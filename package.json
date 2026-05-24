@@ -1,13 +1,22 @@
 {
-  "name": "learnFlow",
+  "name": "learnflow",
   "version": "0.0.1",
   "private": true,
+  "codegenConfig": {
+  "name": "NativeGetVideoList",
+  "type": "modules",
+  "jsSrcsDir": "src/app/specs",
+  "android": {
+    "javaPackageName": "com.learnflow"
+  }
+},
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "clean": "rm -rf dist build node_modules"
   },
   "dependencies": {
     "react": "19.2.3",

@@ -116,4 +116,5 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    implementation 'com.github.shashanksaiakula:AndroidCustomVidoePlayer:1.0.13'
 }
