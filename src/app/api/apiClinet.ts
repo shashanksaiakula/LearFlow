@@ -11,6 +11,13 @@ const apiClient = axios.create({
   },
 });
 
+export const apiClikent2 = axios.create({
+  baseURL : "http://192.168.1.8:3000",
+  headers :{
+    'Content-Type': 'application/json',
+  }
+})
+
 apiClient.interceptors.request.use(
   (config) => {
         config.headers["x-api-key"] = "pub_fc34cc293ca14bcb77514b80534a5b82571fcfcec35f220777d8c7c4f74580e9";

@@ -1,6 +1,6 @@
 import { takeLatest, put, call, all } from "redux-saga/effects";
 import { checkAuthenticationRequested, initializationComplete, loadingStarted, loginFailed, loginRequested, loginSuccess, logout, logoutRequested } from "../slices/authSlice";
-import { login } from "../../networkCalls/authApi";
+import { login } from "../../api/authApi";
 import { authStorage } from "../../utils/AuthToken";
 
 function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any, void, any> {

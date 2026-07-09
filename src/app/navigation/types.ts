@@ -9,4 +9,7 @@ export type RootStackParamList ={
         // cources : string[],
         // isLoggendIn : Boolean
     }
+    CourseDetails :{
+        courseId : number
+    }
 }
