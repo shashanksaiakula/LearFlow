@@ -12,4 +12,8 @@ export type RootStackParamList ={
     CourseDetails :{
         courseId : number
     }
+    LessonPlayer:{
+        lessonId : number,
+        courseId : number
+    }
 }

@@ -6,5 +6,7 @@ export const ENDPOINTS = {
     UPDATE_PASSWORD: '/update-password',
     FORGOT_PASSWORD: '/forgot-password',
     GETALLCOURSES : '/courses',
-    HOME: '/home'
+    GETCOURSEBYID : '/course',
+    HOME: '/home',
+    GETLESSSONBYID : '/course'
 } as const;

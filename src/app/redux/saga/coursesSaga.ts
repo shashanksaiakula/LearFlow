@@ -1,6 +1,6 @@
-import { call, takeLatest, put } from "redux-saga/effects";
-import { getAllCoursesData } from "../../api/coursesApi";
-import { allCourses, getAllCoursesError, requestAllCourses } from "../slices/courseSlicer";
+import { call, takeLatest, put,all } from "redux-saga/effects";
+import { getAllCoursesData, getCourseByIdApi } from "../../api/coursesApi";
+import { allCourses, getAllCoursesError, getCourseById, requestAllCourses, requestCoueseById } from "../slices/courseSlicer";
 
 
 
@@ -16,6 +16,18 @@ function* coursesWorker(): Generator {
     }
 }
 
+function* getCourseByIdrWorker(action : ReturnType<typeof getCourseById>) :Generator {
+     try{
+
+        const response = yield call(getCourseByIdApi, action.payload)
+
+        yield put(getCourseById(response.data))
+
+     } catch(err){
+        yield put(getAllCoursesError(err?.message ?? "sorry something went wrong"))
+     }
+}
+
 
 function* coursesWatcher() {
     yield takeLatest(
@@ -24,6 +36,17 @@ function* coursesWatcher() {
     )
 }
 
+function* getCourseByIdWatcher(){
+    yield takeLatest(
+        requestCoueseById.type,
+        getCourseByIdrWorker
+    )
+}
+
 export default function* coursesSaga() {
-    yield coursesWatcher()
+    yield all([
+        coursesWatcher(),
+        getCourseByIdWatcher()
+])
+    
 }

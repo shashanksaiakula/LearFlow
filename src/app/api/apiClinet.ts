@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { store } from '../redux/store';
 import { logout } from '../redux/slices/authSlice';
-import { authStorage } from '../utils/AuthToken';
 
 const apiClient = axios.create({
   baseURL: 'https://reqres.in/api',
@@ -12,7 +11,7 @@ const apiClient = axios.create({
 });
 
 export const apiClikent2 = axios.create({
-  baseURL : "http://192.168.1.8:3000",
+  baseURL : "http://192.168.1.7:3000",
   headers :{
     'Content-Type': 'application/json',
   }

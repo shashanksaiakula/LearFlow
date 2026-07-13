@@ -1,0 +1,91 @@
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { RootStackParamList } from '../../navigation/types'
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLesson } from '../../redux/thunk/lessonThunk';
+import { AppDispatch, RootState } from '../../redux/store';
+import LessonTab, { LessonTabType } from '../../components/LessonTab';
+import LessonVideoPlayer from './LessonVideoPlayer';
+
+
+type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
+
+type LessonplayerNaigationProps = StackNavigationProp<RootStackParamList, "LessonPlayer">
+
+type Props = {
+    route : LessonPlayerScreenProps
+    navigation : LessonplayerNaigationProps
+}
+
+const LessonPlayerScreen = ({route , navigation} : Props) => {
+    const { lessonId, courseId } = route.params
+    const dispatch = useDispatch<AppDispatch>()
+    const {loading, lesson, error} = useSelector((state : RootState) => state.lesson)
+    const [selectTab, setSelectTab] = useState<LessonTabType>("video-list")
+
+    useEffect(() =>{
+      dispatch(fetchLesson({cousreId : courseId, lessonId :lessonId}))
+    },[dispatch, lessonId,courseId])
+
+    console.log("lesson is "+ lesson?.lesson)
+     if (loading) {
+        return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
+      }
+    
+      if (error) {
+        console.log("error is "+ error)
+        return <Text style={styles.errorStyle}>{error}</Text>
+      }
+
+      // console.log("vidoeplayer is "+ lesson?.videoType)
+  return (
+   <View>
+        <Text style={styles.WelcomeStyle}> {lesson?.title}</Text>
+        {lesson && <LessonVideoPlayer lesson={lesson} />}
+      <Text>{lesson?.title}</Text>
+      <Text>{lesson?.duration}</Text>
+      
+      <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
+      {selectTab === 'video-list' && (
+  <Text>Lessons View</Text>
+)}
+
+{selectTab === 'notes' && (
+  <Text>Notes View</Text>
+)}
+
+{selectTab === 'transcript' && (
+  <Text>Transcript View</Text>
+)}
+    </View>
+  )
+}
+
+export default LessonPlayerScreen
+
+const styles = StyleSheet.create({
+  errorStyle: {
+    fontSize: 20,
+    color: "red"
+  },
+  container: {
+    flex: 1,
+  },
+  indicatorStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  WelcomeStyle: {
+    width: "100%",
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    padding: 22,
+    elevation: 3,
+    backgroundColor: "#fff",
+
+  }
+})

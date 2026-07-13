@@ -78,7 +78,6 @@ const HomeScreen = ({route, navigation}: props) => {
       {homeResponse && <ContinueLearningCard continueLearning={homeResponse?.continueLearning} />}
       <SectionHeader title='Categories'/>
     <FlatList
-    style={{marginBottom : 30}}
       horizontal = {true}
       data={homeResponse?.categories}
        keyExtractor={(item) => item.id.toString()}

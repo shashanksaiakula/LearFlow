@@ -1,6 +1,7 @@
 import { Category } from "../models/Category";
 import { ContinueLearning } from "../models/ContinieLearning";
 import { Course, GetAllCoursesResponse } from "../models/course";
+import { Lesson } from "../models/Lesson";
 
 export interface LoginRequest {
     email: string;
@@ -26,4 +27,13 @@ export interface homeResponse {
     continueLearning: ContinueLearning,
     categories : Category[],
     recommendedCourses : Course[]
+}
+
+export interface LessonByIdRequest{
+    cousreId: number,
+    lessonId : number
+}
+
+export interface LessonByIdResponse{
+    lesson : Lesson
 }

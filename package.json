@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "codegenConfig": {
-  "name": "NativeGetVideoList",
-  "type": "modules",
-  "jsSrcsDir": "src/app/specs",
-  "android": {
-    "javaPackageName": "com.learnflow"
-  }
-},
+    "name": "NativeGetVideoList",
+    "type": "modules",
+    "jsSrcsDir": "src/app/specs",
+    "android": {
+      "javaPackageName": "com.learnflow"
+    }
+  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -31,6 +31,9 @@
     "react-native-gesture-handler": "^3.0.2",
     "react-native-safe-area-context": "^5.8.0",
     "react-native-screens": "^4.25.2",
+    "react-native-video": "^6.19.2",
+    "react-native-webview": "^14.0.1",
+    "react-native-youtube-iframe": "^2.4.1",
     "react-redux": "^9.3.0",
     "redux-saga": "^1.5.0"
   },
