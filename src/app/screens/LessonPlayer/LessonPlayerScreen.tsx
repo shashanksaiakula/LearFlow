@@ -1,5 +1,5 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -8,6 +8,8 @@ import { fetchLesson } from '../../redux/thunk/lessonThunk';
 import { AppDispatch, RootState } from '../../redux/store';
 import LessonTab, { LessonTabType } from '../../components/LessonTab';
 import LessonVideoPlayer from './LessonVideoPlayer';
+import TranscriptView from './TranscriptView';
+import { VideoRef } from 'react-native-video';
 
 
 type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
@@ -24,12 +26,12 @@ const LessonPlayerScreen = ({route , navigation} : Props) => {
     const dispatch = useDispatch<AppDispatch>()
     const {loading, lesson, error} = useSelector((state : RootState) => state.lesson)
     const [selectTab, setSelectTab] = useState<LessonTabType>("video-list")
-
+   const videoRef = useRef<VideoRef>(null);
+   const [currentSec, setCurrentSec] = useState(0)
     useEffect(() =>{
       dispatch(fetchLesson({cousreId : courseId, lessonId :lessonId}))
     },[dispatch, lessonId,courseId])
 
-    console.log("lesson is "+ lesson?.lesson)
      if (loading) {
         return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
       }
@@ -41,12 +43,9 @@ const LessonPlayerScreen = ({route , navigation} : Props) => {
 
       // console.log("vidoeplayer is "+ lesson?.videoType)
   return (
-   <View>
+   <View style = {styles.container}>
         <Text style={styles.WelcomeStyle}> {lesson?.title}</Text>
-        {lesson && <LessonVideoPlayer lesson={lesson} />}
-      <Text>{lesson?.title}</Text>
-      <Text>{lesson?.duration}</Text>
-      
+        {lesson && <LessonVideoPlayer lesson={lesson} videoRef={videoRef?? null} onProgress={setCurrentSec}/>}      
       <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
       {selectTab === 'video-list' && (
   <Text>Lessons View</Text>
@@ -57,7 +56,11 @@ const LessonPlayerScreen = ({route , navigation} : Props) => {
 )}
 
 {selectTab === 'transcript' && (
-  <Text>Transcript View</Text>
+  <TranscriptView vidoeUrl={lesson?.videoLink} seekonPress={(seek)=>{
+    videoRef.current?.seek(seek)
+  }}
+  currentTimeStamp={currentSec}
+  />
 )}
     </View>
   )

@@ -8,5 +8,6 @@ export const ENDPOINTS = {
     GETALLCOURSES : '/courses',
     GETCOURSEBYID : '/course',
     HOME: '/home',
-    GETLESSSONBYID : '/course'
+    GETLESSSONBYID : '/course',
+    TRANSCRIPT : '/transcript'
 } as const;

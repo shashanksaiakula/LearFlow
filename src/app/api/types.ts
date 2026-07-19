@@ -2,6 +2,7 @@ import { Category } from "../models/Category";
 import { ContinueLearning } from "../models/ContinieLearning";
 import { Course, GetAllCoursesResponse } from "../models/course";
 import { Lesson } from "../models/Lesson";
+import { Transcript } from "../models/Transcript";
 
 export interface LoginRequest {
     email: string;
@@ -36,4 +37,12 @@ export interface LessonByIdRequest{
 
 export interface LessonByIdResponse{
     lesson : Lesson
+}
+
+export interface TranscriptRequest{
+    videoUrl : string
+}
+
+export interface TranscriptResponse{
+    transcript : Transcript[]
 }

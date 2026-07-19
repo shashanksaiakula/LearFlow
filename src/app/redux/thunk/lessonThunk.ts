@@ -15,7 +15,7 @@ export const fetchLesson = createAsyncThunk<
     async (request, {rejectWithValue }) => {
         try{
         const response = await getLessonByIdApi(request)
-            console.log("response is "+ JSON.stringify(response))
+            // console.log("response is "+ JSON.stringify(response))
         return response.data
         } catch(error){
             if (axios.isAxiosError(error)){

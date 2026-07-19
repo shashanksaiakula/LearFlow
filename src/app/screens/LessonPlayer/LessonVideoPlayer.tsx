@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import YoutubePlayer from 'react-native-youtube-iframe';
-import Video from 'react-native-video';
+import React, {  useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import Video,{ VideoRef }  from 'react-native-video';
 import { Lesson } from '../../models/Lesson';
-import { getYoutubeVideoId } from '../../utils/youtubeUtils';
 
 interface LessonVideoPlayerProps {
     lesson: Lesson;
+    videoRef : VideoRef
+    onProgress : (currentTimeStamp : number) => void
 }
 
 const LessonVideoPlayer = ({
     lesson,
+    videoRef,
+    onProgress
 }: LessonVideoPlayerProps) => {
 
   const [isBuffering, setIsBuffering] =
   useState(false);
-
-  console.log('video is ', lesson.videoLink);
 
   return (
     <View style={styles.videoContainer}>
@@ -24,6 +24,7 @@ const LessonVideoPlayer = ({
     source={{
       uri: lesson.videoLink,
     }}
+    ref={videoRef}
     style={styles.video}
     controls= {false}
     paused={false}
@@ -39,6 +40,9 @@ const LessonVideoPlayer = ({
     }}
     onError={error => {
       console.log('VIDEO ERROR', error);
+    }}
+ onProgress={(progress) => {
+        onProgress(progress.currentTime);
     }}
   />
 
