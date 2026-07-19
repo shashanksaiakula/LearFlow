@@ -9,7 +9,7 @@ type transcriptCardProps={
     isActive : boolean
 }
 
-const TranscriptCard = memo(({time, text, onClick, isActive} : transcriptCardProps) => {
+const TranscriptCard = memo(({time, text, onClick, isActive = false} : transcriptCardProps) => {
   const timeStamp = formatTime(parseInt(time))
 
   return (

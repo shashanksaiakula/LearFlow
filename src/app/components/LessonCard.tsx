@@ -5,12 +5,13 @@ import { Lesson } from '../models/Lesson'
 
 interface LessonProps {
     lesson : Lesson,
-    onClick : () => void
+    isActive : boolean
+    onClick : () => void 
 }
 
-const LessonCard = ({lesson, onClick} : LessonProps) => {
+const LessonCard = ({lesson, onClick, isActive} : LessonProps) => {
   return (
-    <TouchableOpacity onPress={onClick} style= {styles.card}>
+    <TouchableOpacity onPress={onClick} style= {[styles.card, isActive && {backgroundColor: "#E3F2FD"}]}>
             <Text style= {styles.lesstonTitleStyle}>{lesson.id} . {lesson.title}</Text>
          <View style={[styles.lessonTitel, {justifyContent : "space-between", paddingVertical: 10}]}>
         <Text>{lesson.duration}</Text>

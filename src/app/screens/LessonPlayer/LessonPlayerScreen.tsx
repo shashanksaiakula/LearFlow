@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
@@ -10,6 +10,8 @@ import LessonTab, { LessonTabType } from '../../components/LessonTab';
 import LessonVideoPlayer from './LessonVideoPlayer';
 import TranscriptView from './TranscriptView';
 import { VideoRef } from 'react-native-video';
+import LessonList from './LessonList';
+import NotesView from './NotesView';
 
 
 type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
@@ -17,54 +19,68 @@ type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
 type LessonplayerNaigationProps = StackNavigationProp<RootStackParamList, "LessonPlayer">
 
 type Props = {
-    route : LessonPlayerScreenProps
-    navigation : LessonplayerNaigationProps
+  route: LessonPlayerScreenProps
+  navigation: LessonplayerNaigationProps
 }
 
-const LessonPlayerScreen = ({route , navigation} : Props) => {
-    const { lessonId, courseId } = route.params
-    const dispatch = useDispatch<AppDispatch>()
-    const {loading, lesson, error} = useSelector((state : RootState) => state.lesson)
-    const [selectTab, setSelectTab] = useState<LessonTabType>("video-list")
-   const videoRef = useRef<VideoRef>(null);
-   const [currentSec, setCurrentSec] = useState(0)
-    useEffect(() =>{
-      dispatch(fetchLesson({cousreId : courseId, lessonId :lessonId}))
-    },[dispatch, lessonId,courseId])
+const LessonPlayerScreen = ({ route, navigation }: Props) => {
+  const { lessonId, courseId } = route.params
+  // const lessonID = useRef(lessonId)
+  const [lessonID, setLessonID] = useState(lessonId)
+  const dispatch = useDispatch<AppDispatch>()
+  const { loading, lesson, error } = useSelector((state: RootState) => state.lesson)
+  const [selectTab, setSelectTab] = useState<LessonTabType>("video-list")
+  const videoRef = useRef<VideoRef>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentSec, setCurrentSec] = useState(0)
+  useEffect(() => {
+    dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
+  }, [dispatch, lessonID, courseId])
 
-    const seekPress = useCallback((seek: number)=>{
-      console.log("pressded seek",seek)
-      videoRef.current?.seek(seek+1)
-    },[])
+  const seekPress = useCallback((seek: number) => {
+    videoRef.current?.seek(seek + 1)
+  }, [])
 
-     if (loading) {
-        return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
-      }
-    
-      if (error) {
-        console.log("error is "+ error)
-        return <Text style={styles.errorStyle}>{error}</Text>
-      }
+  if (loading) {
+    return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
+  }
 
-      // console.log("vidoeplayer is "+ lesson?.videoType)
+  if (error) {
+    console.log("error is " + error)
+    return <Text style={styles.errorStyle}>{error}</Text>
+  }
+
+  // console.log("vidoeplayer is "+ lesson?.videoType)
   return (
-   <View style = {styles.container}>
-        <Text style={styles.WelcomeStyle}> {lesson?.title}</Text>
-        {lesson && <LessonVideoPlayer lesson={lesson} videoRef={videoRef?? null} onProgress={setCurrentSec}/>}      
+    <View style={styles.container}>
+      <Text style={styles.WelcomeStyle}> {lesson?.title}</Text>
+      {lesson && <LessonVideoPlayer lesson={lesson} videoRef={videoRef ?? null} onProgress={setCurrentSec} paused={isPaused} />}
       <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
+
       {selectTab === 'video-list' && (
-  <Text>Lessons View</Text>
-)}
+        <LessonList courseId={courseId} onClick={setLessonID} lessonId={lessonID} />
+      )}
 
-{selectTab === 'notes' && (
-  <Text>Notes View</Text>
-)}
+      {selectTab === 'notes' && (
+        <NotesView
+          currentTime={currentSec}
+          playResumeAction={(action: boolean) => {
+            setIsPaused(action)
+          }}
+          onClick={(timeStamp: number) => {
+            console.log(" note", timeStamp)
+            videoRef.current?.seek(timeStamp)
+          }}
+          lessonId ={ lessonId }
+          courseId = { courseId }
+        />
+      )}
 
-{selectTab === 'transcript' && (
-  <TranscriptView vidoeUrl={lesson?.videoLink} seekonPress={seekPress}
-  currentTimeStamp={currentSec}
-  />
-)}
+      {selectTab === 'transcript' && (
+        <TranscriptView vidoeUrl={lesson?.videoLink} seekonPress={seekPress}
+          currentTimeStamp={currentSec}
+        />
+      )}
     </View>
   )
 }

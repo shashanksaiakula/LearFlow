@@ -1,129 +1,105 @@
-import {
-    ActivityIndicator,
-    StyleSheet,
-    Text,
-    FlatList
-} from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../redux/store';
-import { fetchTranscript } from '../../redux/thunk/transcriptThunk';
 import TranscriptCard from '../../components/TranscriptCard';
+import useTranscript from '../../hooks/useTranscript';
 
 type TranscriptProps = {
-    vidoeUrl: string;
-    seekonPress: (seek: number) => void;
-    currentTimeStamp: number;
+  vidoeUrl: string;
+  seekonPress: (seek: number) => void;
+  currentTimeStamp: number;
 };
 
-const TranscriptView = ({
-    vidoeUrl,
-    seekonPress,
-    currentTimeStamp,
+export const TranscriptView = ({
+  vidoeUrl,
+  seekonPress,
+  currentTimeStamp,
 }: TranscriptProps) => {
-    const dispatch = useDispatch<AppDispatch>();
+  // Discard 'activeIndex' from the hook as it is sending the wrong index
+  const { loading, transcript, error } = useTranscript(vidoeUrl, currentTimeStamp);
 
-    const { loading, transcript, error } = useSelector(
-        (state: RootState) => state.transcript,
-    );
+  const scrollViewRef = useRef<ScrollView>(null);
+  const previousIndexRef = useRef<number>(-1);
+  const itemLayoutsRef = useRef<{ [key: number]: number }>({});
 
-    const flatListRef = useRef<FlatList>(null);
+  // 1. Locally calculate the absolute correct active index based on timestamps
+  const transcriptList = transcript?.transcript || [];
+  const localActiveIndex = transcriptList.findIndex(
+    item => currentTimeStamp >= item.start && currentTimeStamp <= item.end
+  );
 
-    // Remember the last scrolled index
-    const previousIndexRef = useRef(-1);
+  useEffect(() => {
+    // Guard clauses against empty states
+    if (localActiveIndex === -1 || previousIndexRef.current === localActiveIndex) {
+      return;
+    }
 
-    useEffect(() => {
-        dispatch(
-            fetchTranscript({
-                videoUrl: vidoeUrl,
-            }),
-        );
-    }, [vidoeUrl, dispatch]);
+    previousIndexRef.current = localActiveIndex;
 
-    /**
-     * Auto Scroll
-     */
-    useEffect(() => {
-        if (!transcript?.transcript?.length) {
-            return;
-        }
+    // 2. Fetch the true layout coordinate of the correct card
+    const targetY = itemLayoutsRef.current[localActiveIndex];
 
-        const activeIndex = transcript.transcript.findIndex(
-            item =>
-                currentTimeStamp >= item.start &&
-                currentTimeStamp <= item.end,
-        );
+    if (targetY !== undefined) {
+      // Offset by 80px to center it cleanly below the top edge
+      const scrollPosition = Math.max(0, targetY - 80);
 
-        if (activeIndex === -1) {
-            return;
-        }
+      scrollViewRef.current?.scrollTo({
+        y: scrollPosition,
+        animated: true,
+      });
+    }
+  }, [localActiveIndex]); // Re-run whenever the true calculated index changes
 
-        // Already scrolled
-        if (previousIndexRef.current === activeIndex) {
-            return;
-        }
+  if (loading) {
+    return <ActivityIndicator size="large" style={styles.indicatorStyle} />;
+  }
 
-        flatListRef.current?.scrollToIndex({
-            index: activeIndex,
-            animated: true,
-            viewPosition: 0.5,
-        });
+  if (error) {
+    return <Text style={styles.errorStyle}>{error}</Text>;
+  }
 
-        previousIndexRef.current = activeIndex;
-    }, [currentTimeStamp, transcript]);
+  return (
+    <ScrollView 
+      ref={scrollViewRef} 
+      contentContainerStyle={styles.scrollContainer}
+    >
+      {transcriptList.map((item, index) => {
+        // Evaluate active state inline using the exact same rule
+        const isCurrentlyActive = index === localActiveIndex;
 
-    if (loading) {
         return (
-            <ActivityIndicator
-                size="large"
-                style={styles.indicatorStyle}
-            />
-        );
-    }
-
-    if (error) {
-        console.log('error is ' + error);
-        return <Text style={styles.errorStyle}>{error}</Text>;
-    }
-
-    return (
-        <FlatList
-            ref={flatListRef}
-            data={transcript?.transcript}
-            keyExtractor={(item) => item.start + "" + item.end}
-            renderItem={({ item }) => (
-                <TranscriptCard
-                    time={item.start}
-                    text={item.text}
-                    onClick={seekonPress}
-                    isActive={
-                        currentTimeStamp >= item.start &&
-                        currentTimeStamp <= item.end
-                    }
-                />
-            )}
-            onScrollToIndexFailed={(info) => {
-                setTimeout(() => {
-                    flatListRef.current?.scrollToIndex({
-                        index: info.index,
-                        animated: true,
-                        viewPosition: 0.5,
-                    });
-                }, 300);
+          <View
+            key={`${item.start}_${item.end}_${index}`}
+            onLayout={(event) => {
+              itemLayoutsRef.current[index] = event.nativeEvent.layout.y;
             }}
-        />
-    );
+          >
+            <TranscriptCard
+              time={item.start}
+              text={item.text}
+              onClick={seekonPress}
+              isActive={isCurrentlyActive}
+            />
+          </View>
+        );
+      })}
+    </ScrollView>
+  );
 };
 
 export default TranscriptView;
 
 const styles = StyleSheet.create({
-    indicatorStyle: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    errorStyle: {
-        fontSize: 20,
-        color: 'red',
-    },
+  scrollContainer: {
+    paddingBottom: 100, // Provides extra space at the bottom to allow last lines to scroll up
+  },
+  indicatorStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorStyle: {
+    fontSize: 20,
+    color: 'red',
+    textAlign: 'center',
+  },
 });

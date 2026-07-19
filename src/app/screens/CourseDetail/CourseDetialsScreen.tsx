@@ -7,6 +7,7 @@ import { requestCoueseById } from '../../redux/slices/courseSlicer';
 import { RootState } from '../../redux/store';
 import LessonCard from '../../components/LessonCard';
 import { StackNavigationProp } from '@react-navigation/stack';
+import useCousre from '../../hooks/useCousre';
 
 
 type CoueseDetailScreenProps = RouteProp<RootStackParamList, "CourseDetails"> 
@@ -19,13 +20,8 @@ type Props = {
 }
 
 const CourseDetialsScreen = ({route, navigation} : Props) => {
-  const {courses, error, loading} = useSelector((state : RootState) => state.courses)
   const {courseId} = route.params
-  const dispatch = useDispatch()
-
-  useEffect(()=>{
-    dispatch(requestCoueseById(courseId))
-},[courseId])
+  const {loading, error, courses} = useCousre(courseId)
 
   if (loading) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
