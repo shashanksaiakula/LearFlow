@@ -1,5 +1,5 @@
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -32,6 +32,11 @@ const LessonPlayerScreen = ({route , navigation} : Props) => {
       dispatch(fetchLesson({cousreId : courseId, lessonId :lessonId}))
     },[dispatch, lessonId,courseId])
 
+    const seekPress = useCallback((seek: number)=>{
+      console.log("pressded seek",seek)
+      videoRef.current?.seek(seek+1)
+    },[])
+
      if (loading) {
         return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
       }
@@ -56,9 +61,7 @@ const LessonPlayerScreen = ({route , navigation} : Props) => {
 )}
 
 {selectTab === 'transcript' && (
-  <TranscriptView vidoeUrl={lesson?.videoLink} seekonPress={(seek)=>{
-    videoRef.current?.seek(seek)
-  }}
+  <TranscriptView vidoeUrl={lesson?.videoLink} seekonPress={seekPress}
   currentTimeStamp={currentSec}
   />
 )}

@@ -1,6 +1,6 @@
-import React, {  useState } from 'react';
+import React, {  useCallback, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import Video,{ VideoRef }  from 'react-native-video';
+import Video,{ OnProgressData, VideoRef }  from 'react-native-video';
 import { Lesson } from '../../models/Lesson';
 
 interface LessonVideoPlayerProps {
@@ -18,6 +18,10 @@ const LessonVideoPlayer = ({
   const [isBuffering, setIsBuffering] =
   useState(false);
 
+  // const progress = useCallback((progress :OnProgressData) =>{
+  //   onProgress(progress.currentTime);
+  // },[onProgress])
+
   return (
     <View style={styles.videoContainer}>
   <Video
@@ -26,7 +30,7 @@ const LessonVideoPlayer = ({
     }}
     ref={videoRef}
     style={styles.video}
-    controls= {false}
+    controls= {true}
     paused={false}
     resizeMode="contain"
     onLoadStart={() => {

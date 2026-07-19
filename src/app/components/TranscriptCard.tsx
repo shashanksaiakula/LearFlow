@@ -1,18 +1,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
 import { formatTime } from '../utils/timeUtils'
 
 type transcriptCardProps={
     time : string
     text : string
-    onClick : (seek:string)=> void,
+    onClick : (seek: number)=> void,
     isActive : boolean
 }
 
-const TranscriptCard = ({time, text, onClick, isActive} : transcriptCardProps) => {
+const TranscriptCard = memo(({time, text, onClick, isActive} : transcriptCardProps) => {
   const timeStamp = formatTime(parseInt(time))
+
   return (
-    <TouchableOpacity style={[styles.card, isActive &&  {backgroundColor: "#E3F2FD"}]} onPress={() => onClick(time)}>
+    <TouchableOpacity style={[styles.card, isActive &&  {backgroundColor: "#E3F2FD"}]}  onPress={() => onClick(parseInt(time))}>
       <Text style={styles.timeStyle}>{timeStamp}</Text>
       {/* Wrapped in a View with flex: 1 to constrain horizontal expansion */}
       <View style={styles.textContainer}>
@@ -20,7 +21,25 @@ const TranscriptCard = ({time, text, onClick, isActive} : transcriptCardProps) =
       </View>
     </TouchableOpacity>
   )
-}
+},
+//  (prevProps, nextProps) => {
+//     console.log("COMPARE:", prevProps.text);
+
+//     console.log({
+//       sameTime: prevProps.time === nextProps.time,
+//       sameText: prevProps.text === nextProps.text,
+//       sameActive: prevProps.isActive === nextProps.isActive,
+//       sameClick: prevProps.onClick === nextProps.onClick,
+//     });
+
+//     return (
+//       prevProps.time === nextProps.time &&
+//       prevProps.text === nextProps.text &&
+//       prevProps.isActive === nextProps.isActive &&
+//       prevProps.onClick === nextProps.onClick
+//     );
+//   }
+)
 
 export default TranscriptCard
 

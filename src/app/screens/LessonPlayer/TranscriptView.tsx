@@ -2,12 +2,12 @@ import {
     ActivityIndicator,
     StyleSheet,
     Text,
+    FlatList
 } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchTranscript } from '../../redux/thunk/transcriptThunk';
-import { FlatList } from 'react-native-gesture-handler';
 import TranscriptCard from '../../components/TranscriptCard';
 
 type TranscriptProps = {
@@ -95,22 +95,22 @@ const TranscriptView = ({
                 <TranscriptCard
                     time={item.start}
                     text={item.text}
-                    onClick={(seek) => seekonPress(parseInt(seek))}
+                    onClick={seekonPress}
                     isActive={
                         currentTimeStamp >= item.start &&
                         currentTimeStamp <= item.end
                     }
                 />
             )}
-            // onScrollToIndexFailed={(info) => {
-            //     setTimeout(() => {
-            //         flatListRef.current?.scrollToIndex({
-            //             index: info.index,
-            //             animated: true,
-            //             viewPosition: 0.5,
-            //         });
-            //     }, 300);
-            // }}
+            onScrollToIndexFailed={(info) => {
+                setTimeout(() => {
+                    flatListRef.current?.scrollToIndex({
+                        index: info.index,
+                        animated: true,
+                        viewPosition: 0.5,
+                    });
+                }, 300);
+            }}
         />
     );
 };
