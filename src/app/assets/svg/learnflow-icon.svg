@@ -1,0 +1,31 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left page (filled, primary blue) -->
+  <path d="M100 55
+           C 85 45, 60 40, 35 42
+           C 30 42.5, 27 46, 27 51
+           L 27 140
+           C 27 145, 31 148.5, 36 148
+           C 58 146, 82 150, 100 162
+           Z"
+        fill="#2563EB"/>
+
+  <!-- Right page (outline, white with blue stroke) -->
+  <path d="M100 55
+           C 115 45, 140 40, 165 42
+           C 170 42.5, 173 46, 173 51
+           L 173 140
+           C 173 145, 169 148.5, 164 148
+           C 142 146, 118 150, 100 162
+           Z"
+        fill="#FFFFFF" stroke="#2563EB" stroke-width="5" stroke-linejoin="round"/>
+
+  <!-- Center spine -->
+  <line x1="100" y1="55" x2="100" y2="162" stroke="#2563EB" stroke-width="4"/>
+
+  <!-- Left page lines -->
+  <path d="M40 65 C 55 62, 70 65, 82 72" stroke="#FFFFFF" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M40 80 C 55 77, 70 80, 82 87" stroke="#FFFFFF" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Bookmark on right page -->
+  <path d="M148 42 L166 42 L166 75 L157 66 L148 75 Z" fill="#2563EB"/>
+</svg>

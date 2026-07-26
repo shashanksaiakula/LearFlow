@@ -1,0 +1,19 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Back wave layer (lightest) -->
+  <path d="M0 90
+           C 100 50, 200 130, 300 90
+           C 400 50, 500 120, 600 80
+           L 600 200
+           L 0 200
+           Z"
+        fill="#DCE8FB"/>
+
+  <!-- Front wave layer (primary light) -->
+  <path d="M0 130
+           C 90 160, 180 100, 280 120
+           C 380 140, 470 170, 600 130
+           L 600 200
+           L 0 200
+           Z"
+        fill="#C4D9F8"/>
+</svg>

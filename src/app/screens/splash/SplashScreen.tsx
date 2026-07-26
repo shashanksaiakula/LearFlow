@@ -1,12 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
-import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux';
 import { checkAuthenticationRequested } from '../../redux/slices/authSlice';
 
-
 export default function SplashScreen() {
-
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(checkAuthenticationRequested());
@@ -14,7 +11,10 @@ export default function SplashScreen() {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size='large' color='blue'/>
+      <Image
+        source={require('../../assets/images/learFlow-loding.gif')}
+        style={{ width: 200, height: 200 }}
+      />
     </View>
   )
 }
