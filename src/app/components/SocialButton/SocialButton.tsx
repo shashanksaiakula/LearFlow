@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     borderWidth: 1,
     paddingHorizontal: 16,
+    margin : 5,
   },
   title: {
     ...Typography.button,

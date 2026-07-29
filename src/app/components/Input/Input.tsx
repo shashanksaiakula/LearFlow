@@ -35,11 +35,11 @@ const Input = ({
 
   return (
     <View style={styles.container}>
-      {label && (
+      {/* {label && (
         <Text style={styles.label}>
           {label}
         </Text>
-      )}
+      )} */}
 
       <View
         style={[

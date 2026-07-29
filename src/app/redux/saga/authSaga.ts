@@ -1,6 +1,6 @@
 import { takeLatest, put, call, all } from "redux-saga/effects";
-import { checkAuthenticationRequested, initializationComplete, loadingStarted, loginFailed, loginRequested, loginSuccess, logout, logoutRequested } from "../slices/authSlice";
-import { login } from "../../api/authApi";
+import { checkAuthenticationRequested, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutRequested, profileSucess, registerRequest, registerSucess } from "../slices/authSlice";
+import { login, profile, register } from "../../api/authApi";
 import { authStorage } from "../../utils/AuthToken";
 
 function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any, void, any> {
@@ -8,30 +8,35 @@ function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any,
     try {
         const response = yield call(login, action.payload);
 
-        yield call(
-            authStorage.saveToken, response.data.token
-        )
+        const { iskeepMeLogin } = action.payload
+        console.log("save ",response.data.token)
+        // if (iskeepMeLogin) {
+            yield call(
+                authStorage.saveToken, response.data.token
+            )
+        // }
+
 
         yield put(loginSuccess({
-            user: {
-                id: 1,
-                name: "shashank",
-                age: 27
-            },
             token: response.data.token
         })
         )
+        const profileReponse = yield call(profile)
+        console.log("profile response ", profileReponse.data.data)
+        yield put(profileSucess({
+            user : profileReponse.data.data
+        }))
     } catch (err) {
         yield put(loginFailed(err?.message ?? 'Something went wrong'));
     }
 }
 
 function* logoutWorker(): Generator<any, void, any> {
-    try{
+    try {
         console.log('Logout Worker called');
         yield call(authStorage.clearToken);
         yield put(logout());
-    } catch(err){
+    } catch (err) {
         console.error('Logout Error:', err);
     }
 }
@@ -39,21 +44,33 @@ function* logoutWorker(): Generator<any, void, any> {
 function* checkAuthenticationWorker(): Generator<any, void, any> {
 
     try {
-    const token = yield call(authStorage.getToken);
-    if (token) {
-        yield put(loginSuccess({
-            user: {
-                id: 1,
-                name: "shashank",
-                age: 27
-            },
-            token: token
-        }));
-    }
-} catch (err) {
+        const token = yield call(authStorage.getToken);
+        if (token) {
+            yield put(loginSuccess({
+                token: token
+            }));
+        }
+        const profileReponse = yield call(profile)
+        console.log("profile response ", profileReponse.data.data)
+        yield put(profileSucess({
+            user : profileReponse.data.data
+        }))
+    } catch (err) {
         yield put(logout());
     } finally {
         yield put(initializationComplete());
+    }
+}
+
+function* registerRequestWorker(action: ReturnType<typeof registerRequest>): Generator<any, void, any> {
+    try {
+        const response = yield call(register, action.payload)
+        console.log("request", response)
+        yield put(registerSucess({
+            message: response.message
+        }))
+    } catch (error) {
+        yield put(loginFailed(err?.message ?? 'Something went wrong'));
     }
 }
 
@@ -80,10 +97,18 @@ function* checkAuthenticationWatcher() {
     )
 }
 
+function* registerWatcher() {
+    yield takeLatest(
+        registerRequest.type,
+        registerRequestWorker
+    )
+}
+
 export default function* authSaga() {
-   yield all([
-    loginWatcher(),
-    logoutWatcher(),
-    checkAuthenticationWatcher()
-   ])
+    yield all([
+        loginWatcher(),
+        logoutWatcher(),
+        checkAuthenticationWatcher(),
+        registerWatcher()
+    ])
 }

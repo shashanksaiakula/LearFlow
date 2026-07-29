@@ -1,40 +1,46 @@
 import axios from 'axios';
 import { store } from '../redux/store';
 import { logout } from '../redux/slices/authSlice';
+import { authStorage } from '../utils/AuthToken';
 
-const apiClient = axios.create({
-  baseURL: 'https://reqres.in/api',
-  // timeout: 10000,
+// const apiClient = axios.create({
+//   baseURL: 'https://reqres.in/api',
+//   // timeout: 10000,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
+export const apiClient = axios.create({
+  baseURL: "http://192.168.1.3:3000",
   headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-export const apiClikent2 = axios.create({
-  baseURL : "http://192.168.1.6:3000",
-  headers :{
     'Content-Type': 'application/json',
   }
 })
 
 apiClient.interceptors.request.use(
-  (config) => {
-        config.headers["x-api-key"] = "pub_fc34cc293ca14bcb77514b80534a5b82571fcfcec35f220777d8c7c4f74580e9";
+  async (config) => {
 
     // console.log("URL:", config.baseURL + config.url);
+    const token = await authStorage.getToken()
+
+    if (token) {
+      // Correct way to assign headers in modern Axios
+      config.headers.Authorization = `Bearer ${token}`;
+      console.log("Token attached successfully");
+    }
     console.log("Headers:", config.headers);
     console.log("Body:", config.data);
+
     return config;
   },
   (error) => {
-    // Handle request error
-    console.error('Request Error:', error);
-      console.log("Status:", error.response?.status);
-  console.log("Data:", error.response?.data);
-  console.log("Message:", error.message);
+    // Handle request configuration errors
+    console.error('Request Setup Error:', error);
     return Promise.reject(error);
   }
 );
+
 
 apiClient.interceptors.response.use(
   (response) => {
@@ -44,7 +50,7 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     console.error('Response Error:', error);
-    if(error.response?.status === 401){
+    if (error.response?.status === 401) {
       // && !originalRequest._retry) {
       //  originalRequest._retry = true;      
       //  await authStorage.clearToken();

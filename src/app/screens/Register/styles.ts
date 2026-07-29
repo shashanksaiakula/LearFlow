@@ -90,6 +90,9 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection : "row",
     alignItems: "center"
+},termsContainer:{
+    flexDirection: "row",
+    paddingVertical: Spacing.xxs,
 }
 
 

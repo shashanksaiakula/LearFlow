@@ -1,8 +1,8 @@
 export const ENDPOINTS = {
-    LOGIN: '/login',
-    LOGOUT: '/logout',
-    REGISTER: '/register',
-    GET_USER: '/user',
+    LOGIN: '/auth/login',
+    LOGOUT: 'auth/logout',
+    REGISTER: 'auth/register',
+    GET_USER: 'auth/profile',
     UPDATE_PASSWORD: '/update-password',
     FORGOT_PASSWORD: '/forgot-password',
     GETALLCOURSES : '/courses',

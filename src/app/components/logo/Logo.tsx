@@ -4,6 +4,8 @@ import { Colors } from '../../theme/colors';
 import { Typography } from '../../theme/typography';
 import { Spacing } from '../../theme/spacing';
 import LearFlow from '../../assets/svg/learnflow-icon.svg'
+import Icon from '../../assets/svg/splashlogo1.svg'
+import TitleComponent from '../common/TitleComponent';
 
 
 type LogoSize = "small" | "medium" | "large" | "xl";
@@ -34,12 +36,10 @@ const Logo = ({ size = "large", showTitle = true }: LogoProps) => {
                 },
             ]}
         >
-            <LearFlow  width={150} height={150}/>
+            <Icon  width={100} height={100}/>
         </View>
         {showTitle && (
-                <Text style={styles.title}>
-                    LearnFlow
-                </Text>
+                <TitleComponent/>
             )}
         </View>
     );

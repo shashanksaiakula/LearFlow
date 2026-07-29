@@ -6,11 +6,13 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  Switch,
   Text,
   View,
 } from "react-native";
 
 import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import LinearGradient from "react-native-linear-gradient";
 import Logo from "../../components/logo/Logo";
 import styles from "./style";
@@ -20,12 +22,24 @@ import { Colors } from "../../theme/colors";
 import Divvider from "../../components/Divider/Divvider";
 import SocialButton from "../../components/SocialButton/SocialButton";
 import GoogleIcon from "../../assets/svg/GoolgeIcon";
+import AppleLogo from "../../assets/svg/applelogo.svg"
 import { Controller, useForm } from "react-hook-form";
 import Waves from '../../assets/svg/wave.svg'
+import TextPressable from "../../components/common/TextPressable";
+import { AuthStackParamsList } from "../../navigation/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Strings } from "../../strings/String";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { loginRequested } from "../../redux/slices/authSlice";
 
+type AuthNavigationProp = NativeStackNavigationProp<AuthStackParamsList>;
 const LoginScreen = () => {
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false)
+  const navigation = useNavigation<AuthNavigationProp>()
+  const dispatch = useDispatch<AppDispatch>()
 
   const {
     control,
@@ -41,8 +55,13 @@ const LoginScreen = () => {
 
 
   const onLogin = (data: any) => {
-    console.log(data);
+    console.log(data.email);
+    dispatch(loginRequested({email : data.email, password : data.password, iskeepMeLogin : isEnabled}))
     reset()
+  }
+
+  const toggleSwitch =()=>{
+    setIsEnabled(!isEnabled)
   }
 
   return (
@@ -74,15 +93,17 @@ const LoginScreen = () => {
               contentContainerStyle={styles.content}
             >
               <View style={styles.header}>
-
+                <View style={{width: "100%", alignItems: "flex-end"}}>
+                {/* <LoginLogo2 width={100} height={100}/> */}
+                </View>
                 <Logo />
 
                 <Text style={styles.title}>
-                  Welcome Back
+                  {Strings.create_account}
                 </Text>
 
                 <Text style={styles.subtitle}>
-                  Continue your learning journey.
+                  {Strings.join_learn_flow}
                 </Text>
 
               </View>
@@ -98,14 +119,14 @@ const LoginScreen = () => {
                 name="email"
                 render={({ field, fieldState }) => (
                   <Input
-                    label="Email"
+                    label={Strings.email}
                     value={field.value}
                     onChangeText={field.onChange}
                     onBlur={field.onBlur}
                     leftIcon={
                       <MaterialCommunityIcons
                         name="email-outline"
-                        color={Colors.textSecondary}
+                        color={Colors.primary}
                         size={22}
                       />
                     }
@@ -126,14 +147,14 @@ const LoginScreen = () => {
                 }}
                 render={({ field }) => (
                   <Input
-                    label="Password"
+                    label={Strings.password}
                     value={field.value}
                     onChangeText={field.onChange}
                     onBlur={field.onBlur}
                     leftIcon={
                       <MaterialCommunityIcons
                         name="lock-outline"
-                        color={Colors.textSecondary}
+                        color={Colors.primary}
                         size={22}
                       />
                     }
@@ -154,26 +175,48 @@ const LoginScreen = () => {
                   />
                 )}
               />
-
-              <Text style={styles.sideText}>Forogot Password?</Text>
-
-              <PrimaryButton onPress={handleSubmit(onLogin)} title="Login" />
+              <View style={styles.forgotContainer}>
+                <View style={styles.switchContainer}>
+                <Switch
+                  trackColor={{ false: Colors.border, }}
+                  thumbColor={isEnabled ? Colors.primary : Colors.white}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                  />
+                  <Text>{Strings.remember_me}</Text>
+                </View>
+                {/* <Text style={styles.sideText}>Forogot Password?</Text> */}
+                <TextPressable text={Strings.forgot_password} onPress={()=>{
+                  navigation.navigate("Forgot")
+                }}/>
+              </View>
+              <PrimaryButton onPress={handleSubmit(onLogin)} title={Strings.login} />
 
               <View style={styles.dividerStyle}>
                 <Divvider />
-                <Text style={styles.dividerText}>OR</Text>
+                <Text style={styles.dividerText}>{Strings.or}</Text>
                 <Divvider />
               </View>
 
               <SocialButton
-                title="Continue with Google"
+                title={Strings.google_login}
                 onClick={() => { }}
                 icon={<GoogleIcon width={18} height={18} />}
               />
+              
+              <SocialButton
+                title={Strings.apple_login}
+                onClick={() => { }}
+                icon={<AppleLogo width={20} height={20} />}
+              />
 
               <View style={styles.registerContainer}>
-                <Text style={styles.accountText}>Don't have an account? </Text>
-                <Text style={styles.registerText}>Register</Text>
+                <Text style={styles.accountText}>{Strings.dont_have_any_account} </Text>
+                {/* <Text style={styles.registerText}>Register</Text> */}
+                <TextPressable text={Strings.register} onPress={()=>{
+                  navigation.navigate("Register")
+                }}/>
               </View>
               <View style={styles.waveContainer} pointerEvents="none">
                 <Waves width="100%" height="100%" fill="#EFF6FF" preserveAspectRatio="none" />

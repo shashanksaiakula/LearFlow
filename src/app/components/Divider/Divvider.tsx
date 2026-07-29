@@ -14,7 +14,7 @@ export default function Divvider() {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        height: 4,
+        height: 2,
         backgroundColor : Colors.border,
         marginHorizontal : Spacing.xs,
         justifyContent: 'center'

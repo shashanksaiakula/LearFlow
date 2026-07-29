@@ -9,40 +9,58 @@ export interface LoginRequest {
     password: string;
 }
 
+export interface RegisterRequest {
+    name: string,
+    email: string;
+    password: string;
+}
+
+
 export interface User {
-  id: number;
-  name: string;
-  email: string;
+    id: number;
+    fullName: string;
+    email: string;
 }
 
 export interface LoginResponse {
+    statusCode: number;
+    success: boolean;
+    message: string;
     token: string;
-    // user: User;
+}
+export interface UserRequest {
+    success: string;
+    user: User
+}
+
+export interface RegisterResponse {
+    success: string;
+    message: string;
 }
 
 export interface getAllCoursesResponse {
-    cources : GetAllCoursesResponse
+    cources: GetAllCoursesResponse
 }
 
 export interface homeResponse {
     continueLearning: ContinueLearning,
-    categories : Category[],
-    recommendedCourses : Course[]
+    categories: Category[],
+    recommendedCourses: Course[]
 }
 
-export interface LessonByIdRequest{
+export interface LessonByIdRequest {
     cousreId: number,
-    lessonId : number
+    lessonId: number
 }
 
-export interface LessonByIdResponse{
-    lesson : Lesson
+export interface LessonByIdResponse {
+    lesson: Lesson
 }
 
-export interface TranscriptRequest{
-    videoUrl : string
+export interface TranscriptRequest {
+    videoUrl: string
 }
 
-export interface TranscriptResponse{
-    transcript : Transcript[]
+export interface TranscriptResponse {
+    transcript: Transcript[]
 }
