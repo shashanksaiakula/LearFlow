@@ -16,7 +16,9 @@ export type RootStackParamList ={
         lessonId : number,
         courseId : number
     },
-    BottomTab : undefined
+    BottomTab : undefined,
+     EditProflie : undefined,
+    ChangePassword : undefined
 }
 
 export type AuthStackParamsList= {
@@ -33,5 +35,11 @@ export type BottomTabParamsList ={
             age: number
         },
     }
-    Profile : undefined
+    ProfileStack : undefined
+}
+
+export type ProfileStackParamList={
+     Profile : undefined,
+    EditProflie : undefined,
+    ChangePassword : undefined
 }

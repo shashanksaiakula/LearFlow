@@ -12,7 +12,7 @@ import { authStorage } from '../utils/AuthToken';
 // });
 
 export const apiClient = axios.create({
-  baseURL: "http://192.168.1.3:3000",
+  baseURL: "http://192.168.1.5:3000",
   headers: {
     'Content-Type': 'application/json',
   }

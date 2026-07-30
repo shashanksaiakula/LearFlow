@@ -19,7 +19,7 @@ import Logo from "../../components/logo/Logo";
 import { Input } from "../../components/Input";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import { Colors } from "../../theme/colors";
-import Divvider from "../../components/Divider/Divvider";
+import Divvider from "../../components/Divider/Divider";
 import { Controller, useForm } from "react-hook-form";
 import Waves from '../../assets/svg/wave.svg'
 import TextPressable from "../../components/common/TextPressable";
@@ -257,9 +257,9 @@ const RegisterScreen = () => {
                             <PrimaryButton disabled={!isEnabled} onPress={handleSubmit(onRegister)} title={Strings.create_account} />
 
                             <View style={styles.dividerStyle}>
-                                <Divvider />
+                                <Divvider style={{flex:1}} />
                                 <Text style={styles.dividerText}>{Strings.or}</Text>
-                                <Divvider />
+                                <Divvider style={{flex:1}} />
                             </View>
 
                             <View style={styles.registerContainer}>

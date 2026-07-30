@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import styles from "./styles";
+import { Colors } from "../../theme/colors";
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -17,6 +18,7 @@ interface InputProps extends TextInputProps {
   rightIconPress? : ()=> void;
    value?: string;
   onChangeText?: (text: string) => void;
+  disabled? :boolean
 }
 
 const Input = ({
@@ -29,23 +31,25 @@ const Input = ({
   value, 
   onChangeText,
   onBlur =()=>{},
+  disabled,
   ...props
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={styles.container}>
-      {/* {label && (
+    <View style={[styles.container]}>
+      {label && (
         <Text style={styles.label}>
           {label}
         </Text>
-      )} */}
+      )}
 
       <View
         style={[
           styles.inputContainer,
           isFocused && styles.focusedInput,
           error && styles.errorInput,
+          disabled && {backgroundColor : Colors.disabled}
         ]}
       >
         {leftIcon && (
@@ -56,10 +60,12 @@ const Input = ({
 
         <TextInput
           {...props}
+          editable={!disabled} 
+          selectTextOnFocus={!disabled}
           value={value}                
           onChangeText={onChangeText}
           placeholder={label}
-          style={styles.input}
+          style={[styles.input]}
           secureTextEntry={secureTextEntry}
           placeholderTextColor="#94A3B8"
           onFocus={() => setIsFocused(true)}

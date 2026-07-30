@@ -61,15 +61,6 @@ const HomeScreen = ({route, navigation}: props) => {
 
   // if(courses.length === 0){
   //   return <Text>No Courses avalible</Text>
-  // }
-  const renderFooter = () => {
-    return (
-      <Button
-        title='Logout'
-        onPress={onLogout}
-      />
-    )
-  }
 
   return (
     <View style={styles.container}>
@@ -87,7 +78,6 @@ const HomeScreen = ({route, navigation}: props) => {
       />
       <FlatList
         ListHeaderComponent={HomeHeader}
-        ListFooterComponent={renderFooter}
         data={homeResponse?.recommendedCourses}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (

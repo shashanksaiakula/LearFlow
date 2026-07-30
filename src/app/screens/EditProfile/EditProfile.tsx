@@ -1,0 +1,137 @@
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { RootState } from '../../redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import ComnonHeader from '../../components/common/ComnonHeader'
+import { Strings } from '../../strings/String'
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
+import { Colors } from '../../theme/colors'
+import LinearGradient from 'react-native-linear-gradient'
+import Avather from '../../components/avathar/Avather'
+import CommonCard from '../../components/common/CommonCard'
+import ProfileCard from '../../components/ProfileCard'
+import Divider from '../../components/Divider/Divider'
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import OutLineButton from '../../components/common/OutLineButton'
+import { ProfileStackParamList } from '../../navigation/types'
+import { useNavigation } from '@react-navigation/native';
+import styles from './styles'
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
+import { Input } from '../../components/Input'
+
+type EditNavigationProps = NativeStackNavigationProp<ProfileStackParamList>;
+
+
+const EditProfile = () => {
+
+    const user = useSelector((state: RootState) => state.auth.user)
+    const dispatch = useDispatch()
+    const navigation = useNavigation<EditNavigationProps>()
+    const [name, setName] = useState(user.name)
+    const [number, setNumber] = useState(user.phone)
+    const [dateOfBirth, setDateOfBirth] = useState(user.dateOfBirth)
+
+    const cancelHandel = () => {
+        setName("")
+        setDateOfBirth("")
+        setNumber("")
+        navigation.pop()
+    }
+
+    return (
+        <>
+            <LinearGradient
+                colors={[
+                    "#dce8f7",
+                    "#FFFFFF",
+                ]}
+                style={[styles.container]}
+            >
+                <ScrollView style={styles.container}
+                    contentContainerStyle={{ paddingBottom: 28 }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <SafeAreaView style={styles.container}>
+                        <ComnonHeader title={Strings.edit_profile}
+                            rightIcon={
+                                <MaterialCommunityIcons
+                                    name="arrow-left"
+                                    color={Colors.primary}
+                                    size={26}
+                                />
+                            }
+                            onPressRight={() => { navigation.pop() }}
+                        />
+                        <Avather isEditScreen={true} />
+                        <View style={styles.nameCointer}>
+                           <Text>{Strings.tap_to_change_img}</Text>
+                        </View>
+                        <CommonCard>
+                            <Text style={styles.persInfo}>{Strings.personal_infrom}</Text>
+                            <Input
+                                label={Strings.full_name}
+                                leftIcon={
+                                    <MaterialCommunityIcons
+                                        name="account-outline"
+                                        color={Colors.secondary}
+                                        size={26}
+                                    />
+                                }
+                                value={name}
+                                onChange={setName}
+                            />
+                            <Input
+                            disabled={true}
+                                label={Strings.email}
+                                leftIcon={
+                                    <MaterialCommunityIcons
+                                        name="email-outline"
+                                        color={Colors.secondary}
+                                        size={26}
+                                    />
+                                }
+                                value={user.email}
+                            />
+                           <Input
+                                label={Strings.phone_number}
+                                leftIcon={
+                                    <MaterialCommunityIcons
+                                        name="phone-outline"
+                                        color={Colors.secondary}
+                                        size={26}
+                                    />
+                                }
+                                value={number}
+                                onChange={setNumber}
+                            />
+                            <Input
+                                label={Strings.date_of_birt}
+                                leftIcon={
+                                    <MaterialCommunityIcons
+                                        name="calendar-month"
+                                        color={Colors.secondary}
+                                        size={26}
+                                    />
+                                }
+                                value={dateOfBirth}
+                                onChange={setDateOfBirth}
+                            />
+                        </CommonCard>
+                        <View style={styles.logoutBtm}>
+                            <PrimaryButton title={Strings.save_changes} onPress={() => {
+
+                            }} />
+                            <OutLineButton color={Colors.primary} text={Strings.cancel}
+                                onPress={cancelHandel}
+                            />
+                        </View>
+                    </SafeAreaView>
+                </ScrollView>
+
+            </LinearGradient>
+        </>
+    )
+}
+
+export default EditProfile
+

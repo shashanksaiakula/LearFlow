@@ -7,6 +7,7 @@ import { RootState } from '../redux/store';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 import SplashScreen from '../screens/splash/SplashScreen';
+import EditProfile from '../screens/EditProfile';
 
 // Create a parent structural stack container
 const RootStack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ export default function RootNavigator() {
         ) : (
           <RootStack.Screen name="Auth" component={AuthStack} />
         )}
+
       </RootStack.Navigator>
     </NavigationContainer>
   );

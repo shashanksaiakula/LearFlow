@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        marginVertical: Spacing.sm
+        marginVertical: Spacing.sm,
     },
     dividerText: {
         ...Typography.body2,

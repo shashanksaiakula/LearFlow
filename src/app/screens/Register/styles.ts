@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
         fontWeight: "800",
     },
     dividerStyle: {
+        flex:1,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",

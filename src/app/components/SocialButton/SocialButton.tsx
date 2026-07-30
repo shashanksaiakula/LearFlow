@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { Typography } from "../../theme/typography"
 import { Colors } from "../../theme/colors"
-import React, { ReactNode } from "react"
+import React from "react"
 
 export interface SocialProps {
   title: string

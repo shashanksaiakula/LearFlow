@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
+import React, { ReactNode } from 'react'
 import { Colors } from '../../theme/colors'
 import { Spacing } from '../../theme/spacing'
 
-export default function Divvider() {
+
+type DividerProps={
+  style? : StyleProp<ViewStyle>
+}
+
+export default function Divider({style} : DividerProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,style]}>
         <View style={styles.container}/>
     </View>
   )
@@ -13,7 +18,6 @@ export default function Divvider() {
 
 const styles = StyleSheet.create({
     container:{
-        flex: 1,
         height: 2,
         backgroundColor : Colors.border,
         marginHorizontal : Spacing.xs,

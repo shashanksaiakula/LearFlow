@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { BottomTabParamsList } from "./types"
 import HomeScreen from "../screens/Home/HomeScreen"
-import ProfileScreen from "../screens/Profile"
 import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { Colors } from "../theme/colors";
+import ProfileScreen from "../screens/Profile";
 
 
 

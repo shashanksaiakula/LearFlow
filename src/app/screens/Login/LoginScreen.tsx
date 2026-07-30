@@ -19,7 +19,7 @@ import styles from "./style";
 import { Input } from "../../components/Input";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import { Colors } from "../../theme/colors";
-import Divvider from "../../components/Divider/Divvider";
+import Divvider from "../../components/Divider/Divider";
 import SocialButton from "../../components/SocialButton/SocialButton";
 import GoogleIcon from "../../assets/svg/GoolgeIcon";
 import AppleLogo from "../../assets/svg/applelogo.svg"
@@ -32,6 +32,7 @@ import { Strings } from "../../strings/String";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { loginRequested } from "../../redux/slices/authSlice";
+import Divider from "../../components/Divider/Divider";
 
 type AuthNavigationProp = NativeStackNavigationProp<AuthStackParamsList>;
 const LoginScreen = () => {
@@ -56,11 +57,11 @@ const LoginScreen = () => {
 
   const onLogin = (data: any) => {
     console.log(data.email);
-    dispatch(loginRequested({email : data.email, password : data.password, iskeepMeLogin : isEnabled}))
+    dispatch(loginRequested({ email: data.email, password: data.password, iskeepMeLogin: isEnabled }))
     reset()
   }
 
-  const toggleSwitch =()=>{
+  const toggleSwitch = () => {
     setIsEnabled(!isEnabled)
   }
 
@@ -93,8 +94,8 @@ const LoginScreen = () => {
               contentContainerStyle={styles.content}
             >
               <View style={styles.header}>
-                <View style={{width: "100%", alignItems: "flex-end"}}>
-                {/* <LoginLogo2 width={100} height={100}/> */}
+                <View style={{ width: "100%", alignItems: "flex-end" }}>
+                  {/* <LoginLogo2 width={100} height={100}/> */}
                 </View>
                 <Logo />
 
@@ -177,26 +178,26 @@ const LoginScreen = () => {
               />
               <View style={styles.forgotContainer}>
                 <View style={styles.switchContainer}>
-                <Switch
-                  trackColor={{ false: Colors.border, }}
-                  thumbColor={isEnabled ? Colors.primary : Colors.white}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
-                  value={isEnabled}
+                  <Switch
+                    trackColor={{ false: Colors.border, }}
+                    thumbColor={isEnabled ? Colors.primary : Colors.white}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
                   />
                   <Text>{Strings.remember_me}</Text>
                 </View>
                 {/* <Text style={styles.sideText}>Forogot Password?</Text> */}
-                <TextPressable text={Strings.forgot_password} onPress={()=>{
+                <TextPressable text={Strings.forgot_password} onPress={() => {
                   navigation.navigate("Forgot")
-                }}/>
+                }} />
               </View>
               <PrimaryButton onPress={handleSubmit(onLogin)} title={Strings.login} />
 
               <View style={styles.dividerStyle}>
-                <Divvider />
+                <Divider style={{ flex: 1 }} />
                 <Text style={styles.dividerText}>{Strings.or}</Text>
-                <Divvider />
+                <Divider style={{ flex: 1 }} />
               </View>
 
               <SocialButton
@@ -204,7 +205,7 @@ const LoginScreen = () => {
                 onClick={() => { }}
                 icon={<GoogleIcon width={18} height={18} />}
               />
-              
+
               <SocialButton
                 title={Strings.apple_login}
                 onClick={() => { }}
@@ -214,9 +215,9 @@ const LoginScreen = () => {
               <View style={styles.registerContainer}>
                 <Text style={styles.accountText}>{Strings.dont_have_any_account} </Text>
                 {/* <Text style={styles.registerText}>Register</Text> */}
-                <TextPressable text={Strings.register} onPress={()=>{
+                <TextPressable text={Strings.register} onPress={() => {
                   navigation.navigate("Register")
-                }}/>
+                }} />
               </View>
               <View style={styles.waveContainer} pointerEvents="none">
                 <Waves width="100%" height="100%" fill="#EFF6FF" preserveAspectRatio="none" />

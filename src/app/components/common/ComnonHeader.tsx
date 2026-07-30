@@ -1,0 +1,43 @@
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { Typography } from '../../theme/typography'
+import { Colors } from '../../theme/colors'
+
+type CommaonProps = {
+    title: string,
+    rightIcon?: React.ReactNode
+    leftIcon?: React.ReactNode
+    onPressleft?: () => void
+    onPressRight?: () => void
+}
+
+const ComnonHeader = ({ title, rightIcon, leftIcon, onPressRight, onPressleft }: CommaonProps) => {
+    return (
+        <View style={styles.container}>
+            <Pressable
+                onPress={onPressRight}
+            >{rightIcon}</Pressable>
+            <Text style={styles.textStyle}>{title}</Text>
+            <Pressable
+                onPress={onPressleft}
+            >{leftIcon}</Pressable>
+        </View>
+    )
+}
+
+export default ComnonHeader
+
+const styles = StyleSheet.create({
+    container: {
+        width: "100%",
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        justifyContent: 'space-between',
+        height: "10%",
+        alignItems: 'center'
+    },
+    textStyle: {
+        ...Typography.h2,
+        color: Colors.primary
+    }
+})
