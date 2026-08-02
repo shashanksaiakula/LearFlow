@@ -48,16 +48,16 @@ apiClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const originalRequest = error.config;
-    console.error('Response Error:', error);
-    if (error.response?.status === 401) {
-      // && !originalRequest._retry) {
-      //  originalRequest._retry = true;      
-      //  await authStorage.clearToken();
-      // // Handle 401 Unauthorized error
-      // console.log("Unauthorized access. Redirecting to login...");
-      store.dispatch(logout());
-    }
+  //   const originalRequest = error.config;
+  //   console.error('Response Error:', error);
+  //   if (error.response?.status === 401) {
+  //     // && !originalRequest._retry) {
+  //     //  originalRequest._retry = true;      
+  //     //  await authStorage.clearToken();
+  //     // // Handle 401 Unauthorized error
+  //     // console.log("Unauthorized access. Redirecting to login...");
+  //     // store.dispatch(logout());
+  //   }
     return Promise.reject(error);
   }
 );

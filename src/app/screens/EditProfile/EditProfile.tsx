@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import styles from './styles'
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
 import { Input } from '../../components/Input'
+import { editProfileRequest } from '../../redux/slices/authSlice'
 
 type EditNavigationProps = NativeStackNavigationProp<ProfileStackParamList>;
 
@@ -36,6 +37,10 @@ const EditProfile = () => {
         setDateOfBirth("")
         setNumber("")
         navigation.pop()
+    }
+
+    const submitHandle = ()=>{
+        dispatch(editProfileRequest({name : name}))
     }
 
     return (
@@ -78,7 +83,7 @@ const EditProfile = () => {
                                     />
                                 }
                                 value={name}
-                                onChange={setName}
+                                onChangeText={setName}
                             />
                             <Input
                             disabled={true}
@@ -102,7 +107,7 @@ const EditProfile = () => {
                                     />
                                 }
                                 value={number}
-                                onChange={setNumber}
+                                onChangeText={setNumber}
                             />
                             <Input
                                 label={Strings.date_of_birt}
@@ -114,13 +119,11 @@ const EditProfile = () => {
                                     />
                                 }
                                 value={dateOfBirth}
-                                onChange={setDateOfBirth}
+                                onChangeText={setDateOfBirth}
                             />
                         </CommonCard>
                         <View style={styles.logoutBtm}>
-                            <PrimaryButton title={Strings.save_changes} onPress={() => {
-
-                            }} />
+                            <PrimaryButton title={Strings.save_changes} onPress={submitHandle} />
                             <OutLineButton color={Colors.primary} text={Strings.cancel}
                                 onPress={cancelHandel}
                             />

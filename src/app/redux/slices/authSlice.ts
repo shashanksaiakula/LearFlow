@@ -29,6 +29,7 @@ const authSlice = createSlice({
         },
 
         loginFailed: (state, action) =>{
+            console.log(JSON.stringify(action.payload))
             state.loading = false
             state.isLoggedIn = false
             state.error = action.payload
@@ -61,9 +62,19 @@ const authSlice = createSlice({
         },
 
         logout : (state) =>{
+            state.loading = false
             state.isLoggedIn = false
             state.token = null
             state.user = null
+        },
+        LogoutRequrst : (state) =>{
+            state.loading = true
+        },
+
+        logoutFail :(state, action) =>{
+            state.loading = false
+            state.isLoggedIn = false
+            state.error = action.payload
         },
 
         initializationComplete: (state) =>{
@@ -72,6 +83,28 @@ const authSlice = createSlice({
 
         checkAuthenticationRequested: (state) =>{
             state.loading = true
+        },
+        changePasswordRequest: (state, action) =>{
+            state.loading = true
+        },
+        changePasswordFailed :(state, action)=>{
+            state.loading = false,
+             state.error = action.payload
+        },
+        changePasswordSuccess :(state , action)=>{
+            state.loading = false,
+            state.message = action.payload.message
+        },
+        editProfileRequest : (state,action) =>{
+            state.loading = true
+        },
+        editProfileSucess: (state,action)=>{
+            state.loading = false,
+            state.user = action.payload
+        },
+        editProfileFailed :(state,action) =>{
+            state.loading = false,
+             state.error = action.payload
         }
 
     }
@@ -82,6 +115,14 @@ export  const {loginSuccess, logout, initializationComplete, loadingStarted, log
     registerRequest,
     registeFailed,
     registerSucess,
-    profileSucess
+    profileSucess,
+    LogoutRequrst,
+    logoutFail,
+    changePasswordFailed,
+    changePasswordRequest,
+    changePasswordSuccess,
+    editProfileFailed,
+    editProfileRequest,
+    editProfileSucess,
 } = authSlice.actions
 export default authSlice.reducer

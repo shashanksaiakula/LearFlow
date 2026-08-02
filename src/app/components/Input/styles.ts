@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   label: {
     ...Typography.body2,
     color: Colors.textPrimary,
-    marginBottom: Spacing.xs,
+    fontWeight: "bold"
   },
 
   inputContainer: {

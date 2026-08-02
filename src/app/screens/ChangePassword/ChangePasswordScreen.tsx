@@ -20,6 +20,7 @@ import { Input } from '../../components/Input'
 import styles from './styles'
 import { Controller, useForm } from 'react-hook-form'
 import { current } from '@reduxjs/toolkit'
+import { changePasswordRequest } from '../../redux/slices/authSlice'
 
 type EditNavigationProps = NativeStackNavigationProp<ProfileStackParamList>;
 
@@ -54,6 +55,7 @@ const ChangePasswordScreen = () => {
     }
     const handelPasswordChange = (data: any) => {
         console.log(data)
+        dispatch(changePasswordRequest({oldPassword : data.currentPassword, newPassword : data.newPassword}))
         reset()
     }
 

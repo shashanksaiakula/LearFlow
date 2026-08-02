@@ -18,8 +18,10 @@ export interface RegisterRequest {
 
 export interface User {
     id: number;
-    fullName: string;
+    name: string;
     email: string;
+    profileImage : string
+    dateOfBirth : string
 }
 
 export interface LoginResponse {
@@ -64,3 +66,31 @@ export interface TranscriptRequest {
 export interface TranscriptResponse {
     transcript: Transcript[]
 }
+
+export interface ChangePasswordRequest {
+    oldPassword : string,
+    newPassword : string
+}
+
+export interface ChangePasswordResponse {
+    success: string;
+    message: string;
+}
+
+export interface LogoutResponse {
+    success: string;
+    message: string;
+}
+
+export interface EditPriofileRequest {
+    name : string,
+    profileImage : string
+    dateOfBirth : string
+}
+
+export interface EditPriofileResponse {
+    success: string;
+    message: string;
+    user : User
+}
+

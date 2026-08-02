@@ -1,6 +1,6 @@
 import apiClient from './apiClinet';
 import { ENDPOINTS } from './endpoint';
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, User } from './types';
+import { ChangePasswordRequest, ChangePasswordResponse, EditPriofileRequest, EditPriofileResponse, LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse, User } from './types';
 
 export const login = (
   loginRequest: LoginRequest
@@ -16,4 +16,18 @@ export const register =(
 
 export const profile = () => {
   return apiClient.get<User>(ENDPOINTS.GET_USER)
+}
+
+export const changePasswordApi =(request : ChangePasswordRequest) =>{
+  return apiClient.post<ChangePasswordResponse>(ENDPOINTS.UPDATE_PASSWORD, request)
+}
+
+export const logoutApi =()=>{
+  return apiClient.post<LogoutResponse>(ENDPOINTS.LOGOUT)
+}
+
+export const editProfileApi =(
+  request : EditPriofileRequest
+)=>{
+  return apiClient.put<EditPriofileResponse>(ENDPOINTS.EDIT_USER, request)
 }
