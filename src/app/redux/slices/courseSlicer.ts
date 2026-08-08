@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Course } from "../../models/course";
+import { fetchCourses } from "../thunk/coursesThunk";
+import { getAllCoursesResponse } from "../../api/types";
 
 
 
 export interface CousrseState {
-    courses: Course | null,
+    courses: Course[] | null,
     loading: boolean,
     error: string | null
 }
@@ -49,7 +51,20 @@ const courseSlicer = createSlice({
             state.loading = false
             state.error = action.payload
         }
-    }
+    },
+    extraReducers:(builder)=>{
+        builder.addCase(fetchCourses.pending, (state) =>{
+            state.loading = true
+        }),
+        builder.addCase(fetchCourses.fulfilled, (state,action)=>{
+            state.loading = false,
+            state.courses = action.payload
+        }),
+        builder.addCase(fetchCourses.rejected,(state, action)=>{
+            state.loading = false
+            state.error = action.payload ?? "Something went wrong";
+        })
+    },
 
 })
 

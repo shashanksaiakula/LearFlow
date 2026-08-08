@@ -41,7 +41,8 @@ export interface RegisterResponse {
 }
 
 export interface getAllCoursesResponse {
-    cources: GetAllCoursesResponse
+    success: boolean;
+    data: Course[];
 }
 
 export interface homeResponse {

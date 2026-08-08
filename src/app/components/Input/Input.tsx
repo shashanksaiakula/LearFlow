@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import {
   Pressable,
+  StyleProp,
+  StyleSheet,
   Text,
   TextInput,
   TextInputProps,
   View,
+  ViewStyle,
 } from "react-native";
 
 import styles from "./styles";
@@ -18,7 +21,9 @@ interface InputProps extends TextInputProps {
   rightIconPress? : ()=> void;
    value?: string;
   onChangeText?: (text: string) => void;
-  disabled? :boolean
+  disabled? :boolean,
+  placeHolder? : string,
+  containerStyle?: StyleProp<ViewStyle>; 
 }
 
 const Input = ({
@@ -32,6 +37,8 @@ const Input = ({
   onChangeText,
   onBlur =()=>{},
   disabled,
+  placeHolder,
+  containerStyle,
   ...props
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -49,7 +56,8 @@ const Input = ({
           styles.inputContainer,
           isFocused && styles.focusedInput,
           error && styles.errorInput,
-          disabled && {backgroundColor : Colors.disabled}
+          disabled && {backgroundColor : Colors.disabled},
+          containerStyle
         ]}
       >
         {leftIcon && (
@@ -64,7 +72,7 @@ const Input = ({
           selectTextOnFocus={!disabled}
           value={value}                
           onChangeText={onChangeText}
-          placeholder={label}
+          placeholder={placeHolder??label}
           style={[styles.input]}
           secureTextEntry={secureTextEntry}
           placeholderTextColor="#94A3B8"

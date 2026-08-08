@@ -30,6 +30,7 @@ import styles from "./styles";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { registerRequest } from "../../redux/slices/authSlice";
+import CommomBackGround from "../../components/common/CommomBackGround";
 
 type AuthNavigationProp = NativeStackNavigationProp<AuthStackParamsList>;
 const RegisterScreen = () => {
@@ -58,7 +59,7 @@ const RegisterScreen = () => {
 
     const onRegister = (data: any) => {
         console.log(data);
-        dispach(registerRequest({name : data.name, email : data.email, password : data.password}))
+        dispach(registerRequest({ name: data.name, email: data.email, password: data.password }))
         navigation.navigate("Login")
         reset()
     }
@@ -257,9 +258,9 @@ const RegisterScreen = () => {
                             <PrimaryButton disabled={!isEnabled} onPress={handleSubmit(onRegister)} title={Strings.create_account} />
 
                             <View style={styles.dividerStyle}>
-                                <Divvider style={{flex:1}} />
+                                <Divvider style={{ flex: 1 }} />
                                 <Text style={styles.dividerText}>{Strings.or}</Text>
-                                <Divvider style={{flex:1}} />
+                                <Divvider style={{ flex: 1 }} />
                             </View>
 
                             <View style={styles.registerContainer}>

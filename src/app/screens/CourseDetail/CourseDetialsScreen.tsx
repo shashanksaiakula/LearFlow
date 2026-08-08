@@ -2,9 +2,6 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import React, { useEffect } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { requestCoueseById } from '../../redux/slices/courseSlicer';
-import { RootState } from '../../redux/store';
 import LessonCard from '../../components/LessonCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import useCousre from '../../hooks/useCousre';

@@ -5,9 +5,12 @@ export interface Course {
     title: string,
     description: string,
     duration: string,
-    rating : string,
+    rating: string,
     instructor: string,
-    lessons : Lesson[]
+    totalLessons: number,
+    level: string,
+    thumbnail: string,
+    category : string
 }
 
 export type GetAllCoursesResponse = Course[]; 

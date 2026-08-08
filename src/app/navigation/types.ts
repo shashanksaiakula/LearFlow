@@ -35,7 +35,10 @@ export type BottomTabParamsList ={
             age: number
         },
     }
-    ProfileStack : undefined
+    ProfileStack : undefined,
+    courses : undefined,
+    myLearning : undefined,
+    bookmarks : undefined
 }
 
 export type ProfileStackParamList={

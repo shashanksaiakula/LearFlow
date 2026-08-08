@@ -1,0 +1,39 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Plant pot -->
+  <g>
+    <path d="M368 395 L410 395 L403 440 L375 440 Z" fill="#0B1A40"/>
+    <!-- Plant leaves -->
+    <path d="M389 398 C 385 365, 400 340, 435 325 C 420 355, 410 380, 393 398 Z" fill="#3DBE64"/>
+    <path d="M389 398 C 375 370, 378 345, 358 320 C 366 352, 372 375, 384 398 Z" fill="#2FA352"/>
+    <path d="M389 398 C 392 358, 408 330, 415 305 C 400 338, 393 368, 389 398 Z" fill="#4ED17A"/>
+  </g>
+
+  <!-- Bottom book (white with orange edge) -->
+  <g>
+    <rect x="130" y="380" width="260" height="46" rx="14" fill="#E8511F"/>
+    <rect x="130" y="378" width="260" height="36" rx="14" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Middle book (navy blue) -->
+  <g>
+    <rect x="150" y="345" width="220" height="42" rx="12" fill="#0F2A6B"/>
+    <rect x="150" y="343" width="220" height="30" rx="12" fill="#173A8C"/>
+  </g>
+
+  <!-- Graduation cap -->
+  <g>
+    <!-- cap base (underside box) -->
+    <rect x="205" y="300" width="130" height="46" rx="8" fill="#0B1A40"/>
+
+    <!-- Top board (diamond) -->
+    <polygon points="270,225 400,275 270,325 140,275" fill="#0F2350"/>
+
+    <!-- button center -->
+    <circle cx="270" cy="275" r="10" fill="#0B1A40"/>
+
+    <!-- Tassel -->
+    <path d="M270 275 C 300 285, 315 300, 318 320" stroke="#E8511F" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="319" cy="326" r="9" fill="#E8511F"/>
+    <path d="M319 326 L316 348 M319 326 L322 348 M319 326 L319 350" stroke="#E8511F" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

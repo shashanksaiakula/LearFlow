@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     logoutBtm:{
         marginHorizontal: 10,
         paddingVertical :10,
-        marginBottom: 10
     }
 })
 export default styles;

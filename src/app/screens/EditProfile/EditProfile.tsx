@@ -19,6 +19,7 @@ import styles from './styles'
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
 import { Input } from '../../components/Input'
 import { editProfileRequest } from '../../redux/slices/authSlice'
+import CommomBackGround from '../../components/common/CommomBackGround'
 
 type EditNavigationProps = NativeStackNavigationProp<ProfileStackParamList>;
 
@@ -39,99 +40,91 @@ const EditProfile = () => {
         navigation.pop()
     }
 
-    const submitHandle = ()=>{
-        dispatch(editProfileRequest({name : name}))
+    const submitHandle = () => {
+        dispatch(editProfileRequest({ name: name }))
     }
 
     return (
         <>
-            <LinearGradient
-                colors={[
-                    "#dce8f7",
-                    "#FFFFFF",
-                ]}
-                style={[styles.container]}
-            >
+            <CommomBackGround>
+                <ComnonHeader title={Strings.edit_profile}
+                    rightIcon={
+                        <MaterialCommunityIcons
+                            name="arrow-left"
+                            color={Colors.primary}
+                            size={26}
+                        />
+                    }
+                    onPressRight={() => { navigation.pop() }}
+                />
                 <ScrollView style={styles.container}
                     contentContainerStyle={{ paddingBottom: 28 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <SafeAreaView style={styles.container}>
-                        <ComnonHeader title={Strings.edit_profile}
-                            rightIcon={
+                    <Avather isEditScreen={true} />
+                    <View style={styles.nameCointer}>
+                        <Text>{Strings.tap_to_change_img}</Text>
+                    </View>
+                    <CommonCard>
+                        <Text style={styles.persInfo}>{Strings.personal_infrom}</Text>
+                        <Input
+                            label={Strings.full_name}
+                            leftIcon={
                                 <MaterialCommunityIcons
-                                    name="arrow-left"
-                                    color={Colors.primary}
+                                    name="account-outline"
+                                    color={Colors.secondary}
                                     size={26}
                                 />
                             }
-                            onPressRight={() => { navigation.pop() }}
+                            value={name}
+                            onChangeText={setName}
                         />
-                        <Avather isEditScreen={true} />
-                        <View style={styles.nameCointer}>
-                           <Text>{Strings.tap_to_change_img}</Text>
-                        </View>
-                        <CommonCard>
-                            <Text style={styles.persInfo}>{Strings.personal_infrom}</Text>
-                            <Input
-                                label={Strings.full_name}
-                                leftIcon={
-                                    <MaterialCommunityIcons
-                                        name="account-outline"
-                                        color={Colors.secondary}
-                                        size={26}
-                                    />
-                                }
-                                value={name}
-                                onChangeText={setName}
-                            />
-                            <Input
+                        <Input
                             disabled={true}
-                                label={Strings.email}
-                                leftIcon={
-                                    <MaterialCommunityIcons
-                                        name="email-outline"
-                                        color={Colors.secondary}
-                                        size={26}
-                                    />
-                                }
-                                value={user.email}
-                            />
-                           <Input
-                                label={Strings.phone_number}
-                                leftIcon={
-                                    <MaterialCommunityIcons
-                                        name="phone-outline"
-                                        color={Colors.secondary}
-                                        size={26}
-                                    />
-                                }
-                                value={number}
-                                onChangeText={setNumber}
-                            />
-                            <Input
-                                label={Strings.date_of_birt}
-                                leftIcon={
-                                    <MaterialCommunityIcons
-                                        name="calendar-month"
-                                        color={Colors.secondary}
-                                        size={26}
-                                    />
-                                }
-                                value={dateOfBirth}
-                                onChangeText={setDateOfBirth}
-                            />
-                        </CommonCard>
-                        <View style={styles.logoutBtm}>
-                            <PrimaryButton title={Strings.save_changes} onPress={submitHandle} />
-                            <OutLineButton color={Colors.primary} text={Strings.cancel}
-                                onPress={cancelHandel}
-                            />
-                        </View>
-                    </SafeAreaView>
+                            label={Strings.email}
+                            leftIcon={
+                                <MaterialCommunityIcons
+                                    name="email-outline"
+                                    color={Colors.secondary}
+                                    size={26}
+                                />
+                            }
+                            value={user.email}
+                        />
+                        <Input
+                            label={Strings.phone_number}
+                            leftIcon={
+                                <MaterialCommunityIcons
+                                    name="phone-outline"
+                                    color={Colors.secondary}
+                                    size={26}
+                                />
+                            }
+                            value={number}
+                            onChangeText={setNumber}
+                        />
+                        <Input
+                            label={Strings.date_of_birt}
+                            leftIcon={
+                                <MaterialCommunityIcons
+                                    name="calendar-month"
+                                    color={Colors.secondary}
+                                    size={26}
+                                />
+                            }
+                            value={dateOfBirth}
+                            onChangeText={setDateOfBirth}
+                        />
+                    </CommonCard>
+                    <View style={styles.logoutBtm}>
+                        <PrimaryButton title={Strings.save_changes} onPress={submitHandle} />
+                        <OutLineButton color={Colors.primary} text={Strings.cancel}
+                            onPress={cancelHandel}
+                        />
+                    </View>
                 </ScrollView>
 
-            </LinearGradient>
+            </CommomBackGround>
         </>
     )
 }

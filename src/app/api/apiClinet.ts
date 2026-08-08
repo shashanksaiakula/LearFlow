@@ -10,9 +10,9 @@ import { authStorage } from '../utils/AuthToken';
 //     'Content-Type': 'application/json',
 //   },
 // });
-
+export const BASE_URL = 'http://192.168.1.9:3000';
 export const apiClient = axios.create({
-  baseURL: "http://192.168.1.5:3000",
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   }

@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { loginRequested } from "../../redux/slices/authSlice";
 import Divider from "../../components/Divider/Divider";
+import CommomBackGround from "../../components/common/CommomBackGround";
 
 type AuthNavigationProp = NativeStackNavigationProp<AuthStackParamsList>;
 const LoginScreen = () => {
@@ -99,132 +100,132 @@ const LoginScreen = () => {
                 </View>
                 <Logo />
 
-                <Text style={styles.title}>
-                  {Strings.create_account}
-                </Text>
+              <Text style={styles.title}>
+                {Strings.create_account}
+              </Text>
 
-                <Text style={styles.subtitle}>
-                  {Strings.join_learn_flow}
-                </Text>
+              <Text style={styles.subtitle}>
+                {Strings.join_learn_flow}
+              </Text>
 
-              </View>
-              <Controller
-                control={control}
-                rules={{
-                  required: "Email is required.",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Please enter a valid email."
+            </View>
+            <Controller
+              control={control}
+              rules={{
+                required: "Email is required.",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Please enter a valid email."
+                }
+              }}
+              name="email"
+              render={({ field, fieldState }) => (
+                <Input
+                  label={Strings.email}
+                  value={field.value}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  leftIcon={
+                    <MaterialCommunityIcons
+                      name="email-outline"
+                      color={Colors.primary}
+                      size={22}
+                    />
                   }
-                }}
-                name="email"
-                render={({ field, fieldState }) => (
-                  <Input
-                    label={Strings.email}
-                    value={field.value}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    leftIcon={
-                      <MaterialCommunityIcons
-                        name="email-outline"
-                        color={Colors.primary}
-                        size={22}
-                      />
-                    }
-                    error={fieldState.error?.message}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="password"
-                rules={{
-                  required: "Password is required.",
-                  pattern: {
-                    value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
-                    message:
-                      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
-                  },
-                }}
-                render={({ field }) => (
-                  <Input
-                    label={Strings.password}
-                    value={field.value}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    leftIcon={
-                      <MaterialCommunityIcons
-                        name="lock-outline"
-                        color={Colors.primary}
-                        size={22}
-                      />
-                    }
-                    rightIcon={
-                      <MaterialCommunityIcons
-                        name={
-                          showPassword
-                            ? "eye-off-outline"
-                            : "eye-outline"
-                        }
-                        size={22}
-                        color={Colors.textSecondary}
-                      />
-                    }
-                    secureTextEntry={!showPassword}
-                    rightIconPress={() => { setShowPassword(previous => !previous) }}
-                    error={errors.password?.message}
-                  />
-                )}
-              />
-              <View style={styles.forgotContainer}>
-                <View style={styles.switchContainer}>
-                  <Switch
-                    trackColor={{ false: Colors.border, }}
-                    thumbColor={isEnabled ? Colors.primary : Colors.white}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
-                  />
-                  <Text>{Strings.remember_me}</Text>
-                </View>
-                {/* <Text style={styles.sideText}>Forogot Password?</Text> */}
-                <TextPressable text={Strings.forgot_password} onPress={() => {
-                  navigation.navigate("Forgot")
-                }} />
+                  error={fieldState.error?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: "Password is required.",
+                pattern: {
+                  value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+                  message:
+                    "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  label={Strings.password}
+                  value={field.value}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  leftIcon={
+                    <MaterialCommunityIcons
+                      name="lock-outline"
+                      color={Colors.primary}
+                      size={22}
+                    />
+                  }
+                  rightIcon={
+                    <MaterialCommunityIcons
+                      name={
+                        showPassword
+                          ? "eye-off-outline"
+                          : "eye-outline"
+                      }
+                      size={22}
+                      color={Colors.textSecondary}
+                    />
+                  }
+                  secureTextEntry={!showPassword}
+                  rightIconPress={() => { setShowPassword(previous => !previous) }}
+                  error={errors.password?.message}
+                />
+              )}
+            />
+            <View style={styles.forgotContainer}>
+              <View style={styles.switchContainer}>
+                <Switch
+                  trackColor={{ false: Colors.border, }}
+                  thumbColor={isEnabled ? Colors.primary : Colors.white}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+                <Text>{Strings.remember_me}</Text>
               </View>
-              <PrimaryButton onPress={handleSubmit(onLogin)} title={Strings.login} />
+              {/* <Text style={styles.sideText}>Forogot Password?</Text> */}
+              <TextPressable text={Strings.forgot_password} onPress={() => {
+                navigation.navigate("Forgot")
+              }} />
+            </View>
+            <PrimaryButton onPress={handleSubmit(onLogin)} title={Strings.login} />
 
-              <View style={styles.dividerStyle}>
-                <Divider style={{ flex: 1 }} />
-                <Text style={styles.dividerText}>{Strings.or}</Text>
-                <Divider style={{ flex: 1 }} />
-              </View>
+            <View style={styles.dividerStyle}>
+              <Divider style={{ flex: 1 }} />
+              <Text style={styles.dividerText}>{Strings.or}</Text>
+              <Divider style={{ flex: 1 }} />
+            </View>
 
-              <SocialButton
-                title={Strings.google_login}
-                onClick={() => { }}
-                icon={<GoogleIcon width={18} height={18} />}
-              />
+            <SocialButton
+              title={Strings.google_login}
+              onClick={() => { }}
+              icon={<GoogleIcon width={18} height={18} />}
+            />
 
-              <SocialButton
-                title={Strings.apple_login}
-                onClick={() => { }}
-                icon={<AppleLogo width={20} height={20} />}
-              />
+            <SocialButton
+              title={Strings.apple_login}
+              onClick={() => { }}
+              icon={<AppleLogo width={20} height={20} />}
+            />
 
-              <View style={styles.registerContainer}>
-                <Text style={styles.accountText}>{Strings.dont_have_any_account} </Text>
-                {/* <Text style={styles.registerText}>Register</Text> */}
-                <TextPressable text={Strings.register} onPress={() => {
-                  navigation.navigate("Register")
-                }} />
-              </View>
-              <View style={styles.waveContainer} pointerEvents="none">
-                <Waves width="100%" height="100%" fill="#EFF6FF" preserveAspectRatio="none" />
-              </View>
-            </ScrollView>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
+            <View style={styles.registerContainer}>
+              <Text style={styles.accountText}>{Strings.dont_have_any_account} </Text>
+              {/* <Text style={styles.registerText}>Register</Text> */}
+              <TextPressable text={Strings.register} onPress={() => {
+                navigation.navigate("Register")
+              }} />
+            </View>
+            <View style={styles.waveContainer} pointerEvents="none">
+              <Waves width="100%" height="100%" fill="#EFF6FF" preserveAspectRatio="none" />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
       </LinearGradient>
     </>
   );

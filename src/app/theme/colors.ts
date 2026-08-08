@@ -1,5 +1,5 @@
 export const Colors = {
-  primary: "#2563EB",
+  primary: "#2196F3",
   primaryLight1: "#EFF6FF",
   primaryLight2: "#6f94c5",
 
@@ -21,4 +21,9 @@ export const Colors = {
 
   secondary: "#64748B",
   danger: "#EF4444",
+
+  backgroundStart : "#eaf1ff",
+  backgroundEnd : "#e3e4e6",
+
+  iconsColor : "#6B7280"
 } as const;

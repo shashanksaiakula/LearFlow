@@ -4,7 +4,7 @@ import HomeScreen from "../screens/Home/HomeScreen"
 import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { Colors } from "../theme/colors";
 import ProfileScreen from "../screens/Profile";
-
+import CousresListScreen from "../screens/courses";
 
 
 const Tab = createBottomTabNavigator<BottomTabParamsList>()
@@ -16,9 +16,36 @@ export default function BottomNavigation() {
             tabBarInactiveTintColor: Colors.textSecondary,
         }}>
             <Tab.Screen name="Home" component={HomeScreen} options={{
-                headerShown: false, tabBarIcon: ({ color, size }) => (
+                headerShown: false, tabBarIcon: ({ focused, color, size }) => (
                     <MaterialCommunityIcons
-                        name="home"
+                        name={focused ? "home" : "home-outline"}
+                        color={color}
+                        size={size}
+                    />
+                )
+            }} />
+            <Tab.Screen name="courses" component={CousresListScreen} options={{
+                headerShown: false, tabBarIcon: ({ focused,color, size }) => (
+                    <MaterialCommunityIcons
+                        name={focused ?"view-grid" : "view-grid-outline"}
+                        color={color}
+                        size={size}
+                    />
+                )
+            }} />
+             <Tab.Screen name="myLearning" component={ProfileScreen} options={{
+                headerShown: false, tabBarIcon: ({focused, color, size }) => (
+                    <MaterialCommunityIcons
+                        name={focused ? "play-circle" : "play-circle-outline"}
+                        color={color}
+                        size={size}
+                    />
+                )
+            }} />
+                        <Tab.Screen name="bookmarks" component={ProfileScreen} options={{
+                headerShown: false, tabBarIcon: ({focused, color, size }) => (
+                    <MaterialCommunityIcons
+                        name={focused ? "bookmark":"bookmark-outline"}
                         color={color}
                         size={size}
                     />
@@ -26,9 +53,9 @@ export default function BottomNavigation() {
             }} />
             <Tab.Screen name="Profile" component={ProfileScreen} options={{
                 headerShown: false,
-                tabBarIcon: ({ color, size }) => (
+                tabBarIcon: ({ focused,color, size }) => (
                     <MaterialCommunityIcons
-                        name="account"
+                        name={focused ? "account" : "account-outline"}
                         color={color}
                         size={size}
                     />
