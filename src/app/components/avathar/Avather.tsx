@@ -1,19 +1,21 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { Colors } from '../../theme/colors';
 
-type AvatherPeops ={
-    isEditScreen : boolean,
-    onPress? : ()=> void
+type AvatherPeops = {
+    isEditScreen: boolean,
+    onPress?: () => void,
+    image?: string
 }
 
-const Avather = ({isEditScreen,onPress}: AvatherPeops) => {
+const Avather = ({ isEditScreen, onPress, image }: AvatherPeops) => {
+    console.log("image is ", image)
     return (
         <Pressable onPress={onPress}
-        disabled={!isEditScreen}
-                 style={({ pressed }) => [
-                    styles.container,
+            disabled={!isEditScreen}
+            style={({ pressed }) => [
+                styles.container,
                 {
 
                     opacity: pressed ? 0.85 : 1,
@@ -27,21 +29,27 @@ const Avather = ({isEditScreen,onPress}: AvatherPeops) => {
         >
 
             <View style={styles.avatherContainer}>
-                <MaterialCommunityIcons
-                    name= "account" 
-                    color={Colors.primaryLight2}
-                    size={120}
-                    style={styles.avatherStyle}
-                />
+                {image ? (
+                    <Image source={{ uri: image }} style={styles.imageStyle} />
+                ) :
+                    (
+                        <MaterialCommunityIcons
+                            name="account"
+                            color={Colors.primaryLight2}
+                            size={120}
+                            style={styles.avatherStyle}
+                        />)
+                }
             </View>
-            <View style={styles.smallAvatherContainer}>
+
+            {!image && <View style={styles.smallAvatherContainer}>
                 <MaterialCommunityIcons
-                    name= {isEditScreen ? "pencil" :"camera-outline"}
+                    name={isEditScreen ? "pencil" : "camera-outline"}
                     color={Colors.primary}
                     size={22}
                     style={styles.smallAvatherStyle}
                 />
-            </View>
+            </View>}
         </Pressable>
     )
 }
@@ -60,10 +68,18 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         alignItems: 'center',
         justifyContent: 'center',
+        overflow: 'hidden',
+        width: 140, // Added precise constraints so absolute positions render properly
+        height: 140,
     },
     avatherStyle: {
         backgroundColor: Colors.surface,
         borderRadius: 100,
+        margin: 5
+    },
+       imageStyle: {
+       width: "100%",
+       height : "100%",
         margin: 5
     },
     smallAvatherStyle: {

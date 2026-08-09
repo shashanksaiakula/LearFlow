@@ -10,7 +10,18 @@ export interface Course {
     totalLessons: number,
     level: string,
     thumbnail: string,
-    category : string
+    category : string,
+    courseCode : string,
+    totalStudents : string,
+    price : number,
+    discountPrice : number ,
+    overview : {
+        description:{
+            value : string
+        },
+        whatYouWillLearn : string[]
+    },
+
 }
 
 export type GetAllCoursesResponse = Course[]; 

@@ -1,14 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Course } from "../../models/course";
-import { fetchCourses } from "../thunk/coursesThunk";
-import { getAllCoursesResponse } from "../../api/types";
+import { fetchCourseInsrtuctor, fetchCourseReviews, fetchCourses, fetchLessonsByCousre } from "../thunk/coursesThunk";
+import { Lesson } from "../../models/Lesson";
+import { Review } from "../../models/Reviews";
+import { Instructor } from "../../models/Instructor";
 
 
 
 export interface CousrseState {
     courses: Course[] | null,
     loading: boolean,
-    error: string | null
+    error: string | null,
+    course : Course | null,
+    lessons : Lesson[] |null,
+    reviews : Review[] | null,
+    instructor : Instructor | null
 }
 
 
@@ -16,7 +22,11 @@ export interface CousrseState {
 const initialState : CousrseState = {
     courses: null,
     loading: false,
-    error: null
+    error: null,
+    course : null,
+    lessons : null,
+    reviews : null,
+    instructor : null
 }
 
 
@@ -40,7 +50,7 @@ const courseSlicer = createSlice({
 
         getCourseById: (state, action)=>{
             state.loading = false
-            state.courses = action.payload
+            state.course = action.payload
         },
         getCourseByIdError : (state,action)=>{
             state.loading = false
@@ -62,6 +72,48 @@ const courseSlicer = createSlice({
         }),
         builder.addCase(fetchCourses.rejected,(state, action)=>{
             state.loading = false
+            state.error = action.payload ?? "Something went wrong";
+        }),
+
+        //fetch lesson by cousres
+        builder.addCase(fetchLessonsByCousre.pending, (state)=>{
+             state.loading = true
+        }),
+        builder.addCase(fetchLessonsByCousre.fulfilled, (state,action)=>{
+            console.log("lessons", action.payload)
+            state.loading = false,
+            state.lessons = action.payload
+        }),
+        builder.addCase(fetchLessonsByCousre.rejected, (state,action) =>{
+             state.loading = false,
+            state.error = action.payload ?? "Something went wrong";
+        })
+        
+        //fetch instructor by cousres
+         builder.addCase(fetchCourseInsrtuctor.pending, (state)=>{
+             state.loading = true
+        }),
+        builder.addCase(fetchCourseInsrtuctor.fulfilled, (state,action)=>{
+            console.log("instructor paylod", action.payload.data)
+            state.loading = false,
+            state.instructor = action.payload.data
+        }),
+        builder.addCase(fetchCourseInsrtuctor.rejected, (state,action) =>{
+             state.loading = false,
+            state.error = action.payload ?? "Something went wrong";
+        })
+
+         //fetch reviews by cousres
+          builder.addCase(fetchCourseReviews.pending, (state)=>{
+             state.loading = true
+        }),
+        builder.addCase(fetchCourseReviews.fulfilled, (state,action)=>{
+            console.log("reviews", action.payload)
+            state.loading = false,
+            state.reviews = action.payload
+        }),
+        builder.addCase(fetchCourseReviews.rejected, (state,action) =>{
+             state.loading = false,
             state.error = action.payload ?? "Something went wrong";
         })
     },

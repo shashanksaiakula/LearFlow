@@ -62,6 +62,7 @@ const authSlice = createSlice({
         },
 
         logout : (state) =>{
+            console.log("logout called ")
             state.loading = false
             state.isLoggedIn = false
             state.token = null

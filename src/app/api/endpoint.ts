@@ -7,7 +7,10 @@ export const ENDPOINTS = {
     UPDATE_PASSWORD: '/auth/changePassword',
     FORGOT_PASSWORD: '/forgot-password',
     GETALLCOURSES : '/courses',
-    GETCOURSEBYID : '/course',
+    GETCOURSEBYID : '/course/code',
+    GETLESSONSBYCOURSE : '/course/lessons',
+    GETINSTRUCTOR : '/course/instructor',
+    GETREWIVE : '/course/reviews',
     HOME: '/home',
     GETLESSSONBYID : '/course',
     TRANSCRIPT : '/transcript'

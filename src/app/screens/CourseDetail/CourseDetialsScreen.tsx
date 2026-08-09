@@ -1,24 +1,36 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
-import LessonCard from '../../components/LessonCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import useCousre from '../../hooks/useCousre';
+import CommomBackGround from '../../components/common/CommomBackGround';
+import ComnonHeader from '../../components/common/ComnonHeader';
+import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
+import { Colors } from '../../theme/colors';
+import { BASE_URL } from '../../api/apiClinet';
+import styles from './styes';
+import { Strings } from '../../strings/String';
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
+import Overview from './overview';
+import Instructor from './instructor';
+import Curiculam from './curiculam';
+import Reviews from './reviews';
 
 
-type CoueseDetailScreenProps = RouteProp<RootStackParamList, "CourseDetails"> 
+type CoueseDetailScreenProps = RouteProp<RootStackParamList, "CourseDetails">
 
-type CoursesDetailsScreenNavigationProps = StackNavigationProp<RootStackParamList, "CourseDetails"> 
+type CoursesDetailsScreenNavigationProps = StackNavigationProp<RootStackParamList, "CourseDetails">
 
 type Props = {
-    route : CoueseDetailScreenProps
-    navigation : CoursesDetailsScreenNavigationProps
+  route: CoueseDetailScreenProps
+  navigation: CoursesDetailsScreenNavigationProps
 }
 
-const CourseDetialsScreen = ({route, navigation} : Props) => {
-  const {courseId} = route.params
-  const {loading, error, courses} = useCousre(courseId)
+const CourseDetialsScreen = ({ route, navigation }: Props) => {
+  const { courseId } = route.params
+  const { loading, error, course,lessons,instructor, reviews,  } = useCousre(courseId)
+  const [selectedTab, setSelectedTab] = useState(Strings.overview)
 
   if (loading) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
@@ -27,58 +39,97 @@ const CourseDetialsScreen = ({route, navigation} : Props) => {
   if (error) {
     return <Text style={styles.errorStyle}>{error}</Text>
   }
-    
+
+  console.log("revires is ",reviews)
+  console.log("instructor is ",instructor)
+
+
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case Strings.overview:
+        return <Overview description={course?.overview.description} whatYouWillLearn={ course?.overview.whatYouWillLearn} />;
+      case Strings.curriculum:
+        return <Curiculam lessons={lessons?.data}/>;
+      case Strings.instructor:
+        return <Instructor instructor ={instructor}/>;
+      case Strings.reviews:
+        return <Reviews />;
+      default:
+        return <Overview description={course?.overview.description.value} whatYouWillLearn={ course?.overview.whatYouWillLearn} />;
+    }
+  };
+
+
+  console.log(course)
   return (
-    <View style ={styles.container}>
-      <Text style={styles.WelcomeStyle}>{courses?.title}</Text>
-      <Text style ={styles.titleTextStle}>Instructor : {courses?.instructor}</Text>
-      <Text style ={styles.titleTextStle}>Rating : {courses?.rating} ⭐</Text>
-      <Text style ={styles.titleTextStle}>Total Duration : {courses?.duration}</Text>
-      <Text style ={styles.titleTextStle}>Total Lessons : {courses?.lessons.length}</Text>
-      <FlatList
-      data={courses?.lessons}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={(item) => 
-        <LessonCard lesson={item.item} onClick={()=>{
-          navigation.navigate("LessonPlayer", {
-            lessonId : item.item.id,
-            courseId : courseId
-          })
-        }} />
-      }
-      />
-    </View>
+    <CommomBackGround>
+      <View style={styles.container}>
+        <ComnonHeader title=''
+          rightIcon={
+            <MaterialDesignIcons
+              name='arrow-left'
+              size={28}
+              color={Colors.iconsColor}
+            />
+          }
+          onPressRight={() => { navigation.pop() }}
+          leftIcon={
+            <MaterialDesignIcons
+              name='bookmark-outline'
+              size={28}
+              color={Colors.iconsColor}
+            />
+          }
+        />
+        <View style={styles.topContainer}>
+          <Image source={{ uri: `${BASE_URL}${course?.thumbnail}` }}
+            style={styles.thumbnail}
+          />
+          <View style={styles.topViewContentStyle}>
+            <Text style={styles.titleTextStle}>{course?.title}</Text>
+            <Text style={styles.discTextStle}>{course?.description}</Text>
+            <View style={styles.topContainer}>
+              <Text style={styles.otherText}>{course?.level}</Text>
+              <Text style={styles.otherText}>{course?.totalLessons} Lessons</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.topContainer}>
+          <Text style={styles.otherText}>⭐ {course?.rating} (2.4k) </Text>
+          <MaterialDesignIcons
+            name='account-multiple-outline'
+            size={18}
+          />
+          <Text style={styles.otherText}>{course?.totalStudents} </Text>
+          <Text style={[styles.discTextStle, { padding: 0 }]}>{Strings.enrolled} </Text>
+        </View>
+        <View style={styles.tabContainer}>
+          <Text style={[styles.tabText, selectedTab === Strings.overview && styles.tabUnderLine]} onPress={() => setSelectedTab(Strings.overview)}>{Strings.overview} </Text>
+          <Text style={[styles.tabText, selectedTab === Strings.curriculum && styles.tabUnderLine]} onPress={() => setSelectedTab(Strings.curriculum)}>{Strings.curriculum} </Text>
+          <Text style={[styles.tabText, selectedTab === Strings.instructor && styles.tabUnderLine]} onPress={() => setSelectedTab(Strings.instructor)}>{Strings.instructor} </Text>
+          <Text style={[styles.tabText, selectedTab === Strings.reviews && styles.tabUnderLine]} onPress={() => setSelectedTab(Strings.reviews)}>{Strings.reviews} </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          {renderTabContent()}
+        </View>
+      </View>
+
+      <View style={styles.bottomView}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.tabText}>{Strings.total_price}</Text>
+          {course?.discountPrice ?
+            <View style={styles.topContainer}>
+              <Text style={[styles.tabText, { textDecorationLine: 'line-through' }]}>₹{course?.price}</Text>
+              <Text style={[styles.tabText]}>₹{course?.discountPrice}</Text>
+            </View> :
+            <Text style={[styles.tabText,]}>₹{course?.price}</Text>}
+        </View>
+        <View style={{ flex: 1 }}>
+          <PrimaryButton onPress={() => { }} title={Strings.enroll_now} />
+        </View>
+      </View>
+    </CommomBackGround>
   )
 }
 
 export default CourseDetialsScreen
-
-const styles = StyleSheet.create({
-    errorStyle: {
-    fontSize: 20,
-    color: "red"
-  },
-  container: {
-    flex: 1,
-    padding: 6,
-  },
-  indicatorStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-    WelcomeStyle: {
-    width: "100%",
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-    padding: 22,
-    elevation: 3,
-    backgroundColor: "#fff",
-
-  },titleTextStle:{
-    padding: 10,
-    fontSize: 22,
-    fontWeight: "800"
-  }
-})

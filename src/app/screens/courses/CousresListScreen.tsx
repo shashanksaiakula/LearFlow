@@ -1,5 +1,5 @@
 import { ActivityIndicator, AppState, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CommomBackGround from '../../components/common/CommomBackGround'
 import ComnonHeader from '../../components/common/ComnonHeader'
 import { Strings } from '../../strings/String'
@@ -11,24 +11,27 @@ import { fetchCourses } from '../../redux/thunk/coursesThunk'
 import { AppDispatch, RootState } from '../../redux/store'
 import CourseCard from '../../components/CourseCard'
 import styles from './styles'
-// import BottomSheet from "@gorhom/bottom-sheet";
 import FilterBottomSheet from '../../components/FilterBottomSheet'
-
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../../navigation/types'
+import { useNavigation } from '@react-navigation/native';
 const CousresListScreen = () => {
 
+  type CousrseListScreenProps = NativeStackNavigationProp<RootStackParamList>;
   const levels = [
-    "All",
-    "Beginner",
-    "Intermediate",
-    "Advanced",
+    Strings.all,
+    Strings.beginner,
+    Strings.intermediate,
+    Strings.advanced,
   ];
 
   const [search, setSearch] = useState("")
   const [selectCatagey, setSelectCatagery] = useState("All")
   const [selectedLevel, setSelectedLevel] = useState("All");
+  const [filterVisible, setFilterVisible] = useState(false);
   const dispatch = useDispatch<AppDispatch>()
   const { loading, courses, error } = useSelector((state: RootState) => state.courses)
-  // const bottomSheetRef = useRef<BottomSheet>(null);
+  const navigation =useNavigation<CousrseListScreenProps>()
 
   useEffect(() => {
     dispatch(fetchCourses())
@@ -44,12 +47,13 @@ const CousresListScreen = () => {
     return <Text style={styles.errorStyle}>{error}</Text>
   }
 
-  const categories = ["All", ...new Set(courses?.map(c => c?.category).filter(Boolean))]
+const categories = ["All", ...new Set((courses || []).map(c => c?.category).filter(Boolean))];
 
   const filterCourses = courses?.filter(course => {
     const matchesCategory = selectCatagey === 'All' || course.category === selectCatagey;
     const matchesSearch = course.title?.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const filterLevel = selectedLevel === "All" || course.level === selectedLevel
+    return matchesCategory && matchesSearch && filterLevel;
   })
 
 
@@ -81,11 +85,11 @@ const CousresListScreen = () => {
           )
         }
         containerStyle={{ marginHorizontal: 16, marginTop: 16 }}
-        rightIconPress={()=>{
-          if(search){
+        rightIconPress={() => {
+          if (search) {
             setSearch("")
           } else {
-            // bottomSheetRef.current?.open();
+            setFilterVisible(true);
           }
         }}
       />
@@ -119,10 +123,22 @@ const CousresListScreen = () => {
         data={filterCourses}
         keyExtractor={(item, index) => `${item}-${index}`}
         renderItem={({ item }) => (
-          <CourseCard course={item} onClick={() => { }} />
+          <CourseCard course={item} onClick={() => {
+            navigation.navigate("CourseDetails",{
+              courseId : item.courseCode
+            })
+           }} />
         )}
       />
-      {/* <FilterBottomSheet ref={bottomSheetRef} /> */}
+      <FilterBottomSheet visible={filterVisible} onClose={(item) => {
+        console.log("dfdfdfdf",!(item! !== ""))
+        if (item! === "") {
+          setSelectedLevel("All")
+        } else{
+          setSelectedLevel(item)
+        }
+        setFilterVisible(false)
+      }} levels={levels} />
     </CommomBackGround>
   )
 }

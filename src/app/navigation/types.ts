@@ -10,7 +10,7 @@ export type RootStackParamList ={
         // isLoggendIn : Boolean
     }
     CourseDetails :{
-        courseId : number
+        courseId : string
     }
     LessonPlayer:{
         lessonId : number,

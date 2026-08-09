@@ -1,21 +1,33 @@
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "../redux/store"
+import { AppDispatch, RootState } from "../redux/store"
 import { useEffect } from "react"
 import { requestCoueseById } from "../redux/slices/courseSlicer"
+import { fetchCourseInsrtuctor, fetchCourseReviews, fetchLessonsByCousre } from "../redux/thunk/coursesThunk"
 
-function useCousre(courseId : number){
+function useCousre(courseId : string){
 
-    const dispatch = useDispatch()
-      const {courses, error, loading} = useSelector((state : RootState) => state.courses)
+    const dispatch = useDispatch<AppDispatch>()
+      const {course, error, loading,lessons, reviews, instructor} = useSelector((state : RootState) => state.courses)
 
   useEffect(()=>{
+    if (!courseId) return;
     dispatch(requestCoueseById(courseId))
-},[courseId])
+    dispatch(fetchLessonsByCousre({courseCode: courseId}))
+    dispatch(fetchCourseReviews({courseCode: courseId}))
+},[courseId,dispatch])
 
+useEffect(()=>{
+    if(course?.instructor){
+      dispatch(fetchCourseInsrtuctor({name : course?.instructor}))
+    }
+},[course?.instructor])
 return {
-    courses,
+    course,
     error,
     loading,
+    lessons,
+    instructor,
+    reviews
 }
 }
 export default useCousre

@@ -1,7 +1,9 @@
 import { Category } from "../models/Category";
 import { ContinueLearning } from "../models/ContinieLearning";
 import { Course, GetAllCoursesResponse } from "../models/course";
+import { Instructor } from "../models/Instructor";
 import { Lesson } from "../models/Lesson";
+import { Review } from "../models/Reviews";
 import { Transcript } from "../models/Transcript";
 
 export interface LoginRequest {
@@ -43,6 +45,32 @@ export interface RegisterResponse {
 export interface getAllCoursesResponse {
     success: boolean;
     data: Course[];
+}
+export interface getLessonsByCourseCodeResponse {
+    success: boolean;
+    lessons: Lesson[];
+}
+
+export interface getLessonsByCourseCodeRequest {
+    courseCode : string
+}
+
+export interface getInsructorRequest{
+    name : string
+}
+
+export interface getInsructorResponse{
+    success : boolean,
+    data : Instructor
+}
+
+export interface getReviewsRequest{
+    courseCode : string
+}
+
+export interface getReviewsResponse{
+    success : boolean,
+    data : Review
 }
 
 export interface homeResponse {

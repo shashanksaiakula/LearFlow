@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     container:{
         elevation: 3,
         padding: 10,
-        margin:16,
+        margin:10,
         borderRadius: 10,
         backgroundColor: Colors.surface
     }

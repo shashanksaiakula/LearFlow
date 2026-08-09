@@ -18,9 +18,8 @@ function* coursesWorker(): Generator {
 
 function* getCourseByIdrWorker(action : ReturnType<typeof getCourseById>) :Generator {
      try{
-
         const response = yield call(getCourseByIdApi, action.payload)
-
+         console.log("call api", response)
         yield put(getCourseById(response.data))
 
      } catch(err){
