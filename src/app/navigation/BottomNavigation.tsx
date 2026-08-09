@@ -5,6 +5,8 @@ import MaterialCommunityIcons from "@react-native-vector-icons/material-design-i
 import { Colors } from "../theme/colors";
 import ProfileScreen from "../screens/Profile";
 import CousresListScreen from "../screens/courses";
+import MyLearnings from "../screens/mylearning";
+import Bookmark from "../screens/bookmark";
 
 
 const Tab = createBottomTabNavigator<BottomTabParamsList>()
@@ -33,7 +35,7 @@ export default function BottomNavigation() {
                     />
                 )
             }} />
-             <Tab.Screen name="myLearning" component={ProfileScreen} options={{
+             <Tab.Screen name="myLearning" component={MyLearnings} options={{
                 headerShown: false, tabBarIcon: ({focused, color, size }) => (
                     <MaterialCommunityIcons
                         name={focused ? "play-circle" : "play-circle-outline"}
@@ -42,7 +44,7 @@ export default function BottomNavigation() {
                     />
                 )
             }} />
-                        <Tab.Screen name="bookmarks" component={ProfileScreen} options={{
+                        <Tab.Screen name="bookmarks" component={Bookmark} options={{
                 headerShown: false, tabBarIcon: ({focused, color, size }) => (
                     <MaterialCommunityIcons
                         name={focused ? "bookmark":"bookmark-outline"}
@@ -51,7 +53,8 @@ export default function BottomNavigation() {
                     />
                 )
             }} />
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{
+            <Tab.Screen name="ProfileStack" component={ProfileScreen} options={{
+                 tabBarLabel: 'Profile',
                 headerShown: false,
                 tabBarIcon: ({ focused,color, size }) => (
                     <MaterialCommunityIcons

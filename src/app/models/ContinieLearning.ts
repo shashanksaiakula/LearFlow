@@ -1,5 +1,6 @@
 export interface ContinueLearning{
         title : string,
         progress: number,
-        thumbnail: string
+        thumbnail: string,
+        isCompleted? : boolean,
 }

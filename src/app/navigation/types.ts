@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 export type RootStackParamList ={
     Login : undefined;
     Home : {
@@ -16,9 +18,18 @@ export type RootStackParamList ={
         lessonId : number,
         courseId : number
     },
-    BottomTab : undefined,
+    BottomTab :  NavigatorScreenParams<BottomTabParamsList>; 
      EditProflie : undefined,
-    ChangePassword : undefined
+    ChangePassword : undefined,
+    Checkout :{
+        amount : number,
+        cousreCode :string
+    },
+    Payment : {
+        amount : number,
+         cousreCode :string
+    }
+    PaymentSuccess : undefined
 }
 
 export type AuthStackParamsList= {

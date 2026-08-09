@@ -64,5 +64,13 @@ export  const Strings = {
      enroll_now : "Enroll Now",
      total_price : "Total Price",
      what_you_will_learn : "what You Will Learn",
-     students_enroller : "Students enrolled" 
+     students_enroller : "Students enrolled",
+     my_learning: "My Learning",
+     in_progress : "In Progress",
+     completed : "Completed",
+     bookmark : "Bookmarks",
+     make_payment : "Make a Payment",
+     complete_payment : "Complete your Payment",
+     payment : "Payment",
+     checkout : "Checkout"
 }

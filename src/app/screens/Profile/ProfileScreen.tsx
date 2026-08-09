@@ -41,7 +41,7 @@ const ProfileScreen = () => {
                     leftIcon={
                         <MaterialCommunityIcons
                             name="bell-outline"
-                            color={Colors.primary}
+                            color={Colors.iconsColor}
                             size={26}
                         />
                     }

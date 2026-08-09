@@ -15,10 +15,12 @@ const ComnonHeader = ({ title, rightIcon, leftIcon, onPressRight, onPressleft }:
     return (
         <View style={styles.container}>
             <Pressable
+                style={styles.iconStyle}
                 onPress={onPressRight}
             >{rightIcon}</Pressable>
             <Text style={styles.textStyle}>{title}</Text>
             <Pressable
+                style={styles.iconStyle}
                 onPress={onPressleft}
             >{leftIcon}</Pressable>
         </View>
@@ -37,7 +39,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textStyle: {
+        flex: 1,
         ...Typography.h2,
-        color: Colors.primary
+        color: Colors.black,
+        textAlign: 'center'
+    }, iconStyle: {
+        paddingHorizontal: 10
     }
 })

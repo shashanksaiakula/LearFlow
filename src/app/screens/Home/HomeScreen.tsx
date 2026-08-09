@@ -87,27 +87,7 @@ const HomeScreen = ({ route, navigation }: props) => {
           </View>
           <HomeIcon width="40%" height="100%" />
         </View>
-        <Input
-          value={search}
-          onChangeText={setSearch}
-          placeHolder={Strings.search_home}
-          leftIcon={
-            <MaterialDesignIcons
-              name='magnify'
-              size={22}
-              color={Colors.iconsColor}
-            />
-          }
-          rightIcon={
-            <MaterialDesignIcons
-              name='filter-variant'
-              size={22}
-              color={Colors.iconsColor}
-            />
-          }
-          containerStyle={{ marginHorizontal: 16, marginTop: 16 }}
-        />
-        <SectionHeader title={Strings.contine_learning} />
+        <SectionHeader title={Strings.contine_learning} onPress={()=>{navigation.navigate('BottomTab', {screen : "myLearning"})}}/>
         {homeResponse && <ContinueLearningCard continueLearning={homeResponse?.continueLearning} />}
         {/* <SectionHeader title={Strings.categories} />
         <FlatList

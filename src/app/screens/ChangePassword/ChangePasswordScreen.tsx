@@ -71,7 +71,7 @@ const ChangePasswordScreen = () => {
                         rightIcon={
                             <MaterialCommunityIcons
                                 name="arrow-left"
-                                color={Colors.primary}
+                                color={Colors.iconsColor}
                                 size={26}
                             />
                         }

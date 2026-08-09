@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: Spacing.sm,
     flexDirection: "row",
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginTop: Spacing.sm
   },
   textStyle: {
     ...Typography.body1,

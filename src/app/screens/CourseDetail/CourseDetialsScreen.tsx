@@ -16,6 +16,7 @@ import Overview from './overview';
 import Instructor from './instructor';
 import Curiculam from './curiculam';
 import Reviews from './reviews';
+import CommonCard from '../../components/common/CommonCard';
 
 
 type CoueseDetailScreenProps = RouteProp<RootStackParamList, "CourseDetails">
@@ -29,7 +30,7 @@ type Props = {
 
 const CourseDetialsScreen = ({ route, navigation }: Props) => {
   const { courseId } = route.params
-  const { loading, error, course,lessons,instructor, reviews,  } = useCousre(courseId)
+  const { loading, error, course, lessons, instructor, reviews } = useCousre(courseId)
   const [selectedTab, setSelectedTab] = useState(Strings.overview)
 
   if (loading) {
@@ -40,22 +41,22 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
     return <Text style={styles.errorStyle}>{error}</Text>
   }
 
-  console.log("revires is ",reviews)
-  console.log("instructor is ",instructor)
+  console.log("revires is ", reviews)
+  console.log("instructor is ", instructor)
 
 
   const renderTabContent = () => {
     switch (selectedTab) {
       case Strings.overview:
-        return <Overview description={course?.overview.description} whatYouWillLearn={ course?.overview.whatYouWillLearn} />;
+        return <Overview description={course?.overview.description} whatYouWillLearn={course?.overview.whatYouWillLearn} />;
       case Strings.curriculum:
-        return <Curiculam lessons={lessons?.data}/>;
+        return <Curiculam lessons={lessons?.data} />;
       case Strings.instructor:
-        return <Instructor instructor ={instructor}/>;
+        return <Instructor instructor={instructor} />;
       case Strings.reviews:
         return <Reviews />;
       default:
-        return <Overview description={course?.overview.description.value} whatYouWillLearn={ course?.overview.whatYouWillLearn} />;
+        return <Overview description={course?.overview.description.value} whatYouWillLearn={course?.overview.whatYouWillLearn} />;
     }
   };
 
@@ -64,7 +65,7 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
   return (
     <CommomBackGround>
       <View style={styles.container}>
-        <ComnonHeader title=''
+        <ComnonHeader title={course?.title}
           rightIcon={
             <MaterialDesignIcons
               name='arrow-left'
@@ -81,28 +82,30 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
             />
           }
         />
-        <View style={styles.topContainer}>
-          <Image source={{ uri: `${BASE_URL}${course?.thumbnail}` }}
-            style={styles.thumbnail}
-          />
-          <View style={styles.topViewContentStyle}>
-            <Text style={styles.titleTextStle}>{course?.title}</Text>
-            <Text style={styles.discTextStle}>{course?.description}</Text>
-            <View style={styles.topContainer}>
-              <Text style={styles.otherText}>{course?.level}</Text>
-              <Text style={styles.otherText}>{course?.totalLessons} Lessons</Text>
+        <CommonCard>
+            {/* <Text style={styles.titleTextStle}>{course?.title}</Text> */}
+          <View style={styles.topContainer}>
+            <Image source={{ uri: `${BASE_URL}${course?.thumbnail}` }}
+              style={styles.thumbnail}
+            />
+            <View style={styles.topViewContentStyle}>
+              <Text style={styles.discTextStle}>{course?.description}</Text>
+              <View style={styles.topContainer}>
+                <Text style={styles.otherText}>{course?.level}</Text>
+                <Text style={styles.otherText}>{course?.totalLessons} Lessons</Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={styles.topContainer}>
-          <Text style={styles.otherText}>⭐ {course?.rating} (2.4k) </Text>
-          <MaterialDesignIcons
-            name='account-multiple-outline'
-            size={18}
-          />
-          <Text style={styles.otherText}>{course?.totalStudents} </Text>
-          <Text style={[styles.discTextStle, { padding: 0 }]}>{Strings.enrolled} </Text>
-        </View>
+          <View style={styles.topContainer}>
+            <Text style={styles.otherText}>⭐ {course?.rating} (2.4k) </Text>
+            <MaterialDesignIcons
+              name='account-multiple-outline'
+              size={18}
+            />
+            <Text style={styles.otherText}>{course?.totalStudents} </Text>
+            <Text style={[styles.discTextStle, { padding: 0 }]}>{Strings.enrolled} </Text>
+          </View>
+        </CommonCard>
         <View style={styles.tabContainer}>
           <Text style={[styles.tabText, selectedTab === Strings.overview && styles.tabUnderLine]} onPress={() => setSelectedTab(Strings.overview)}>{Strings.overview} </Text>
           <Text style={[styles.tabText, selectedTab === Strings.curriculum && styles.tabUnderLine]} onPress={() => setSelectedTab(Strings.curriculum)}>{Strings.curriculum} </Text>
@@ -125,7 +128,10 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
             <Text style={[styles.tabText,]}>₹{course?.price}</Text>}
         </View>
         <View style={{ flex: 1 }}>
-          <PrimaryButton onPress={() => { }} title={Strings.enroll_now} />
+          <PrimaryButton onPress={() => {navigation.navigate("Checkout",{
+            cousreCode : course?.courseCode ?? "",
+            amount : course?.discountPrice ?? course?.price ?? 0
+          }) }} title={Strings.enroll_now} />
         </View>
       </View>
     </CommomBackGround>

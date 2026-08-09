@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { RootState } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,11 +6,8 @@ import ComnonHeader from '../../components/common/ComnonHeader'
 import { Strings } from '../../strings/String'
 import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { Colors } from '../../theme/colors'
-import LinearGradient from 'react-native-linear-gradient'
 import Avather from '../../components/avathar/Avather'
 import CommonCard from '../../components/common/CommonCard'
-import ProfileCard from '../../components/ProfileCard'
-import Divider from '../../components/Divider/Divider'
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import OutLineButton from '../../components/common/OutLineButton'
 import { ProfileStackParamList } from '../../navigation/types'
@@ -29,9 +26,9 @@ const EditProfile = () => {
     const user = useSelector((state: RootState) => state.auth.user)
     const dispatch = useDispatch()
     const navigation = useNavigation<EditNavigationProps>()
-    const [name, setName] = useState(user.name)
-    const [number, setNumber] = useState(user.phone)
-    const [dateOfBirth, setDateOfBirth] = useState(user.dateOfBirth)
+    const [name, setName] = useState(user?.name)
+    const [number, setNumber] = useState(user?.phone)
+    const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth)
 
     const cancelHandel = () => {
         setName("")
@@ -51,7 +48,7 @@ const EditProfile = () => {
                     rightIcon={
                         <MaterialCommunityIcons
                             name="arrow-left"
-                            color={Colors.primary}
+                            color={Colors.iconsColor}
                             size={26}
                         />
                     }

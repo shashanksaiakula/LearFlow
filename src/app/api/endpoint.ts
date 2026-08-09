@@ -13,5 +13,6 @@ export const ENDPOINTS = {
     GETREWIVE : '/course/reviews',
     HOME: '/home',
     GETLESSSONBYID : '/course',
-    TRANSCRIPT : '/transcript'
+    TRANSCRIPT : '/transcript',
+    ENROLLMENT : "/enrollment"
 } as const;

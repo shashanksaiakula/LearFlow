@@ -6,6 +6,7 @@ import lessonReducer from './slices/lessonSlicer'
 import createSagaMiddleware from "redux-saga";
 import transcriptReducer from './slices/transcriptSlicer'
 import notesReducer from './slices/noteSlice'
+import enrollReducer from './slices/enrollSlice'
 import rootSaga from "./saga/rootSaga";
 import { useDispatch } from "react-redux";
 
@@ -18,6 +19,7 @@ export const store = configureStore({
         lesson : lessonReducer,
         transcript : transcriptReducer,
         note : notesReducer,
+        enroll : enrollReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(sagaMiddleware),

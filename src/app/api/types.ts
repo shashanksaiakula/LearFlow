@@ -1,6 +1,7 @@
 import { Category } from "../models/Category";
 import { ContinueLearning } from "../models/ContinieLearning";
 import { Course, GetAllCoursesResponse } from "../models/course";
+import { Enrollment } from "../models/Enrollment";
 import { Instructor } from "../models/Instructor";
 import { Lesson } from "../models/Lesson";
 import { Review } from "../models/Reviews";
@@ -121,5 +122,19 @@ export interface EditPriofileResponse {
     success: string;
     message: string;
     user : User
+}
+
+export interface postEnrollRequest {
+    cousreCode : string
+}
+
+export interface postEnrollResponse {
+    success : boolean,
+    data : Enrollment
+}
+
+export interface getEnrollResponse {
+    success : boolean,
+    data : Enrollment[]
 }
 

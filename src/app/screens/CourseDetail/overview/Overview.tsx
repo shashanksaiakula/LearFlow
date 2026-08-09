@@ -23,7 +23,7 @@ const Overview = ({ description, whatYouWillLearn }: OverViewProps) => {
       <CommonCard>
         {/* Replaced FlatList with an array map styled with padding */}
         <View style={{ padding: 10 }}>
-          {whatYouWillLearn.map((item, index) => (
+          {whatYouWillLearn && whatYouWillLearn.map((item, index) => (
             <View key={index} style={styles.constainer}>
               <View>
                 <MaterialDesignIcons 

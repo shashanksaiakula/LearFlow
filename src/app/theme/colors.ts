@@ -2,6 +2,7 @@ export const Colors = {
   primary: "#2196F3",
   primaryLight1: "#EFF6FF",
   primaryLight2: "#6f94c5",
+  primaryLight3: "#d8e6fa",
 
   background: "#FFFFFF",
   surface: "#F8FAFC",
@@ -13,6 +14,7 @@ export const Colors = {
   disabled: "#D1D5DB",
 
   success: "#16A34A",
+  successbackground: "#e7faee",
   warning: "#F59E0B",
   error: "#DC2626",
 
