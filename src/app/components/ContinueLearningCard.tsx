@@ -10,15 +10,16 @@ import { Spacing } from '../theme/spacing';
 
 // Convention: Use PascalCase for Interface names
 interface ContinueLearningProps {
-  continueLearning: ContinueLearning
+  continueLearning: ContinueLearning,
+  onPress? : ()=> void
 }
 
 
-const ContinueLearningCard = ({ continueLearning }: ContinueLearningProps) => {
+const ContinueLearningCard = ({ continueLearning,onPress }: ContinueLearningProps) => {
 
 
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View>
         <Image source={{ uri: `${BASE_URL}${continueLearning.thumbnail}` }}
           style={styles.thumbnail}

@@ -12,20 +12,18 @@ import ContinueLearningCard from '../../components/ContinueLearningCard'
 import { Course } from '../../models/course'
 import { EnrollmentStatus } from '../../models/Enrollment'
 import { fetchCourses } from '../../redux/thunk/coursesThunk'
+import { selectCombinedCourses, selectCompletedCourses, selectInProgressCourses } from '../../redux/selectors/courseSelectors'
 
 const MyLearnings = () => {
     const [selectedTab, setSelectedTab] = useState(Strings.in_progress)
     const dispatch = useDispatch<AppDispatch>()
     const { loading, enrollments, error } = useSelector((state: RootState) => state.enroll)
     const { courses } = useSelector((state: RootState) => state.courses)
-    const enrolledCourses: CombinedCourse[] = [];
-    const completedCourses: CombinedCourse[] = [];
+    const inProgressCourses  = useSelector(selectInProgressCourses)
+    const completedCousrces  = useSelector(selectCompletedCourses)
 
-    interface CombinedCourse extends Course {
-        progress: number;
-        status: EnrollmentStatus;
-    }
     useEffect(() => {
+        if(!enrollments)
         dispatch(getEnrolledCourse())
         if (!courses) {
             dispatch(fetchCourses())
@@ -36,28 +34,7 @@ const MyLearnings = () => {
         setSelectedTab(select)
     }
 
-    courses?.forEach((courseItem) => {
-        const matchingEnrollment = enrollments?.find(
-            (enrollmentItem) => enrollmentItem.courseCode === courseItem.courseCode
-        );
-
-        if (matchingEnrollment) {
-            const combinedData: CombinedCourse = {
-                ...courseItem,
-                progress: matchingEnrollment.progress,
-                status: matchingEnrollment.status,
-            };
-            
-            if (matchingEnrollment.progress === 100) {
-                completedCourses.push(combinedData);
-            } else {
-                enrolledCourses.push(combinedData);
-            }
-        }
-    });
-
-
-const listData = selectedTab === Strings.in_progress ? enrolledCourses : completedCourses;
+const listData = selectedTab === Strings.in_progress ? inProgressCourses : completedCousrces;
     if (loading) {
         return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
     }

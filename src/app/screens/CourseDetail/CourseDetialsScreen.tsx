@@ -83,7 +83,7 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
           }
         />
         <CommonCard>
-            {/* <Text style={styles.titleTextStle}>{course?.title}</Text> */}
+          {/* <Text style={styles.titleTextStle}>{course?.title}</Text> */}
           <View style={styles.topContainer}>
             <Image source={{ uri: `${BASE_URL}${course?.thumbnail}` }}
               style={styles.thumbnail}
@@ -117,22 +117,39 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
         </View>
       </View>
 
+
       <View style={styles.bottomView}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.tabText}>{Strings.total_price}</Text>
-          {course?.discountPrice ?
-            <View style={styles.topContainer}>
-              <Text style={[styles.tabText, { textDecorationLine: 'line-through' }]}>₹{course?.price}</Text>
-              <Text style={[styles.tabText]}>₹{course?.discountPrice}</Text>
-            </View> :
-            <Text style={[styles.tabText,]}>₹{course?.price}</Text>}
-        </View>
-        <View style={{ flex: 1 }}>
-          <PrimaryButton onPress={() => {navigation.navigate("Checkout",{
-            cousreCode : course?.courseCode ?? "",
-            amount : course?.discountPrice ?? course?.price ?? 0
-          }) }} title={Strings.enroll_now} />
-        </View>
+        {route.params.isEnrolled ?
+          <View style={{ flex: 1 }}>
+            {route.params.progress === 100 ? <PrimaryButton title={Strings.completed} onPress={()=>{
+
+            }}
+            variant='success'
+            /> :
+            <PrimaryButton title={`${Strings.in_progress} - ${route.params.progress}%`} onPress={() => {
+            }} />
+          }
+          </View>
+          : <>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.tabText}>{Strings.total_price}</Text>
+              {course?.discountPrice ?
+                <View style={styles.topContainer}>
+                  <Text style={[styles.tabText, { textDecorationLine: 'line-through' }]}>₹{course?.price}</Text>
+                  <Text style={[styles.tabText]}>₹{course?.discountPrice}</Text>
+                </View> :
+                <Text style={[styles.tabText,]}>₹{course?.price}</Text>}
+            </View>
+            <View style={{ flex: 1 }}>
+              <PrimaryButton onPress={() => {
+                navigation.navigate("Checkout", {
+                  cousreCode: course?.courseCode ?? "",
+                  amount: course?.discountPrice ?? course?.price ?? 0
+                })
+              }} title={Strings.enroll_now} />
+            </View>
+          </>
+        }
       </View>
     </CommomBackGround>
   )

@@ -12,7 +12,9 @@ export type RootStackParamList ={
         // isLoggendIn : Boolean
     }
     CourseDetails :{
-        courseId : string
+        courseId : string,
+        progress : number,
+        isEnrolled : boolean
     }
     LessonPlayer:{
         lessonId : number,

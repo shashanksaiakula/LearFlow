@@ -30,7 +30,11 @@ categoryText: {
     color: "#333333",
     textAlign: "center",
     includeFontPadding: false,
-},
+},sectionTitle:{
+  ...Typography.h2,
+  fontWeight :"800",
+  marginHorizontal: Spacing.md
+}
 
 })
 

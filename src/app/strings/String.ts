@@ -72,5 +72,6 @@ export  const Strings = {
      make_payment : "Make a Payment",
      complete_payment : "Complete your Payment",
      payment : "Payment",
-     checkout : "Checkout"
+     checkout : "Checkout",
+     not_enrolled: "Yet to enroll"
 }

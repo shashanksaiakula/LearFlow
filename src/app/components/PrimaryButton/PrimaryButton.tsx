@@ -11,7 +11,7 @@ import { Colors } from "../../theme/colors";
 import { Typography } from "../../theme/typography";
 import { Spacing } from "../../theme/spacing";
 
-type ButtonVariant = "primary" | "secondary" | "danger";
+type ButtonVariant = "primary" | "secondary" | "danger" | "success";
 
 interface PrimaryButtonProps {
     title: string;
@@ -26,6 +26,7 @@ const buttonBackgroundColors: Record<ButtonVariant, string> = {
     primary: Colors.primary,
     secondary: Colors.secondary,
     danger: Colors.danger,
+    success : Colors.success
 };
 
 const PrimaryButton = ({
