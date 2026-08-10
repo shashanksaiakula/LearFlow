@@ -34,7 +34,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   const [isPaused, setIsPaused] = useState(false);
   const [currentSec, setCurrentSec] = useState(0)
   useEffect(() => {
-    dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
+    // dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
   }, [dispatch, lessonID, courseId])
 
   const seekPress = useCallback((seek: number) => {

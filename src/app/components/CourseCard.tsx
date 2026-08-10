@@ -9,15 +9,17 @@ import { BASE_URL } from '../api/apiClinet';
 
 interface CourseCardProps {
   course: Course;
-  onClick : () => void
+  onClick: () => void,
+  isBoomarked? : boolean,
+  bookmarkPressed?: ()=>void
 }
 
-export default function CourseCard({course, onClick} : CourseCardProps) {
+export default function CourseCard({ course, onClick, isBoomarked, bookmarkPressed }: CourseCardProps) {
 
   let leveColor = ""
-  if(course.level === Strings.beginner){
+  if (course.level === Strings.beginner) {
     leveColor = Colors.success
-  } else if(course.level === Strings.intermediate){
+  } else if (course.level === Strings.intermediate) {
     leveColor = Colors.warning
   } else {
     leveColor = Colors.danger
@@ -26,57 +28,57 @@ export default function CourseCard({course, onClick} : CourseCardProps) {
   return (
     <TouchableOpacity style={styles.container} onPress={onClick}>
       <View>
-        <Image source={{uri: `${BASE_URL}${course.thumbnail}` }}  
-                 style={styles.thumbnail} 
-                />
+        <Image source={{ uri: `${BASE_URL}${course.thumbnail}` }}
+          style={styles.thumbnail}
+        />
       </View>
-      <View style={{flex:1,}}>
+      <View style={{ flex: 1, }}>
         <Text style={styles.titleStyle}>{course.title}</Text>
         <View style={styles.bottomTextSyle}>
-        <Text style={styles.bottomText} >{course.totalLessons} {Strings.lessons}</Text>
-        <Text style={[styles.bottomText , {color: leveColor}]}>{course.level}</Text>
+          <Text style={styles.bottomText} >{course.totalLessons} {Strings.lessons}</Text>
+          <Text style={[styles.bottomText, { color: leveColor }]}>{course.level}</Text>
         </View>
-        </View>
-        <TouchableOpacity>
-          <MaterialDesignIcons
-           name='bookmark-outline'
-           size={28}
-           color={Colors.iconsColor}
-           />
-        </TouchableOpacity>
+      </View>
+      <TouchableOpacity onPress={bookmarkPressed}>
+        <MaterialDesignIcons
+          name={isBoomarked ? 'bookmark' :'bookmark-outline'}
+          size={28}
+          color={isBoomarked ? Colors.primary : Colors.iconsColor}
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     padding: 16,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        borderRadius: 10,
-        backgroundColor: "#FFF",
-        elevation: 3,
-        flexDirection: "row",
-        justifyContent: 'space-between',
-        alignItems: 'center',
-  },bottomTextSyle:{
-    flex:1,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: "#FFF",
+    elevation: 3,
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  }, bottomTextSyle: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: 'space-evenly',
     alignItems: 'flex-end'
   },
-    thumbnail: {
+  thumbnail: {
     width: 90,
     height: 90,
     resizeMode: 'stretch',
     borderRadius: 10
-  },titleStyle:{
+  }, titleStyle: {
     ...Typography.body1,
     fontWeight: "bold",
     padding: 10
-  },bottomText:{
+  }, bottomText: {
     ...Typography.body2,
     color: Colors.iconsColor,
-     fontWeight: "bold"
+    fontWeight: "bold"
   }
 })

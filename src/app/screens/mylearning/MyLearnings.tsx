@@ -13,14 +13,23 @@ import { Course } from '../../models/course'
 import { EnrollmentStatus } from '../../models/Enrollment'
 import { fetchCourses } from '../../redux/thunk/coursesThunk'
 import { selectCombinedCourses, selectCompletedCourses, selectInProgressCourses } from '../../redux/selectors/courseSelectors'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from '../../navigation/types'
 
-const MyLearnings = () => {
+type MyLearningNauvationProps = StackNavigationProp<RootStackParamList>
+
+type Props ={
+    navigation : MyLearningNauvationProps
+}
+
+const MyLearnings = ({navigation}: Props) => {
     const [selectedTab, setSelectedTab] = useState(Strings.in_progress)
     const dispatch = useDispatch<AppDispatch>()
     const { loading, enrollments, error } = useSelector((state: RootState) => state.enroll)
     const { courses } = useSelector((state: RootState) => state.courses)
     const inProgressCourses  = useSelector(selectInProgressCourses)
     const completedCousrces  = useSelector(selectCompletedCourses)
+
 
     useEffect(() => {
         if(!enrollments)
@@ -59,7 +68,14 @@ const listData = selectedTab === Strings.in_progress ? inProgressCourses : compl
                 data={listData}
                 keyExtractor={(item, index) => `${item.id}${index}`}
                 renderItem={({ item }) => (
-                    <ContinueLearningCard continueLearning={{ title: item.title, progress: item.progress, thumbnail: item.thumbnail,isCompleted :(item.progress === 100) }} />
+                    <ContinueLearningCard continueLearning={{ title: item.title, progress: item.progress, thumbnail: item.thumbnail,isCompleted :(item.progress === 100) }} 
+                    onPress={()=>{
+                        navigation.navigate('LessonPlayer', {
+                            courseId : item.courseCode,
+                            lessonId : ""
+                        })
+                    }}
+                    />
                 )}
             />
         </CommomBackGround>

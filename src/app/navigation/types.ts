@@ -17,8 +17,8 @@ export type RootStackParamList ={
         isEnrolled : boolean
     }
     LessonPlayer:{
-        lessonId : number,
-        courseId : number
+        lessonId : string,
+        courseId : string
     },
     BottomTab :  NavigatorScreenParams<BottomTabParamsList>; 
      EditProflie : undefined,

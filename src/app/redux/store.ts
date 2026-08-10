@@ -7,19 +7,21 @@ import createSagaMiddleware from "redux-saga";
 import transcriptReducer from './slices/transcriptSlicer'
 import notesReducer from './slices/noteSlice'
 import enrollReducer from './slices/enrollSlice'
+import bookmarkReducer from './slices/bookmarkSlice'
 import rootSaga from "./saga/rootSaga";
 import { useDispatch } from "react-redux";
 
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
-    reducer :{
-        auth : authReducer,
-        courses : coursesReducer,
-        home : homeReducer,
-        lesson : lessonReducer,
-        transcript : transcriptReducer,
-        note : notesReducer,
-        enroll : enrollReducer,
+    reducer: {
+        auth: authReducer,
+        courses: coursesReducer,
+        home: homeReducer,
+        lesson: lessonReducer,
+        transcript: transcriptReducer,
+        note: notesReducer,
+        enroll: enrollReducer,
+        bookmark: bookmarkReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(sagaMiddleware),

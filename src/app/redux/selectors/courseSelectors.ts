@@ -5,6 +5,13 @@ import { RootState } from "../store";
 export interface CombinedCourse extends Course {
     progress: number;
     status: EnrollmentStatus;
+        isBookmarked: boolean;
+    bookmarkId?: string;
+}
+
+export interface CourseWithBookmark extends Course {
+    isBookmarked: boolean;
+    bookmarkId?: string;
 }
 
 export const selectEnrolledCourses = (state: RootState) => {
@@ -71,15 +78,32 @@ export const selectCompletedCourses = (
     );
 };
 
-export const selectYetToEnrollCourses = (state: RootState) => {
+export const selectYetToEnrollCourses = (
+    state: RootState
+): CourseWithBookmark[] => {
 
-    const courses = state.courses.courses;
-    const enrollments = state.enroll.enrollments;
+    const courses = state.courses.courses ?? [];
+    const enrollments = state.enroll.enrollments ?? [];
+    const bookmarks = state.bookmark.bookmarks ?? [];
 
-    return courses?.filter(course =>
-        !enrollments?.some(
-            enrollment =>
-                enrollment.courseCode === course.courseCode
+    return courses
+        .filter(course =>
+            !enrollments.some(
+                enrollment =>
+                    enrollment.courseCode === course.courseCode
+            )
         )
-    ) ?? [];
+        .map(course => {
+
+            const bookmark = bookmarks.find(
+                bookmark =>
+                    bookmark.courseCode === course.courseCode
+            );
+
+            return {
+                ...course,
+                isBookmarked: !!bookmark,
+                bookmarkId: bookmark?._id,
+            };
+        });
 };

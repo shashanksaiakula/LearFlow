@@ -16,9 +16,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../navigation/types'
 import { useNavigation } from '@react-navigation/native';
 import { Course } from '../../models/course'
-import { CombinedCourse, selectCompletedCourses, selectInProgressCourses, selectYetToEnrollCourses } from '../../redux/selectors/courseSelectors'
+import { CombinedCourse, CourseWithBookmark, selectCompletedCourses, selectInProgressCourses, selectYetToEnrollCourses } from '../../redux/selectors/courseSelectors'
 import { getEnrolledCourse } from '../../redux/thunk/enrollThunk'
 import ContinueLearningCard from '../../components/ContinueLearningCard'
+import { addBookmark, deleteBookmark, getBookmark } from '../../redux/thunk/thunkBookmark'
 const CousresListScreen = () => {
 
   type CousrseListScreenProps = NativeStackNavigationProp<RootStackParamList>;
@@ -41,6 +42,7 @@ const CousresListScreen = () => {
   const completedCourses = useSelector(selectCompletedCourses);
   useEffect(() => {
     dispatch(getEnrolledCourse())
+    dispatch(getBookmark())
     if (!courses) {
       dispatch(fetchCourses())
     }
@@ -58,8 +60,13 @@ const CousresListScreen = () => {
 
   const categories = ["All", ...new Set((courses || []).map(c => c?.category).filter(Boolean))];
 
+  type CourseSectionItem =
+    | CombinedCourse
+    | CourseWithBookmark;
 
-  const applyFilters = (courseList: CombinedCourse[]) => {
+  const applyFilters = <T extends Course>(
+    courseList: T[]
+): T[] => {
     return courseList.filter(course => {
 
       const matchesCategory =
@@ -87,7 +94,7 @@ const CousresListScreen = () => {
     {
       type: "inProgress",
       title: Strings.in_progress,
-      data: applyFilters(inProgressCourses),
+      data: applyFilters(inProgressCourses,),
     },
     {
       type: "notEnrolled",
@@ -182,7 +189,7 @@ const CousresListScreen = () => {
                   navigation.navigate("CourseDetails", {
                     courseId: item.courseCode,
                     progress: item.progress,
-                    isEnrolled : true
+                    isEnrolled: true
                   });
                 }}
               />
@@ -202,7 +209,7 @@ const CousresListScreen = () => {
                   navigation.navigate("CourseDetails", {
                     courseId: item.courseCode,
                     progress: item.progress,
-                    isEnrolled : true
+                    isEnrolled: true
                   });
                 }}
               />
@@ -216,9 +223,18 @@ const CousresListScreen = () => {
                 navigation.navigate("CourseDetails", {
                   courseId: item.courseCode,
                   isEnrolled: false,
-                  progress : 0
+                  progress: 0,
                 });
               }}
+              bookmarkPressed={ async() => {
+                if(item.isBookmarked){
+                 await dispatch(deleteBookmark({id : item.bookmarkId})).unwrap()
+                } else{
+                 await dispatch(addBookmark({ courseCode: item.courseCode })).unwrap()
+                }
+                dispatch(getBookmark())
+              }}
+              isBoomarked ={item.isBookmarked}
             />
           );
         }}

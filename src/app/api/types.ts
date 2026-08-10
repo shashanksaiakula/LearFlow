@@ -1,3 +1,4 @@
+import { Bookmark } from "../models/Bookmark";
 import { Category } from "../models/Category";
 import { ContinueLearning } from "../models/ContinieLearning";
 import { Course, GetAllCoursesResponse } from "../models/course";
@@ -136,5 +137,28 @@ export interface postEnrollResponse {
 export interface getEnrollResponse {
     success : boolean,
     data : Enrollment[]
+}
+
+export interface addBookmaekRequest{
+     courseCode : string
+}
+export interface addBookmarkResponse{
+    success : boolean,
+    data : Bookmark
+
+}
+
+export interface getBookmarkResponse {
+    success : boolean,
+    data : Bookmark[]
+}
+
+export interface deleteBookmarkRequest {
+    id: string;
+}
+
+export interface deleteBookmarkResponse {
+     success : boolean,
+    data : any
 }
 
