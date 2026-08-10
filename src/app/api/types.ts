@@ -82,8 +82,8 @@ export interface homeResponse {
 }
 
 export interface LessonByIdRequest {
-    cousreId: number,
-    lessonId: number
+    cousreId: string,
+    lessonId: string
 }
 
 export interface LessonByIdResponse {

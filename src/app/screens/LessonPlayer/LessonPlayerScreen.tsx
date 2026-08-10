@@ -12,6 +12,9 @@ import TranscriptView from './TranscriptView';
 import { VideoRef } from 'react-native-video';
 import LessonList from './LessonList';
 import NotesView from './NotesView';
+import CommomBackGround from '../../components/common/CommomBackGround';
+import { BASE_URL } from '../../api/apiClinet';
+import { Spacing } from '../../theme/spacing';
 
 
 type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
@@ -33,8 +36,9 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   const videoRef = useRef<VideoRef>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [currentSec, setCurrentSec] = useState(0)
+  const { lessons } = useSelector((state: RootState) => state.courses)
   useEffect(() => {
-    // dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
+    dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
   }, [dispatch, lessonID, courseId])
 
   const seekPress = useCallback((seek: number) => {
@@ -45,6 +49,8 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
 
+  console.log("lesson screen is ", lesson?.title)
+
   if (error) {
     console.log("error is " + error)
     return <Text style={styles.errorStyle}>{error}</Text>
@@ -52,36 +58,38 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
 
   // console.log("vidoeplayer is "+ lesson?.videoType)
   return (
-    <View style={styles.container}>
-      <Text style={styles.WelcomeStyle}> {lesson?.title}</Text>
-      {lesson && <LessonVideoPlayer lesson={lesson} videoRef={videoRef ?? null} onProgress={setCurrentSec} paused={isPaused} />}
-      <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
+    <CommomBackGround>
+      <View style={styles.container}>
+        {/* <ComnonHeader title={lesson?.title} /> */}
+        {lesson && <LessonVideoPlayer lesson={lesson} videoRef={videoRef ?? null} onProgress={setCurrentSec} paused={isPaused} />}
+        <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
 
-      {selectTab === 'video-list' && (
-        <LessonList courseId={courseId} onClick={setLessonID} lessonId={lessonID} />
-      )}
+        {selectTab === 'video-list' && (
+          <LessonList onClick={setLessonID} lessonId={lessonID} lessons={lessons} />
+        )}
 
-      {selectTab === 'notes' && (
-        <NotesView
-          currentTime={currentSec}
-          playResumeAction={(action: boolean) => {
-            setIsPaused(action)
-          }}
-          onClick={(timeStamp: number) => {
-            console.log(" note", timeStamp)
-            videoRef.current?.seek(timeStamp)
-          }}
-          lessonId ={ lessonId }
-          courseId = { courseId }
-        />
-      )}
+        {selectTab === 'notes' && (
+          <NotesView
+            currentTime={currentSec}
+            playResumeAction={(action: boolean) => {
+              setIsPaused(action)
+            }}
+            onClick={(timeStamp: number) => {
+              console.log(" note", timeStamp)
+              videoRef.current?.seek(timeStamp)
+            }}
+            lessonId={lessonId}
+            courseId={courseId}
+          />
+        )}
 
-      {selectTab === 'transcript' && (
-        <TranscriptView vidoeUrl={lesson?.videoLink} seekonPress={seekPress}
-          currentTimeStamp={currentSec}
-        />
-      )}
-    </View>
+        {selectTab === 'transcript' && (
+          <TranscriptView vidoeUrl={`${BASE_URL}${lesson?.videoUrl}`} seekonPress={seekPress}
+            currentTimeStamp={currentSec}
+          />
+        )}
+      </View>
+    </CommomBackGround>
   )
 }
 
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    marginTop : Spacing.sm
   },
   indicatorStyle: {
     flex: 1,

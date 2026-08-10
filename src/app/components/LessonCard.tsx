@@ -12,10 +12,10 @@ interface LessonProps {
 const LessonCard = ({lesson, onClick, isActive} : LessonProps) => {
   return (
     <TouchableOpacity onPress={onClick} style= {[styles.card, isActive && {backgroundColor: "#E3F2FD"}]}>
-            <Text style= {styles.lesstonTitleStyle}>{lesson.id} . {lesson.title}</Text>
+            <Text style= {styles.lesstonTitleStyle}>{lesson.title}</Text>
          <View style={[styles.lessonTitel, {justifyContent : "space-between", paddingVertical: 10}]}>
         <Text>{lesson.duration}</Text>
-        <Text>{lesson.completed ? "Completed" : "yet to start"}</Text>
+        <Text>{lesson.isCompleted ? "Completed" : "yet to start"}</Text>
         </View>
     </TouchableOpacity>
   )

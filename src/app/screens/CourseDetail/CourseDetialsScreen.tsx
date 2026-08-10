@@ -121,14 +121,18 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
       <View style={styles.bottomView}>
         {route.params.isEnrolled ?
           <View style={{ flex: 1 }}>
-            {route.params.progress === 100 ? <PrimaryButton title={Strings.completed} onPress={()=>{
+            {route.params.progress === 100 ? <PrimaryButton title={Strings.completed} onPress={() => {
 
             }}
-            variant='success'
+              variant='success'
             /> :
-            <PrimaryButton title={`${Strings.in_progress} - ${route.params.progress}%`} onPress={() => {
-            }} />
-          }
+              <PrimaryButton title={`${Strings.in_progress} - ${route.params.progress}%`} onPress={() => {
+                navigation.navigate('LessonPlayer', {
+                  courseId: courseId,
+                  lessonId: "lesson_001"
+                })
+              }} />
+            }
           </View>
           : <>
             <View style={{ flex: 1 }}>

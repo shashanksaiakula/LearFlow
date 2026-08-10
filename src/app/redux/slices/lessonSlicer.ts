@@ -6,7 +6,7 @@ import { LessonByIdResponse } from "../../api/types";
 
 export interface LessonState {
     loading : boolean
-    lesson : LessonByIdResponse | null
+    lesson : Lesson | null
     error : string | null
 }
 
@@ -27,7 +27,7 @@ const LessonSlicce = createSlice({
         })
         .addCase(fetchLesson.fulfilled, (state,action) =>{
             state.loading = false
-            state.lesson = action.payload
+            state.lesson = action.payload.data
         })
         .addCase(fetchLesson.rejected, (state,action) =>{
             state.loading = false

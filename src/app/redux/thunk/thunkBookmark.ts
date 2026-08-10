@@ -19,7 +19,7 @@ export const addBookmark = createAsyncThunk<
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data?.error ??
-                    "Unable to fetch lesson"
+                    "Unable to add bookmark"
                 )
             }
             console.log("leson error is " + error?.message)
@@ -44,7 +44,7 @@ export const getBookmark = createAsyncThunk<
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data?.error ??
-                    "Unable to fetch lesson"
+                    "Unable to fetch bookmarks"
                 )
             }
             console.log("leson error is " + error?.message)
@@ -69,7 +69,7 @@ export const deleteBookmark = createAsyncThunk<
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data?.error ??
-                    "Unable to fetch lesson"
+                    "Unable to delete bookmark"
                 )
             }
             console.log("leson error is " + error?.message)

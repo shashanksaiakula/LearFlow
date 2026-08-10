@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import Video, { OnProgressData, VideoRef } from 'react-native-video';
 import { Lesson } from '../../models/Lesson';
+import { BASE_URL } from '../../api/apiClinet';
 
 interface LessonVideoPlayerProps {
   lesson: Lesson;
@@ -28,7 +29,7 @@ const LessonVideoPlayer = ({
     <View style={styles.videoContainer}>
       <Video
         source={{
-          uri: lesson.videoLink,
+          uri: `${BASE_URL}${lesson.videoUrl}`,
         }}
         ref={videoRef}
         style={styles.video}

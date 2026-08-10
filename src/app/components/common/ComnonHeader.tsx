@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         flex: 1,
         ...Typography.h2,
         color: Colors.black,
-        textAlign: 'center'
+        textAlign: 'center',
     }, iconStyle: {
         paddingHorizontal: 10
     }

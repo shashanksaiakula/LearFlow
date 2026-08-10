@@ -3,32 +3,28 @@ import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import LessonCard from '../../components/LessonCard'
 import useCousre from '../../hooks/useCousre'
+import { Lesson } from '../../models/Lesson'
 
 type LessonProps = {
-    courseId: number,
-    lessonId : number
-    onClick: (lessonId: number) => void
+    courseId: string,
+    lessonId : string
+    onClick: (lessonId: string) => void,
+    lessons : Lesson[]
 }
 
-const LessonList = ({ courseId, onClick,lessonId }: LessonProps) => {
-    const { loading, error, courses } = useCousre(courseId)
-    if (loading) {
-        return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
-    }
+const LessonList = ({ onClick,lessonId,lessons }: LessonProps) => {
 
-    if (error) {
-        return <Text style={styles.errorStyle}>{error}</Text>
-    }
+    console.log("list lesson is ",lessons)
 
     return (
         <View style={styles.container}>
             <FlatList
-                data={courses?.lessons}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={(item) =>
-                    <LessonCard lesson={item.item} onClick={() => {
-                        onClick(item.item.id)
-                    }} isActive= {item.item.id === lessonId} />
+                data={lessons.data}
+                keyExtractor={(item,index) => `${item._id}+${index}`}
+                renderItem={({item}) =>
+                    <LessonCard lesson={item} onClick={() => {
+                        onClick(item.lessonCode)
+                    }} isActive= {item._id === lessonId} />
                 }
             />
         </View>

@@ -10,8 +10,8 @@ type NotesPros = {
     currentTime: number
     playResumeAction : (isPLay : boolean) => void
     onClick : (timeStamp : number) => void
-    courseId : number
-    lessonId : number
+    courseId : string
+    lessonId : string
 }
 
 interface NotesModel {
