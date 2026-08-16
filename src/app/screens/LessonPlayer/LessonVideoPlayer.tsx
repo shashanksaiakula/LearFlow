@@ -48,17 +48,19 @@ const LessonVideoPlayer = ({
 
   const navigation = useNavigation()
   const dispatch = useDispatch<AppDispatch>()
+  const nextLesson = lessons?.find(getLesson => getLesson.order === lesson.order + 1)
 
   useFocusEffect(
     useCallback(() => {
       const onHardwareBackPress = async () => {
         // 1. Run your exact same dispatch action
-      await   dispatch(
+        await dispatch(
           updateEnrollent({
             id: enrolledId,
             currentLessonCode: lesson.lessonCode,
             currentLessonPosition: currentSec,
-            progress: progress
+            progress: progress,
+
           })
         ).unwrap()
 
@@ -113,7 +115,7 @@ const LessonVideoPlayer = ({
         //  paused={paused} 
         onEnd={async () => {
           setCurrentSec(0)
-          const nextLesson = lessons?.find(getLesson => getLesson.order === lesson.order + 1)
+
 
           const progress = Math.round((lesson.order / lessons.length) * 100)
           if (nextLesson === undefined) {
@@ -121,7 +123,9 @@ const LessonVideoPlayer = ({
           }
           await dispatch(updateEnrollent({
             id: enrolledId, currentLessonCode: nextLesson.lessonCode, currentLessonPosition: 0, progress: progress,
-            completedLessonCode: lesson.lessonCode
+            completedLessonCode: lesson.lessonCode,
+            lastPlayedLessonCode: nextLesson?.lessonCode,
+            lastPlayedLessonPosition: 0
           })).unwrap()
           await dispatch(getEnrolledCourse()).unwrap()
           setCurrentSec(0)

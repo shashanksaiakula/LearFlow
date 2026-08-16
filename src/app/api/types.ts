@@ -143,10 +143,12 @@ export interface getEnrollResponse {
 
 export interface updateEnrollmentRequest {
     id: string,
-    currentLessonCode: string,
-    currentLessonPosition: number,
-    progress: number,
-    completedLessonCode? : string
+    currentLessonCode?: string,
+    currentLessonPosition?: number,
+    progress?: number,
+    completedLessonCode? : string,
+    lastPlayedLessonCode? : string,
+    lastPlayedLessonPosition? :number
 }
 export interface updateEnrollmentResponse {
     success: boolean,

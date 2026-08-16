@@ -66,7 +66,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
 
   const enrolledId = enrollments?.filter(enroll => enroll.userId === user?._id)
     .find(course => (course.courseCode === courseId))
-  console.log("enrolledis is 1 ", enrolledId?.completedLessonCode)
+  console.log("enrolledis is 1 ", enrolledId?.lastPlayedLessonCode)
   if (loading) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
@@ -76,6 +76,24 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   if (error) {
     console.log("error is " + error)
     return <Text style={styles.errorStyle}>{error}</Text>
+  }
+
+  function handleLessoChages(
+    lessonChangedId: string,
+    lastPlayedCode?: string,
+    lastPlayedPosition?: number
+  ) {
+    console.log("Clicked lesson:", lessonChangedId);
+    console.log("Current server last played code:", lastPlayedCode);
+
+    // Compare using the fresh arguments passed from the click event
+    if (lastPlayedCode && lessonChangedId === lastPlayedCode) {
+      setResumePosition(lastPlayedPosition ?? 0);
+    } else {
+      setResumePosition(0);
+    }
+
+    setLessonID(lessonChangedId);
   }
 
 
@@ -103,11 +121,14 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
 
         {selectTab === 'video-list' && (
           <LessonList
-            onClick={setLessonID}
+            enrolledId={enrolledId?._id}
+            onClick={(id) => handleLessoChages(id, enrolledId?.lastPlayedLessonCode, enrolledId?.lastPlayedLessonPosition)}
             lessonId={lessonID}
             lessons={lessons}
             completedList={enrolledId?.completedLessonCode}
-            LastLessonPlayed={enrolled?.currentLessonCode}
+            lastLessonPlayedcode={enrolledId?.lastPlayedLessonCode}
+            currentVideoSec={currentSec}
+
           />
         )}
 

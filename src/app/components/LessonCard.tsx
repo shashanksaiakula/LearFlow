@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Lesson } from '../models/Lesson'
 import { Typography } from '../theme/typography'
@@ -13,26 +13,33 @@ interface LessonProps {
     isActive: boolean
     onClick: () => void,
     index: number,
-    currentLesson : string,
-    completedList : string[],
-    lastLessonPlayed : string
+    currentLesson: string,
+    completedList: string[],
+    lastLessonPlayed: string
 }
 
-const LessonCard = ({ lesson, onClick, isActive, index, currentLesson,completedList,lastLessonPlayed }: LessonProps) => {
+const LessonCard = ({ lesson, onClick, isActive, index, currentLesson, completedList, lastLessonPlayed }: LessonProps) => {
     const [isExpanded, setIsExpanded] = useState(false)
-    //  const CompletedIndex = parseInt(currentLesson.slice(-1))
-    
-    function handleclickCard(){
-        if(completedList.includes(lesson.lessonCode) || lastLessonPlayed === lesson.courseCode) {
-            onClick()
-        } else{
-            console.log("plase complete older lesson to watch this")
-        }
-    }
 
+    console.log("lesson is ",lastLessonPlayed)
+    const renderLessonIcon = (lessonCode: string) => {
+        // 1. If it's the active lesson, show the play icon
+        if (completedList?.includes(lessonCode)) {
+            return <CommonIconWithLoder icon="check-circle-outline" loading={false} size={18} color={Colors.success} isBackground={false} />;
+        } 
+        if (lastLessonPlayed === lessonCode) {
+            return <CommonIconWithLoder icon="play-circle-outline" loading={false} size={18} color={Colors.primary} isBackground={false} />;
+        }
+
+        // 2. If the lesson is finished, show the checkmark icon
+
+
+        // 3. Otherwise, show the lock icon
+        return <CommonIconWithLoder icon="lock" loading={false} size={18} isBackground={false} color={Colors.iconsColor} />;
+    };
     return (
-        <TouchableOpacity onPress={handleclickCard} style={[styles.card, isActive && { backgroundColor: "#E3F2FD" }, 
-        currentLesson=== lesson.lessonCode && { borderLeftColor: Colors.primary, borderLeftWidth: 5} ]}>
+        <TouchableOpacity onPress={onClick} style={[styles.card, isActive && { backgroundColor: "#E3F2FD" },
+        currentLesson === lesson.lessonCode && { borderLeftColor: Colors.primary, borderLeftWidth: 5 }]}>
             <View style={styles.mainContainer}>
                 <View style={styles.indexView}>
                     <Text style={styles.index}>{index}</Text>
@@ -42,10 +49,8 @@ const LessonCard = ({ lesson, onClick, isActive, index, currentLesson,completedL
                 </View>
                 <View >
                     <View style={{ justifyContent: 'center', flex: 1 }}>
-                        { completedList.includes(lesson.lessonCode)? 
-                        <CommonIconWithLoder icon='check-circle-outline' loding={false} size={18} color={Colors.success} isBackground={false} />
-                        :
-                        <CommonIconWithLoder icon='lock' loding={false} size={18} isBackground={false} color={Colors.iconsColor} />}
+                        {renderLessonIcon(lesson.lessonCode)}
+
                     </View>
                 </View>
                 <View>

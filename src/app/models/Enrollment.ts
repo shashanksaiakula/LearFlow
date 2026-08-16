@@ -11,6 +11,8 @@ export interface Enrollment {
   createdAt: string;
   updatedAt: string;
   currentLessonPosition : number;
+  lastPlayedLessonPosition : number;
   currentLessonCode : string
+  lastPlayedLessonCode : string
   completedLessonCode : []
 }
