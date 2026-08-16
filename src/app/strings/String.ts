@@ -81,6 +81,8 @@ export  const Strings = {
      save : "Save",
      Time_stamp : "TIMESTAMP ",
      write_your_obs:"Write youe Observation",
-     all_lessons: "All Lessons"
+     all_lessons: "All Lessons",
+     my_cousrses : "My Cousrses",
+     my_bookmarked : "My Bookedmarked Cousrses"
 
 }

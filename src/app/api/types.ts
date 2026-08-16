@@ -77,8 +77,9 @@ export interface getReviewsResponse {
 }
 
 export interface homeResponse {
-    continueLearning: ContinueLearning,
-    categories: Category[],
+    continueLearning: Enrollment,
+    myCourses : Enrollment[],
+    bookmarkd : Bookmark[]
     recommendedCourses: Course[]
 }
 

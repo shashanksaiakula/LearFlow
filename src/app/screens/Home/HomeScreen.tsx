@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutRequested } from '../../redux/slices/authSlice';
-import { RootState } from '../../redux/store'
+import { AppDispatch, RootState } from '../../redux/store'
 import CourseCard from '../../components/CourseCard';
 import HomeHeader from '../../components/HomeHeader';
 import ContinueLearningCard from '../../components/ContinueLearningCard';
@@ -21,6 +21,13 @@ import { Strings } from '../../strings/String';
 import { Typography } from '../../theme/typography';
 import HomeIcon from '../../assets/svg/home-icon.svg'
 import { Input } from '../../components/Input';
+import { requestAllCourses } from '../../redux/slices/courseSlicer';
+import { selectInProgressCourses } from '../../redux/selectors/courseSelectors';
+import { getAllENrolleCousrses } from '../../api/enrollApi';
+import { getEnrolledCourse } from '../../redux/thunk/enrollThunk';
+import MyCousrseCard from '../../components/MyCousrseCard';
+import { selectBookmarkedCourses } from '../../redux/selectors/bookmarkSelector';
+import { getBookmark } from '../../redux/thunk/thunkBookmark';
 
 //router props
 type HomeScreenRoutProp = RouteProp<
@@ -42,21 +49,23 @@ type props = {
 }
 
 const HomeScreen = ({ route, navigation }: props) => {
-  const dispatch = useDispatch()
-  const [search, setSearch] = useState("")
+  const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
-    // dispatch(requestAllCourses())
+    dispatch(requestAllCourses())
+    dispatch(getBookmark())
     dispatch(homeRequest())
+    dispatch(getEnrolledCourse())
   }, [dispatch])
   // const navigation = useNavigation<>()
 
   const user = useSelector((state: RootState) => state.auth.user)
 
-  // const { loading, courses, error } = useSelector((state: RootState) => state.courses)
-
   const { loading, homeResponse, error } = useSelector((state: RootState) => state.home)
+  const inProgressCousres = useSelector(selectInProgressCourses)
+  const myBookermark = useSelector(selectBookmarkedCourses)
+  const currentLearning = inProgressCousres.find(course => course.courseCode === homeResponse?.continueLearning.courseCode)
 
-
+console.log("bookmark us ",myBookermark)
   if (loading) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
@@ -87,36 +96,26 @@ const HomeScreen = ({ route, navigation }: props) => {
           </View>
           <HomeIcon width="40%" height="100%" />
         </View>
-        <SectionHeader title={Strings.contine_learning} onPress={()=>{navigation.navigate('BottomTab', {screen : "myLearning"})}}/>
-        {homeResponse && <ContinueLearningCard continueLearning={homeResponse?.continueLearning} />}
-        {/* <SectionHeader title={Strings.categories} />
+        <SectionHeader title={Strings.contine_learning} isShowViewAll={false} />
+        {currentLearning && <ContinueLearningCard continueLearning={{
+          progress: currentLearning.progress,
+          thumbnail: currentLearning.thumbnail,
+          title: currentLearning.title,
+          isCompleted: (currentLearning.progress === 100)
+        }} />}
+        <SectionHeader title={Strings.my_cousrses} onPress={() => { navigation.navigate('BottomTab', { screen: "myLearning" }) }} />
         <FlatList
           horizontal={true}
-          data={homeResponse?.categories}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <CategoryCard category={item} />
-          )}
-        /> */}
-        <SectionHeader title={Strings.recommended_for_you} />
-        {/* <FlatList
-        horizontal={true}
-          // ListHeaderComponent={HomeHeader}
-          data={homeResponse?.recommendedCourses[0]}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <CourseCard course={item} onClick={() => navigation.navigate("CourseDetails", {
-              courseId: item.id
-            })} />
-          )}
-        /> */}
-        {homeResponse && <CourseCard course={homeResponse?.recommendedCourses[4]} onClick={() => {}
-      //   navigation.navigate("CourseDetails", {
-      //     courseId: homeResponse?.recommendedCourses[4].id
-      //   }
-      // )
-      } 
-        />}
+          data={inProgressCousres.slice(0, 2)}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) =>
+            <MyCousrseCard course={item} onClick={() => { }} />
+          }
+        />
+        <SectionHeader title={Strings.recommended_for_you} isShowViewAll={false} />
+        {homeResponse?.recommendedCourses[0] && <CourseCard course={homeResponse?.recommendedCourses[0]} onClick={() => { }} />}
+        <SectionHeader title={Strings.my_bookmarked} onPress={() => { navigation.navigate('BottomTab', { screen: "bookmarks" }) }} />
+        {myBookermark.length >0 && <CourseCard course={myBookermark[0]} onClick={() => { }} isBoomarked={true}/>}
       </ScrollView>
     </CommomBackGround>
   )

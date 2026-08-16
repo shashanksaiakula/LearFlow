@@ -17,7 +17,7 @@ interface ContinueLearningProps {
 
 const ContinueLearningCard = ({ continueLearning,onPress }: ContinueLearningProps) => {
 
-
+  
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View>

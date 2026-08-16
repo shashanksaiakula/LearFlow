@@ -21,6 +21,7 @@ export interface Course {
         },
         whatYouWillLearn : string[]
     },
+    bannerImage :string
 
 }
 

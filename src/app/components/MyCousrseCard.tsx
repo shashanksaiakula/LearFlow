@@ -7,16 +7,15 @@ import { Typography } from '../theme/typography';
 import { Strings } from '../strings/String';
 import { BASE_URL } from '../api/apiClinet';
 
-interface CourseCardProps {
+interface MyCousrseCard {
   course: Course;
   onClick: () => void,
   isBoomarked? : boolean,
   bookmarkPressed?: ()=>void
 }
 
-export default function CourseCard({ course, onClick, isBoomarked, bookmarkPressed }: CourseCardProps) {
+export default function MyCousrseCard({ course, onClick, isBoomarked, bookmarkPressed }: MyCousrseCard) {
 
-  console.log("level is ",course.level)
   let leveColor = ""
   if (course.level === Strings.beginner) {
     leveColor = Colors.success
@@ -29,7 +28,7 @@ export default function CourseCard({ course, onClick, isBoomarked, bookmarkPress
   return (
     <TouchableOpacity style={styles.container} onPress={onClick}>
       <View>
-        <Image source={{ uri: `${BASE_URL}${course.thumbnail}` }}
+        <Image source={{ uri: `${BASE_URL}${course.bannerImage}` }}
           style={styles.thumbnail}
         />
       </View>
@@ -40,28 +39,18 @@ export default function CourseCard({ course, onClick, isBoomarked, bookmarkPress
           <Text style={[styles.bottomText, { color: leveColor }]}>{course.level}</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={bookmarkPressed}>
-        <MaterialDesignIcons
-          name={isBoomarked ? 'bookmark' :'bookmark-outline'}
-          size={28}
-          color={isBoomarked ? Colors.primary : Colors.iconsColor}
-        />
-      </TouchableOpacity>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    padding: 8,
+    marginVertical: 2,
+    marginHorizontal: 5,
     borderRadius: 10,
     backgroundColor: "#FFF",
     elevation: 3,
-    flexDirection: "row",
-    justifyContent: 'space-between',
-    alignItems: 'center',
   }, bottomTextSyle: {
     flex: 1,
     flexDirection: "row",
@@ -69,8 +58,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   thumbnail: {
-    width: 90,
-    height: 90,
+    width: "100%",
+    height: 120,
     resizeMode: 'stretch',
     borderRadius: 10
   }, titleStyle: {
