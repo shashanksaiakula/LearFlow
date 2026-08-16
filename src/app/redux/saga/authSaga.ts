@@ -29,7 +29,7 @@ function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any,
             user: profileReponse.data.data
         }))
     } catch (err) {
-        // console.log("error is ", err)
+        console.log("error is ", err)
         // yield put(loginFailed(err?.message ?? 'Something went wrong'));
         const error = err as AxiosError<{
         // statusCode: number;

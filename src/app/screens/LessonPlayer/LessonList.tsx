@@ -1,30 +1,42 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import {  StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import LessonCard from '../../components/LessonCard'
-import useCousre from '../../hooks/useCousre'
 import { Lesson } from '../../models/Lesson'
+import { Strings } from '../../strings/String'
+import { Typography } from '../../theme/typography'
+import { Spacing } from '../../theme/spacing'
 
 type LessonProps = {
     courseId: string,
-    lessonId : string
+    lessonId: string
     onClick: (lessonId: string) => void,
-    lessons : Lesson[]
+    lessons: Lesson[],
+    completedList? :string[],
+    lastLessonPlayed? : string
 }
 
-const LessonList = ({ onClick,lessonId,lessons }: LessonProps) => {
+const LessonList = ({ onClick, lessonId, lessons,completedList,lastLessonPlayed }: LessonProps) => {
 
-    console.log("list lesson is ",lessons)
-
+    const sortedLessons = lessons?.data
+        ? [...lessons.data].sort((a, b) => a.lessonNumber - b.lessonNumber)
+        : [];
     return (
         <View style={styles.container}>
+            <Text style={styles.titleStyle}>{Strings.all_lessons} {lessons.data.length}</Text>
             <FlatList
-                data={lessons.data}
-                keyExtractor={(item,index) => `${item._id}+${index}`}
-                renderItem={({item}) =>
+                data={sortedLessons}
+                keyExtractor={(item, index) => `${item._id}+${index}`}
+                renderItem={({ item }) =>
                     <LessonCard lesson={item} onClick={() => {
                         onClick(item.lessonCode)
-                    }} isActive= {item._id === lessonId} />
+                    }}
+                        isActive={item._id === lessonId}
+                        index={item.order} 
+                        currentLesson={lessonId}
+                        completedList={completedList}
+                        lastLessonPlayed={lastLessonPlayed}
+                        />
                 }
             />
         </View>
@@ -60,5 +72,9 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 22,
         fontWeight: "800"
+    }, titleStyle: {
+        ...Typography.h2,
+        fontWeight: 'bold',
+        paddingHorizontal: Spacing.xxs
     }
 })

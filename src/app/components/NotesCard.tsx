@@ -1,21 +1,45 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { parseTimeToSeconds } from '../utils/timeUtils'
+import React, { useState } from 'react'
+import { formatTime, formatToLocalTime, parseTimeToSeconds } from '../utils/timeUtils'
+import CommonIconWithLoder from './CommonIconWithLoder'
+import { Colors } from '../theme/colors'
+import { Spacing } from '../theme/spacing'
+import { Typography } from '../theme/typography'
 
-type NotesProps={
-    timeStamp : string
-    text : string
-    onClick : (seek : number) => void
+type NotesProps = {
+  timeStamp: string
+  text: string
+  onClick: (seek: number) => void,
+  isSelected: boolean
+  onSelectActive: () => void
+  editClickHandel?: () => void
+  deleteClickHandel?: () => void
+  isLodingDelete?: boolean
+  isLodingEdit?: boolean,
+  date: string
 }
 
 
-const NotesCard = ({timeStamp, onClick, text} : NotesProps) => {
+const NotesCard = ({ timeStamp, onClick, text, onSelectActive, isSelected, editClickHandel, deleteClickHandel, isLodingDelete, isLodingEdit, date }: NotesProps) => {
   return (
-    <TouchableOpacity style={[styles.card]}  onPress={()=> onClick(parseTimeToSeconds(timeStamp))}>
-      <Text style={styles.timeStyle}>{timeStamp}</Text>
+    <TouchableOpacity style={[styles.card, isSelected && { borderLeftColor: Colors.primary, borderLeftWidth: 5, }]} onPress={() => onClick(parseTimeToSeconds(timeStamp))}
+
+      onLongPress={onSelectActive}
+    >
+      <View style={styles.timeStampStyle}>
+        <Text style={styles.timeStyle}>{formatTime(parseInt(timeStamp))}</Text>
+      </View>
       <View style={styles.textContainer}>
         <Text style={styles.textStyle}>{text}</Text>
+        <Text style={styles.dateStyle}>{formatToLocalTime(date)}</Text>
       </View>
+      {isSelected && <View style={styles.icons}>
+        <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+          <CommonIconWithLoder icon='pencil-outline' loding={isLodingEdit ?? false} onPress={editClickHandel} size={28} />
+          <CommonIconWithLoder icon='trash-can-outline' loding={isLodingDelete ?? false} onPress={deleteClickHandel} size={28} />
+        </View>
+      </View>
+      }
     </TouchableOpacity>
   )
 }
@@ -30,21 +54,31 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#FFF",
     margin: 5,
-    alignItems: 'center', // Aligns timestamp and text vertically in the center
     flexDirection: 'row',
   },
   timeStyle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingRight: 12, // Increased spacing between time and text
-    width: 55, // Fixed width prevents layout shifts with varying time lengths
+    ...Typography.caption,
+    backgroundColor: Colors.primaryLight1,
+    marginRight: Spacing.sm,
+    padding: Spacing.xs,
+    fontWeight: 600,
+    borderRadius: 10,
+    textAlign: 'right'
   },
   textContainer: {
     flex: 1, // Crucial: Absorbs remaining horizontal space and forces text wrapping
   },
   textStyle: {
-    fontSize: 14,
-    color: '#333',
-    // Removed margins that conflict with row layout bounding
-  }
+    ...Typography.body1
+  }, icons: {
+    justifyContent: 'flex-end',
+    flexDirection: 'row'
+  },
+  dateStyle: {
+    ...Typography.caption,
+    fontWeight: '300',
+    textAlign: 'right'
+  }, timeStampStyle: {
+    justifyContent: 'flex-start',
+  },
 })

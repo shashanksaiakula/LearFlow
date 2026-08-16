@@ -40,6 +40,7 @@ const CousresListScreen = () => {
   const inProgressCourses = useSelector(selectInProgressCourses);
   const yetToEnrollCourses = useSelector(selectYetToEnrollCourses);
   const completedCourses = useSelector(selectCompletedCourses);
+
   useEffect(() => {
     dispatch(getEnrolledCourse())
     dispatch(getBookmark())
@@ -66,7 +67,7 @@ const CousresListScreen = () => {
 
   const applyFilters = <T extends Course>(
     courseList: T[]
-): T[] => {
+  ): T[] => {
     return courseList.filter(course => {
 
       const matchesCategory =
@@ -94,7 +95,7 @@ const CousresListScreen = () => {
     {
       type: "inProgress",
       title: Strings.in_progress,
-      data: applyFilters(inProgressCourses,),
+      data: applyFilters(inProgressCourses),
     },
     {
       type: "notEnrolled",
@@ -186,10 +187,13 @@ const CousresListScreen = () => {
                   isCompleted: false,
                 }}
                 onPress={() => {
+                  console.log("onPress inprog =s ", item.currentLessonPosition)
                   navigation.navigate("CourseDetails", {
                     courseId: item.courseCode,
                     progress: item.progress,
-                    isEnrolled: true
+                    isEnrolled: true,
+                    currentLessonCode: item.currentLessonCode,
+                    currentLessonPosition: item.currentLessonPosition
                   });
                 }}
               />
@@ -209,7 +213,9 @@ const CousresListScreen = () => {
                   navigation.navigate("CourseDetails", {
                     courseId: item.courseCode,
                     progress: item.progress,
-                    isEnrolled: true
+                    isEnrolled: true,
+                    currentLessonCode: item.currentLessonCode,
+                    currentLessonPosition: item.currentLessonPosition
                   });
                 }}
               />
@@ -224,17 +230,19 @@ const CousresListScreen = () => {
                   courseId: item.courseCode,
                   isEnrolled: false,
                   progress: 0,
+                  currentLessonCode: "",
+                  currentLessonPosition: 0
                 });
               }}
-              bookmarkPressed={ async() => {
-                if(item.isBookmarked){
-                 await dispatch(deleteBookmark({id : item.bookmarkId})).unwrap()
-                } else{
-                 await dispatch(addBookmark({ courseCode: item.courseCode })).unwrap()
+              bookmarkPressed={async () => {
+                if (item.isBookmarked) {
+                  await dispatch(deleteBookmark({ id: item.bookmarkId })).unwrap()
+                } else {
+                  await dispatch(addBookmark({ courseCode: item.courseCode })).unwrap()
                 }
                 dispatch(getBookmark())
               }}
-              isBoomarked ={item.isBookmarked}
+              isBoomarked={item.isBookmarked}
             />
           );
         }}

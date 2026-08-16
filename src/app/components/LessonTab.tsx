@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { Colors } from '../theme/colors';
 
 export type LessonTabType =
   | 'notes'
@@ -47,14 +48,14 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 10,
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    elevation: 3,
     borderRadius: 8,
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
+    borderBottomWidth : 2,
+    borderBottomColor : Colors.disabled
   },
   selectedStyle: {
     borderBottomWidth: 3,
-    borderBottomColor: '#007AFF'
+    borderBottomColor: Colors.primary
   },
   TextStyle: {
     padding: 8,

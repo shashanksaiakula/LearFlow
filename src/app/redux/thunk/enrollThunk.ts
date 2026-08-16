@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getEnrollResponse, postEnrollRequest, postEnrollResponse } from "../../api/types";
+import { getEnrollResponse, postEnrollRequest, postEnrollResponse, updateEnrollmentRequest, updateEnrollmentResponse } from "../../api/types";
 import axios from "axios";
-import { enrollToCousre, getAllENrolleCousrses } from "../../api/enrollApi";
+import { enrollToCousre, getAllENrolleCousrses, updateEnrollment } from "../../api/enrollApi";
 
 export const enrollIntoCousre = createAsyncThunk<
     postEnrollResponse,
@@ -13,14 +13,15 @@ export const enrollIntoCousre = createAsyncThunk<
     "enrollIntoCousre/add",
     async (request, { rejectWithValue }) => {
         try {
+            console.log(JSON.stringify(request))
             const response = await enrollToCousre(request)
-            console.log("enroll is",response)
+            console.log("enroll is", response)
             return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data.error ??
-                    "Unable to fetch instructor"
+                    "Unable to enroll into course"
                 )
             }
             console.log("eroolent add error is " + error?.message)
@@ -45,7 +46,32 @@ export const getEnrolledCourse = createAsyncThunk<
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data.error ??
-                    "Unable to fetch instructor"
+                    "Unable to fetch emrolled details"
+                )
+            }
+            console.log("eroolent add error is " + error?.message)
+            return rejectWithValue("Something went wrong")
+        }
+    }
+)
+
+export const updateEnrollent = createAsyncThunk<
+    updateEnrollmentResponse,
+    updateEnrollmentRequest,
+    {
+        rejectValue: string
+    }
+>(
+    "updateEnrollment/update",
+    async (request, { rejectWithValue }) => {
+        try {
+            const response = await updateEnrollment(request)
+            return response.data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(
+                    error.response?.data.error ??
+                    "Unable to update enrolled cousre"
                 )
             }
             console.log("eroolent add error is " + error?.message)

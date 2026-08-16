@@ -15,5 +15,6 @@ export const ENDPOINTS = {
     GETLESSSONBYID : '/course',
     TRANSCRIPT : '/transcript',
     ENROLLMENT : "/enrollment",
-    BOOKMARK : "/bookmark"
+    BOOKMARK : "/bookmark",
+    NOTES: "/notes"
 } as const;

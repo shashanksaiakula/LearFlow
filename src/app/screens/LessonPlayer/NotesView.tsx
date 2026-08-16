@@ -1,72 +1,120 @@
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { formatTime } from '../../utils/timeUtils'
 import NotesCard from '../../components/NotesCard'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNote } from '../../redux/slices/noteSlice'
-import { RootState } from '../../redux/store'
+import { AppDispatch, RootState } from '../../redux/store'
+import { deleteNotes, getNotes, postNotes, updateNotes } from '../../redux/thunk/notesThunk'
+import { Spacing } from '../../theme/spacing'
+import { Strings } from '../../strings/String'
+import { Typography } from '../../theme/typography'
+import { Colors } from '../../theme/colors'
+import NoteModal from '../../components/notebottommodal/NoteModal'
 
 type NotesPros = {
     currentTime: number
-    playResumeAction : (isPLay : boolean) => void
-    onClick : (timeStamp : number) => void
-    courseId : string
-    lessonId : string
-}
-
-interface NotesModel {
-    id: string
-    timestamp: string
-    note: string,
+    playResumeAction: (isPLay: boolean) => void
+    onClick: (timeStamp: number) => void
+    courseId: string
+    lessonId: string
 }
 
 const NotesView = ({ currentTime, playResumeAction, onClick, courseId, lessonId }: NotesPros) => {
 
-    const dispach = useDispatch()
-    const [input, setInput] = useState("")
-    const [note, setNote] = useState<NotesModel[]>([])
+    const dispach = useDispatch<AppDispatch>()
+    const [isShowModal, setIsShowModal] = useState(false)
+    const [addNote, setAddNote] = useState("")
+    const [editNotId, setEditNoteId] = useState("")
+    const { loding, error, note, noteslist, lodingDelete, lodingEdit } = useSelector((state: RootState) => state.note)
     const [focus, setOnFocus] = useState(false)
-    // const {records} = useSelector((state : RootState) => state.note)
-    // const notes = records.map((item) => )
-     const notesList = useSelector((state: RootState) => state.note.records[courseId]?.[lessonId] ?? []);
-    function handleSaveNote() {
-        const newNote = {
-            id: Date.now().toString(),
-            timestamp: formatTime(currentTime),
-            note: input
-        }
-        setNote((perviosuNote) => [...perviosuNote, newNote])
-        setInput("")
+    const [activeCardId, setActiveCardId] = useState<number | null>(null);
+    useEffect(() => {
+        dispach(getNotes({ courseCode: courseId, lessonCode: lessonId }))
+    }, [dispach, courseId, lessonId])
+
+    async function handleSaveNote() {
+         setActiveCardId(null)
+        // setInput("")y
         setOnFocus(false)
         playResumeAction(false)
-        dispach(addNote({
-            courseId : courseId,
-            lessonId : lessonId,
-            note : newNote
-        }))
+        setIsShowModal(!isShowModal)
+        if (editNotId) {
+            await dispach(updateNotes({ note : addNote, id : editNotId})).unwrap()
+        } else {
+           await dispach(postNotes({ courseCode: courseId, lessonCode: lessonId, note: addNote, timestamp: currentTime })).unwrap()
+        }
+        dispach(getNotes({ courseCode: courseId, lessonCode: lessonId }))
     }
-    function handelOnFouus(){
-        setOnFocus(true)
+    function handelCancel() {
+        setAddNote("")
+        setIsShowModal(false)
+        playResumeAction(false)
+        setActiveCardId(null)
+    }
+
+    function handleDeleteClick(id: string) {
+        dispach(deleteNotes({ id: id }))
+        setActiveCardId(null)
+        dispach(getNotes({ courseCode: courseId, lessonCode: lessonId }))
+    }
+    function handelEditClick(note: string, id : string) {
+        setAddNote(note)
+        setIsShowModal(!isShowModal)
+        playResumeAction(true)
+        setEditNoteId(id)
+    }
+
+    function handelAddNote() {
+        setIsShowModal(!isShowModal)
         playResumeAction(true)
     }
 
     return (
         <View style={styles.constainer}>
+            <View style={styles.topContainer}>
+                <Text style={styles.myNoteStyle}>{Strings.my_notes}</Text>
+                <Pressable onPress={() => handelAddNote()}>
+                    <Text style={styles.addNoteStyle}>+ {Strings.add_notes}</Text>
+                </Pressable>
+            </View>
             <FlatList
-                data={notesList}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <NotesCard text={item.note} timeStamp={item.timestamp} onClick={onClick} />}
+                data={noteslist}
+                keyExtractor={(item, index) => `${item.id}+${index}`}
+                renderItem={({ item, index }) =>
+                    <NotesCard text={item.note} timeStamp={item.timestamp.toString()} onClick={onClick}
+                        isSelected={activeCardId === index}
+                        onSelectActive={() => {
+                            playResumeAction(activeCardId === null ? true : false)
+                            setActiveCardId(activeCardId === index ? null : index);
+                        }}
+                        deleteClickHandel={() => handleDeleteClick(item._id ?? "")}
+                        editClickHandel={() => handelEditClick(item.note, item._id)}
+                        isLodingDelete={lodingDelete}
+                        isLodingEdit={lodingEdit}
+                        date ={item.createdAt ?? ""}
+                    />}
 
             />
-            <View style={styles.inputFiledStyle}>
+            {/* <View style={styles.inputFiledStyle}>
                 {focus && <Text>{formatTime(currentTime)}</Text>}
-                <TextInput value={input} onChangeText={setInput} placeholder={focus ?  "" : 'Please enter Note'}
-                onFocus={handelOnFouus}
+                <TextInput value={input} onChangeText={setInput} placeholder={focus ? "" : 'Please enter Note'}
+                    onFocus={handelOnFouus}
                     returnKeyType="done"
                     onSubmitEditing={() => {
                         handleSaveNote()
                     }} />
-            </View>
+            </View> */}
+            {isShowModal &&
+                <NoteModal
+                    cancelBtnAction={() => { handelCancel() }}
+                    saveBtnAction={() => handleSaveNote()}
+                    showModel={isShowModal}
+                    timeStamp={formatTime(currentTime)}
+                    note={addNote}
+                    onChangeValue={setAddNote}
+                    title={Strings.note}
+                />
+            }
         </View>
     )
 }
@@ -84,8 +132,22 @@ const styles = StyleSheet.create({
         marginHorizontal: 8,
         borderRadius: 6,
         marginVertical: 10,
-        flexDirection : "row",
+        flexDirection: "row",
         // justifyContent: 'center',
-        alignItems : 'center'
+        alignItems: 'center'
+    }, topContainer: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        paddingHorizontal: Spacing.xs,
+        margin: Spacing.xxs
+    },
+    myNoteStyle: {
+        ...Typography.h2,
+        fontWeight: 'bold'
+    },
+    addNoteStyle: {
+        ...Typography.body1,
+        fontWeight: 'bold',
+        color: Colors.primary
     }
 })

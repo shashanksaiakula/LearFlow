@@ -13,14 +13,10 @@ interface InstructorProps {
 
 const InstructorScreen = ({ instructor }: InstructorProps) => {
   return (
-    <ScrollView 
-    showsVerticalScrollIndicator = {false}
-    contentContainerStyle={styles.conatainer}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.conatainer}>
       <Avather isEditScreen={false} image={instructor?.image} />
-      <CommonCard>
-        <Text style={styles.nameStyle}>{instructor.name}</Text>
-        <Text style={styles.bioStyle}>{instructor.bio}</Text>
-      </CommonCard>
       <View style={styles.rowConatiner}>
         <CommonCard>
           <Text style={styles.rowtextStyle}>Instructor Rating</Text>
@@ -37,6 +33,10 @@ const InstructorScreen = ({ instructor }: InstructorProps) => {
           </View>
         </CommonCard>
       </View>
+      <CommonCard>
+        <Text style={styles.nameStyle}>{instructor.name}</Text>
+        <Text style={styles.bioStyle}>{instructor.bio}</Text>
+      </CommonCard>
     </ScrollView>
   )
 }

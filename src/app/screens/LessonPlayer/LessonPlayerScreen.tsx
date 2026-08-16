@@ -37,14 +37,36 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   const [isPaused, setIsPaused] = useState(false);
   const [currentSec, setCurrentSec] = useState(0)
   const { lessons } = useSelector((state: RootState) => state.courses)
+  const { user } = useSelector((state: RootState) => state.auth)
+  const { enrollments, enrolled } = useSelector((state: RootState) => state.enroll)
+  const [resumePosition, setResumePosition] = useState(
+    route.params.currentLessonPosition ?? 0
+  );
+
   useEffect(() => {
     dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
   }, [dispatch, lessonID, courseId])
+
+  //   useEffect(() => {
+  // if (hasRestoredPosition.current) {
+  //     return;
+  //   }
+
+  //   const targetPosition = route.params.currentLessonPosition ?? 0;
+
+  //   if (targetPosition > 0 && videoRef.current) {
+  //     videoRef.current.seek(targetPosition);
+  //     hasRestoredPosition.current = true;
+  //   }
+  //   }, [route.params.currentLessonPosition]);
 
   const seekPress = useCallback((seek: number) => {
     videoRef.current?.seek(seek + 1)
   }, [])
 
+  const enrolledId = enrollments?.filter(enroll => enroll.userId === user?._id)
+    .find(course => (course.courseCode === courseId))
+  console.log("enrolledis is 1 ", enrolledId?.completedLessonCode)
   if (loading) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
@@ -56,16 +78,37 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
     return <Text style={styles.errorStyle}>{error}</Text>
   }
 
-  // console.log("vidoeplayer is "+ lesson?.videoType)
+
+
   return (
     <CommomBackGround>
       <View style={styles.container}>
         {/* <ComnonHeader title={lesson?.title} /> */}
-        {lesson && <LessonVideoPlayer lesson={lesson} videoRef={videoRef ?? null} onProgress={setCurrentSec} paused={isPaused} />}
+        {lesson &&
+          <LessonVideoPlayer
+            lesson={lesson}
+            videoRef={videoRef}
+            onProgress={setCurrentSec}
+            paused={isPaused}
+            lessons={lessons?.data}
+            initialPosition={resumePosition}
+            onLessonComplete={(lessonid) => {
+              setResumePosition(0)
+              setLessonID(lessonid)
+            }}
+            enrolledId={enrolledId?._id}
+            progress={enrolled?.progress}
+          />}
         <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
 
         {selectTab === 'video-list' && (
-          <LessonList onClick={setLessonID} lessonId={lessonID} lessons={lessons} />
+          <LessonList
+            onClick={setLessonID}
+            lessonId={lessonID}
+            lessons={lessons}
+            completedList={enrolledId?.completedLessonCode}
+            LastLessonPlayed={enrolled?.currentLessonCode}
+          />
         )}
 
         {selectTab === 'notes' && (
@@ -77,8 +120,9 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
             onClick={(timeStamp: number) => {
               console.log(" note", timeStamp)
               videoRef.current?.seek(timeStamp)
+              setIsPaused(false)
             }}
-            lessonId={lessonId}
+            lessonId={lessonID}
             courseId={courseId}
           />
         )}
@@ -102,21 +146,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop : Spacing.sm
+    marginTop: Spacing.sm,
   },
   indicatorStyle: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  WelcomeStyle: {
-    width: "100%",
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: 22,
-    elevation: 3,
-    backgroundColor: "#fff",
-
-  }
 })

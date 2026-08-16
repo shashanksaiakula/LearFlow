@@ -1,6 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { memo } from 'react'
 import { formatTime } from '../utils/timeUtils'
+import { Typography } from '../theme/typography'
+import { Colors } from '../theme/colors'
+import { Spacing } from '../theme/spacing'
 
 type transcriptCardProps={
     time : string
@@ -13,8 +16,10 @@ const TranscriptCard = memo(({time, text, onClick, isActive = false} : transcrip
   const timeStamp = formatTime(parseInt(time))
 
   return (
-    <TouchableOpacity style={[styles.card, isActive &&  {backgroundColor: "#E3F2FD"}]}  onPress={() => onClick(parseInt(time))}>
+    <TouchableOpacity style={[styles.card, isActive && { borderLeftColor: Colors.primary, borderLeftWidth: 5, backgroundColor : Colors.primaryLight3}]}  onPress={() => onClick(parseInt(time))}>
+      <View style={styles.timeStampStyle}> 
       <Text style={styles.timeStyle}>{timeStamp}</Text>
+      </View>
       {/* Wrapped in a View with flex: 1 to constrain horizontal expansion */}
       <View style={styles.textContainer}>
         <Text style={styles.textStyle}>{text}</Text>
@@ -43,6 +48,7 @@ const TranscriptCard = memo(({time, text, onClick, isActive = false} : transcrip
 
 export default TranscriptCard
 
+
 const styles = StyleSheet.create({
   card: {
     paddingHorizontal: 16,
@@ -51,21 +57,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#FFF",
     margin: 5,
-    alignItems: 'center', // Aligns timestamp and text vertically in the center
     flexDirection: 'row',
   },
   timeStyle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingRight: 12, // Increased spacing between time and text
-    width: 55, // Fixed width prevents layout shifts with varying time lengths
+    ...Typography.caption,
+    backgroundColor: Colors.primaryLight1,
+    marginRight: Spacing.sm,
+    padding: Spacing.xs,
+    fontWeight: 600,
+    borderRadius: 10,
   },
   textContainer: {
     flex: 1, // Crucial: Absorbs remaining horizontal space and forces text wrapping
   },
   textStyle: {
-    fontSize: 14,
-    color: '#333',
-    // Removed margins that conflict with row layout bounding
+    ...Typography.body1,
+    marginTop: Spacing.xs
+  },timeStampStyle:{
+    justifyContent : 'flex-start',
   }
 })

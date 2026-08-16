@@ -72,7 +72,8 @@ const listData = selectedTab === Strings.in_progress ? inProgressCourses : compl
                     onPress={()=>{
                         navigation.navigate('LessonPlayer', {
                             courseId : item.courseCode,
-                            lessonId : "lesson_001"
+                            lessonId : item.currentLessonCode,
+                            currentLessonPosition : item.currentLessonPosition
                         })
                     }}
                     />

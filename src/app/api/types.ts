@@ -5,6 +5,7 @@ import { Course, GetAllCoursesResponse } from "../models/course";
 import { Enrollment } from "../models/Enrollment";
 import { Instructor } from "../models/Instructor";
 import { Lesson } from "../models/Lesson";
+import { Notes } from "../models/Notes";
 import { Review } from "../models/Reviews";
 import { Transcript } from "../models/Transcript";
 
@@ -24,8 +25,8 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    profileImage : string
-    dateOfBirth : string
+    profileImage: string
+    dateOfBirth: string
 }
 
 export interface LoginResponse {
@@ -54,25 +55,25 @@ export interface getLessonsByCourseCodeResponse {
 }
 
 export interface getLessonsByCourseCodeRequest {
-    courseCode : string
+    courseCode: string
 }
 
-export interface getInsructorRequest{
-    name : string
+export interface getInsructorRequest {
+    name: string
 }
 
-export interface getInsructorResponse{
-    success : boolean,
-    data : Instructor
+export interface getInsructorResponse {
+    success: boolean,
+    data: Instructor
 }
 
-export interface getReviewsRequest{
-    courseCode : string
+export interface getReviewsRequest {
+    courseCode: string
 }
 
-export interface getReviewsResponse{
-    success : boolean,
-    data : Review
+export interface getReviewsResponse {
+    success: boolean,
+    data: Review
 }
 
 export interface homeResponse {
@@ -99,8 +100,8 @@ export interface TranscriptResponse {
 }
 
 export interface ChangePasswordRequest {
-    oldPassword : string,
-    newPassword : string
+    oldPassword: string,
+    newPassword: string
 }
 
 export interface ChangePasswordResponse {
@@ -114,43 +115,55 @@ export interface LogoutResponse {
 }
 
 export interface EditPriofileRequest {
-    name : string,
-    profileImage : string
-    dateOfBirth : string
+    name: string,
+    profileImage: string
+    dateOfBirth: string
 }
 
 export interface EditPriofileResponse {
     success: string;
     message: string;
-    user : User
+    user: User
 }
 
 export interface postEnrollRequest {
-    cousreCode : string
+    courseCode: string,
+    lessonCode : string
 }
 
 export interface postEnrollResponse {
-    success : boolean,
-    data : Enrollment
+    success: boolean,
+    data: Enrollment
 }
 
 export interface getEnrollResponse {
-    success : boolean,
-    data : Enrollment[]
+    success: boolean,
+    data: Enrollment[]
 }
 
-export interface addBookmaekRequest{
-     courseCode : string
+export interface updateEnrollmentRequest {
+    id: string,
+    currentLessonCode: string,
+    currentLessonPosition: number,
+    progress: number,
+    completedLessonCode? : string
 }
-export interface addBookmarkResponse{
-    success : boolean,
-    data : Bookmark
+export interface updateEnrollmentResponse {
+    success: boolean,
+    data: Enrollment
+}
+export interface addBookmaekRequest {
+    courseCode: string
+}
+export interface addBookmarkResponse {
+    success: boolean,
+    data: Bookmark
 
 }
 
 export interface getBookmarkResponse {
-    success : boolean,
-    data : Bookmark[]
+    success: boolean,
+    data: Bookmark[]
 }
 
 export interface deleteBookmarkRequest {
@@ -158,7 +171,45 @@ export interface deleteBookmarkRequest {
 }
 
 export interface deleteBookmarkResponse {
-     success : boolean,
-    data : any
+    success: boolean,
+    data: any
+}
+
+export interface getNoteRequest {
+    courseCode: string,
+    lessonCode: String
+}
+
+export interface getNoteResponse {
+    notes: Notes[]
+}
+
+export interface postNoteRequest {
+    courseCode: string,
+    lessonCode: String,
+    timestamp: number,
+    note: string
+}
+
+export interface postNoteResponse {
+    note: Notes
+}
+
+export interface updateNoteRequest {
+    note: string,
+    selectedText?: string,
+    id: string
+}
+
+export interface updateNoteResponse {
+    note: Notes
+}
+
+export interface deleteNoteRequest {
+    id: string
+}
+
+export interface deleteNoteResponse {
+    note: any
 }
 

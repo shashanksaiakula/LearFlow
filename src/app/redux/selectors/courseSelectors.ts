@@ -5,8 +5,10 @@ import { RootState } from "../store";
 export interface CombinedCourse extends Course {
     progress: number;
     status: EnrollmentStatus;
-        isBookmarked: boolean;
+    isBookmarked: boolean;
     bookmarkId?: string;
+    currentLessonPosition : number;
+    currentLessonCode :string
 }
 
 export interface CourseWithBookmark extends Course {
@@ -48,6 +50,8 @@ export const selectCombinedCourses = (
                 ...course,
                 progress: enrollment.progress,
                 status: enrollment.status,
+                currentLessonPosition : enrollment.currentLessonPosition,
+                currentLessonCode : enrollment.currentLessonCode
             };
         })
         .filter(

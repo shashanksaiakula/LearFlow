@@ -38,3 +38,20 @@ export const parseTimeToSeconds = (timeString: string): number => {
   // If there's only one part (just seconds)
   return parts[0] || 0;
 };
+
+export const formatToLocalTime = (isoString: string): string => {
+  if (!isoString) return '';
+  
+  const date = new Date(isoString);
+  
+  // Example output configuration: "13 Aug 2026, 7:57 PM"
+  return date.toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    // hour: 'numeric',
+    // minute: '2-digit',
+    hour12: true, // Forces PM/AM layout notation instead of 24h
+  });
+};
+

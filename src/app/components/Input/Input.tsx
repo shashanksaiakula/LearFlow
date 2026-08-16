@@ -23,7 +23,8 @@ interface InputProps extends TextInputProps {
   onChangeText?: (text: string) => void;
   disabled? :boolean,
   placeHolder? : string,
-  containerStyle?: StyleProp<ViewStyle>; 
+  containerStyle?: StyleProp<ViewStyle>;
+  height? : number 
 }
 
 const Input = ({
@@ -39,6 +40,7 @@ const Input = ({
   disabled,
   placeHolder,
   containerStyle,
+  height =56,
   ...props
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -57,7 +59,8 @@ const Input = ({
           isFocused && styles.focusedInput,
           error && styles.errorInput,
           disabled && {backgroundColor : Colors.disabled},
-          containerStyle
+          containerStyle,
+          {height : height}
         ]}
       >
         {leftIcon && (
@@ -72,7 +75,7 @@ const Input = ({
           selectTextOnFocus={!disabled}
           value={value}                
           onChangeText={onChangeText}
-          placeholder={placeHolder??label}
+          placeholder={placeHolder ??label}
           style={[styles.input]}
           secureTextEntry={secureTextEntry}
           placeholderTextColor="#94A3B8"
@@ -81,6 +84,8 @@ const Input = ({
             setIsFocused(false)
             onBlur?.(event);
           }}
+            numberOfLines={4}
+            multiline={true}   
         />
 
         {rightIcon && (

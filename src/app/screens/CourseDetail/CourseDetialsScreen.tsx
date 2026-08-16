@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
@@ -41,8 +41,14 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
     return <Text style={styles.errorStyle}>{error}</Text>
   }
 
-  console.log("revires is ", reviews)
-  console.log("instructor is ", instructor)
+  const sortedLessons = Array.isArray(lessons?.data)
+    ? [...lessons.data].sort((a, b) => a.lessonNumber - b.lessonNumber)
+    : [];
+
+
+
+
+  // console.log("lessons is ", lessons?.data)
 
 
   const renderTabContent = () => {
@@ -50,7 +56,7 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
       case Strings.overview:
         return <Overview description={course?.overview.description} whatYouWillLearn={course?.overview.whatYouWillLearn} />;
       case Strings.curriculum:
-        return <Curiculam lessons={lessons?.data} />;
+        return <Curiculam lessons={sortedLessons} />;
       case Strings.instructor:
         return <Instructor instructor={instructor} />;
       case Strings.reviews:
@@ -61,7 +67,7 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
   };
 
 
-  console.log(course)
+  console.log("coustre ios ", route.params.currentLessonCode)
   return (
     <CommomBackGround>
       <View style={styles.container}>
@@ -75,13 +81,16 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
           }
           onPressRight={() => { navigation.pop() }}
           leftIcon={
-            <MaterialDesignIcons
-              name='bookmark-outline'
-              size={28}
-              color={Colors.iconsColor}
-            />
+            !route.params?.isEnrolled ? (
+              <MaterialDesignIcons
+                name='bookmark-outline'
+                size={28}
+                color={Colors.iconsColor}
+              />
+            ) : undefined
           }
         />
+
         <CommonCard>
           {/* <Text style={styles.titleTextStle}>{course?.title}</Text> */}
           <View style={styles.topContainer}>
@@ -129,7 +138,8 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
               <PrimaryButton title={`${Strings.in_progress} - ${route.params.progress}%`} onPress={() => {
                 navigation.navigate('LessonPlayer', {
                   courseId: courseId,
-                  lessonId: "lesson_001"
+                  lessonId: route.params.currentLessonCode,
+                  currentLessonPosition: route.params.currentLessonPosition
                 })
               }} />
             }
@@ -147,8 +157,9 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
             <View style={{ flex: 1 }}>
               <PrimaryButton onPress={() => {
                 navigation.navigate("Checkout", {
-                  cousreCode: course?.courseCode ?? "",
-                  amount: course?.discountPrice ?? course?.price ?? 0
+                  courseCode: course?.courseCode ?? "",
+                  amount: course?.discountPrice ?? course?.price ?? 0,
+                  lessonId: sortedLessons[0]?.lessonCode ?? ""
                 })
               }} title={Strings.enroll_now} />
             </View>

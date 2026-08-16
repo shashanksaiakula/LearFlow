@@ -27,5 +27,11 @@ export const Colors = {
   backgroundStart : "#eaf1ff",
   backgroundEnd : "#e3e4e6",
 
-  iconsColor : "#6B7280"
+  iconsColor : "#6B7280",
+
+  // 📝 TRANSCRIPT COLORS
+  transcriptHighlight: "#2196F3",       // Color for the currently spoken/active text
+  transcriptHighlightBg: "#EFF6FF",     // Background highlight for the active paragraph
+  transcriptNormalText: "#334155",      // Clean readability color for non-active text
+  transcriptTime: "#94A3B8"             // Muted color for the timestamps (e.g., 01:23)
 } as const;

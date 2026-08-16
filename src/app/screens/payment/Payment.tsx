@@ -28,7 +28,7 @@ const Payment = ({ route, navigation }: Props) => {
     const { loading, enrolled, error } = useSelector((state: RootState) => state.enroll)
 
     useEffect(() => {
-        dispacth(enrollIntoCousre({ cousreCode: route.params.cousreCode }))
+        dispacth(enrollIntoCousre({ courseCode: route.params.courseCode, lessonCode : route.params.lessonId }))
     }, [dispacth])
 
     return (

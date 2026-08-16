@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Enrollment } from "../../models/Enrollment";
-import { enrollIntoCousre, getEnrolledCourse } from "../thunk/enrollThunk";
+import { enrollIntoCousre, getEnrolledCourse, updateEnrollent } from "../thunk/enrollThunk";
 
 interface enrollSlicProps {
     loading: boolean,
@@ -44,6 +44,19 @@ const enrollSlicer = createSlice({
                 state.enrollments = action.payload.data
             }),
             builder.addCase(getEnrolledCourse.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload ?? "Something went wrong"
+            })
+
+            // update enrolled data
+            .addCase(updateEnrollent.pending, (state) => {
+            state.loading = true
+        }),
+            builder.addCase(updateEnrollent.fulfilled, (state, action) => {
+                state.loading = false
+                state.enrolled = action.payload
+            }),
+            builder.addCase(updateEnrollent.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload ?? "Something went wrong"
             })

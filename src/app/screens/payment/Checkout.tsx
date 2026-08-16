@@ -21,6 +21,7 @@ type Props = {
     navigation: CheckoutScreenPropsNavigationProps
 }
 const Checkout = ({route, navigation} :Props) => {
+    console.log("lass id is ", route.params.lessonId)
   return (
    <CommomBackGround>
             <ComnonHeader title={Strings.checkout} 
@@ -38,7 +39,8 @@ const Checkout = ({route, navigation} :Props) => {
                 <PrimaryButton onPress={() => {
                     navigation.navigate('Payment',{
                         amount: route.params.amount,
-                        cousreCode: route.params.cousreCode
+                        courseCode: route.params.courseCode,
+                        lessonId :route.params.lessonId
                     })
                 }}
                     title={Strings.make_payment}

@@ -13,6 +13,9 @@ interface CurriculumProps {
 const Curiculam = ({ lessons }: CurriculumProps) => {
   const [expandedLessonId, setExpandedLessonId] = useState<string | null>(null);
 
+  //   const sortedLessons = lessons 
+  // ? [...lessons].sort((a, b) => a.lessonNumber - b.lessonNumber) 
+  // : [];
   const toggleLesson = (id: string) => {
     setExpandedLessonId((prevId) => (prevId === id ? null : id));
   };
@@ -48,7 +51,7 @@ const Curiculam = ({ lessons }: CurriculumProps) => {
                 </View>
               </Pressable>
               {isExpanded && (
-                <View style={{ marginTop: 12, paddingHorizontal: 5, borderTopWidth: 0.5, borderTopColor: '#eee', paddingTop: 8 }}>
+                <View style={{ marginTop: 6, paddingHorizontal: 5, borderTopWidth: 0.5, borderTopColor: '#eee', paddingTop: 8 }}>
                   <Text style={{ color: '#666', lineHeight: 18 }}>
                     {item.description || "No description available for this lesson."}
                   </Text>

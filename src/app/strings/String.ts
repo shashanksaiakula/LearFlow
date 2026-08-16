@@ -73,5 +73,14 @@ export  const Strings = {
      complete_payment : "Complete your Payment",
      payment : "Payment",
      checkout : "Checkout",
-     not_enrolled: "Yet to enroll"
+     not_enrolled: "Yet to enroll",
+     my_notes: "My Notes",
+     add_notes : "Add Notes",
+     note : "Note",
+     edit_notes : "Edit Notes",
+     save : "Save",
+     Time_stamp : "TIMESTAMP ",
+     write_your_obs:"Write youe Observation",
+     all_lessons: "All Lessons"
+
 }

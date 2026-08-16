@@ -10,4 +10,7 @@ export interface Enrollment {
   completedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  currentLessonPosition : number;
+  currentLessonCode : string
+  completedLessonCode : []
 }

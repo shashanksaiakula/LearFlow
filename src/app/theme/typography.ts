@@ -8,6 +8,10 @@ export const Typography = {
     fontSize: 24,
     fontWeight: "600" as const,
   },
+  h3: {
+    fontSize: 18,
+    fontWeight: "800" as const,
+  },
 
   body1: {
     fontSize: 16,
