@@ -1,6 +1,6 @@
 import apiClient from './apiClinet';
 import { ENDPOINTS } from './endpoint';
-import { ChangePasswordRequest, ChangePasswordResponse, EditPriofileRequest, EditPriofileResponse, LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse, User } from './types';
+import { ChangePasswordRequest, ChangePasswordResponse, EditPriofileRequest, EditPriofileResponse, emailVerifyRequest, emailVerifyResponse, LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse, resendEmailVerifyRequest, resendEmailVerifyResponse, User } from './types';
 
 export const login = (
   loginRequest: LoginRequest
@@ -30,4 +30,16 @@ export const editProfileApi =(
   request : EditPriofileRequest
 )=>{
   return apiClient.put<EditPriofileResponse>(ENDPOINTS.EDIT_USER, request)
+}
+
+export const emailVerify =(
+  request : emailVerifyRequest
+)=>{
+  return apiClient.post<emailVerifyResponse>(ENDPOINTS.EMAIL_VERIFY, request)
+}
+
+export const resendEmailVerifcation =(
+  request : resendEmailVerifyRequest
+)=>{
+  return apiClient.post<resendEmailVerifyResponse>(ENDPOINTS.RESEND_EMAIL_VERIFY, request)
 }

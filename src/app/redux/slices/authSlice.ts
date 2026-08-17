@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { emailVerify } from "../../api/authApi"
 
 const initialState ={
     isLoggedIn : false,
@@ -8,7 +9,11 @@ const initialState ={
     error : null,
     loading : false,
     iskeepMeLogin : false,
-    message : null
+    message : null,
+    resendEmailLoding : false,
+    resendEmailMessage : null,
+    verifyEmailLoding : false,
+    verifyEmailMessage : null
 }
 
 const authSlice = createSlice({
@@ -106,13 +111,44 @@ const authSlice = createSlice({
         editProfileFailed :(state,action) =>{
             state.loading = false,
              state.error = action.payload
+        },
+        emailVerifyRequest :(state, action) =>{
+            console.log("slice is ",action.payload)
+            state.verifyEmailLoding = true
+        },
+        emailVerifyError :(state, action) =>{
+            state.verifyEmailLoding = false
+            state.error = action.payload 
+        },
+        emailVerifySuccess :(state, action) =>{
+            state.verifyEmailLoding = false
+            state.verifyEmailMessage = action.payload
+        },
+        resendEmailRequest :(state, action) =>{
+            state.resendEmailLoding = true
+        },
+        resendEmailError :(state, action) =>{
+            state.resendEmailLoding = false
+            state.error = action.payload 
+        },
+        resendEmailSuccess :(state, action) =>{
+            state.resendEmailLoding = false
+            state.resendEmailMessage = action.payload
         }
 
     }
 }
 )
 
-export  const {loginSuccess, logout, initializationComplete, loadingStarted, loginFailed, loginRequested, logoutRequested, checkAuthenticationRequested,
+export  const {
+    loginSuccess, 
+    logout, 
+    initializationComplete, 
+    loadingStarted, 
+    loginFailed, 
+    loginRequested, 
+    logoutRequested, 
+    checkAuthenticationRequested,
     registerRequest,
     registeFailed,
     registerSucess,
@@ -125,5 +161,11 @@ export  const {loginSuccess, logout, initializationComplete, loadingStarted, log
     editProfileFailed,
     editProfileRequest,
     editProfileSucess,
+    emailVerifyError,
+    emailVerifyRequest,
+    emailVerifySuccess,
+    resendEmailError,
+    resendEmailRequest,
+    resendEmailSuccess,
 } = authSlice.actions
 export default authSlice.reducer

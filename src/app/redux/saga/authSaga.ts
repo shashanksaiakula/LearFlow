@@ -1,6 +1,6 @@
 import { takeLatest, put, call, all } from "redux-saga/effects";
-import { changePasswordFailed, changePasswordRequest, changePasswordSuccess, checkAuthenticationRequested, editProfileFailed, editProfileRequest, editProfileSucess, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutFail, logoutRequested, profileSucess, registerRequest, registerSucess } from "../slices/authSlice";
-import { login, profile, register, logoutApi, changePasswordApi, editProfileApi } from "../../api/authApi";
+import { changePasswordFailed, changePasswordRequest, changePasswordSuccess, checkAuthenticationRequested, editProfileFailed, editProfileRequest, editProfileSucess, emailVerifyError, emailVerifyRequest, emailVerifySuccess, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutFail, logoutRequested, profileSucess, registerRequest, registerSucess, resendEmailError, resendEmailRequest, resendEmailSuccess } from "../slices/authSlice";
+import { login, profile, register, logoutApi, changePasswordApi, editProfileApi, emailVerify, resendEmailVerifcation } from "../../api/authApi";
 import { authStorage } from "../../utils/AuthToken";
 import { AxiosError } from "axios";
 
@@ -32,18 +32,18 @@ function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any,
         console.log("error is ", err)
         // yield put(loginFailed(err?.message ?? 'Something went wrong'));
         const error = err as AxiosError<{
-        // statusCode: number;
-        success: boolean;
-        message: string;
-    }>;
+            // statusCode: number;
+            success: boolean;
+            message: string;
+        }>;
 
-    console.log("Full Error:", error.response?.data);
+        console.log("Full Error:", error.response?.data);
 
-    yield put(
-        loginFailed(
-            error.response?.data?.message ?? "Something went wrong"
-        )
-    );
+        yield put(
+            loginFailed(
+                error.response?.data?.message ?? "Something went wrong"
+            )
+        );
     }
 }
 
@@ -104,12 +104,12 @@ function* chanagePasswordWorker(action: ReturnType<typeof changePasswordRequest>
         }))
 
     } catch (err) {
-         const error = err as AxiosError<{
-        // statusCode: number;
-        success: boolean;
-        message: string;
-    }>;
-       console.log("error is ", error?.response?.data)
+        const error = err as AxiosError<{
+            // statusCode: number;
+            success: boolean;
+            message: string;
+        }>;
+        console.log("error is ", error?.response?.data)
         yield put(changePasswordFailed(error?.message ?? 'Something went wrong'));
     }
 }
@@ -121,27 +121,76 @@ function* chagePasswordWatcher() {
     )
 }
 
-function* editProfileWorker(action : ReturnType<typeof editProfileRequest>) :Generator<any , void, any>{
-    
-    try{
+function* editProfileWorker(action: ReturnType<typeof editProfileRequest>): Generator<any, void, any> {
+
+    try {
         const response = yield call(editProfileApi, action.payload)
         console.log(response.data.message)
         yield put(editProfileSucess({
-            message : response.data.message,
-            user : response.data.user
+            message: response.data.message,
+            user: response.data.user
         }))
-    } catch(err){
+    } catch (err) {
         const error = err as AxiosError<{
-            success : boolean;
+            success: boolean;
             message: string
         }>
-
+         console.log("error is ", error?.response?.data)
         yield put(editProfileFailed(error.response?.data.message ?? "Something went wrong"))
     }
 }
 
+function* emailVerifyWorker(action: ReturnType<typeof emailVerifyRequest>): Generator<any, void, any> {
+    try {
+        const response = yield call(emailVerify, action.payload)
+        console.log("email ", JSON.stringify(response))
+        yield put(emailVerifySuccess({
+            success: response.data.success,
+            message: response.data.message
+        }))
+    } catch (err) {
+        const error = err as AxiosError<{
+            success: boolean;
+            message: string
+        }>
 
-function* editProfileWatcher(){
+        yield put(emailVerifyError(error.response?.data.message ?? "Something went wrong"))
+    }
+}
+
+function* resendEmailWorker(action: ReturnType<typeof resendEmailRequest>): Generator<any, void, any> {
+    try {
+        const response = yield call(resendEmailVerifcation, action.payload)
+        yield put(resendEmailSuccess({
+            success: response.data.success,
+            message: response.data.message
+        }))
+    } catch (err) {
+        const error = err as AxiosError<{
+            success: boolean;
+            message: string
+        }>
+
+        yield put(resendEmailError(error.response?.data.message ?? "Something went wrong"))
+    }
+}
+
+function* emailVerifyWatcher() {
+    yield takeLatest(
+        emailVerifyRequest.type,
+        emailVerifyWorker
+    )
+}
+
+function* resendEmailWatcher() {
+    yield takeLatest(
+        resendEmailRequest.type,
+        resendEmailWorker
+    )
+}
+
+
+function* editProfileWatcher() {
     yield takeLatest(
         editProfileRequest.type,
         editProfileWorker
@@ -187,6 +236,8 @@ export default function* authSaga() {
         checkAuthenticationWatcher(),
         registerWatcher(),
         chagePasswordWatcher(),
-        editProfileWatcher()
+        editProfileWatcher(),
+        emailVerifyWatcher(),
+        resendEmailWatcher()
     ])
 }

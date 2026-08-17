@@ -16,5 +16,7 @@ export const ENDPOINTS = {
     TRANSCRIPT : '/transcript',
     ENROLLMENT : "/enrollment",
     BOOKMARK : "/bookmark",
-    NOTES: "/notes"
+    NOTES: "/notes",
+    EMAIL_VERIFY : "/auth/verifyEmail",
+    RESEND_EMAIL_VERIFY : "/auth/resendVerifyEmailToken"
 } as const;

@@ -215,4 +215,19 @@ export interface deleteNoteRequest {
 export interface deleteNoteResponse {
     note: any
 }
+export interface emailVerifyRequest {
+    token: string
+}
 
+export interface emailVerifyResponse {
+     success: boolean,
+    message: string
+}
+export interface resendEmailVerifyRequest {
+    email: string
+}
+
+export interface resendEmailVerifyResponse {
+     success: boolean,
+    message: string
+}
