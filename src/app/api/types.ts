@@ -210,7 +210,8 @@ export interface postNoteRequest {
     courseCode: string,
     lessonCode: String,
     timestamp: number,
-    note: string
+    note: string,
+    selectedText? : string
 }
 
 export interface postNoteResponse {

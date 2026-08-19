@@ -33,18 +33,19 @@ const NotesView = ({ currentTime, playResumeAction, onClick, courseId, lessonId 
     }, [dispach, courseId, lessonId])
 
     async function handleSaveNote() {
-         setActiveCardId(null)
+        setActiveCardId(null)
         // setInput("")y
         setOnFocus(false)
         playResumeAction(false)
         setIsShowModal(!isShowModal)
         if (editNotId) {
-            await dispach(updateNotes({ note : addNote, id : editNotId})).unwrap()
+            await dispach(updateNotes({ note: addNote, id: editNotId })).unwrap()
         } else {
-           await dispach(postNotes({ courseCode: courseId, lessonCode: lessonId, note: addNote, timestamp: currentTime })).unwrap()
+            await dispach(postNotes({ courseCode: courseId, lessonCode: lessonId, note: addNote, timestamp: currentTime })).unwrap()
         }
         dispach(getNotes({ courseCode: courseId, lessonCode: lessonId }))
     }
+
     function handelCancel() {
         setAddNote("")
         setIsShowModal(false)
@@ -55,9 +56,10 @@ const NotesView = ({ currentTime, playResumeAction, onClick, courseId, lessonId 
     function handleDeleteClick(id: string) {
         dispach(deleteNotes({ id: id }))
         setActiveCardId(null)
+         playResumeAction(false)
         dispach(getNotes({ courseCode: courseId, lessonCode: lessonId }))
     }
-    function handelEditClick(note: string, id : string) {
+    function handelEditClick(note: string, id: string, selectedText? : string) {
         setAddNote(note)
         setIsShowModal(!isShowModal)
         playResumeAction(true)
@@ -91,7 +93,8 @@ const NotesView = ({ currentTime, playResumeAction, onClick, courseId, lessonId 
                         editClickHandel={() => handelEditClick(item.note, item._id)}
                         isLodingDelete={lodingDelete}
                         isLodingEdit={lodingEdit}
-                        date ={item.createdAt ?? ""}
+                        date={item.createdAt ?? ""}
+                        selectedText={item.selectedText}
                     />}
 
             />

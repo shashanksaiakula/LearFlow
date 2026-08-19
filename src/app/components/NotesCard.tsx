@@ -16,11 +16,12 @@ type NotesProps = {
   deleteClickHandel?: () => void
   isLodingDelete?: boolean
   isLodingEdit?: boolean,
-  date: string
+  date: string,
+  selectedText?: string
 }
 
 
-const NotesCard = ({ timeStamp, onClick, text, onSelectActive, isSelected, editClickHandel, deleteClickHandel, isLodingDelete, isLodingEdit, date }: NotesProps) => {
+const NotesCard = ({ timeStamp, onClick, text, onSelectActive, isSelected, editClickHandel, deleteClickHandel, isLodingDelete, isLodingEdit, date, selectedText }: NotesProps) => {
   return (
     <TouchableOpacity style={[styles.card, isSelected && { borderLeftColor: Colors.primary, borderLeftWidth: 5, }]} onPress={() => onClick(parseTimeToSeconds(timeStamp))}
 
@@ -30,6 +31,7 @@ const NotesCard = ({ timeStamp, onClick, text, onSelectActive, isSelected, editC
         <Text style={styles.timeStyle}>{formatTime(parseInt(timeStamp))}</Text>
       </View>
       <View style={styles.textContainer}>
+        {selectedText && <Text style={styles.meaningStyle}>{selectedText} :- </Text>}
         <Text style={styles.textStyle}>{text}</Text>
         <Text style={styles.dateStyle}>{formatToLocalTime(date)}</Text>
       </View>
@@ -80,5 +82,8 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   }, timeStampStyle: {
     justifyContent: 'flex-start',
-  },
+  },meaningStyle:{
+    ...Typography.body1,
+    fontWeight : 800
+  }
 })

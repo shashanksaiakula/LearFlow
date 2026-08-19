@@ -24,10 +24,13 @@ const LessonSlicce = createSlice({
     extraReducers :(builder) =>{
         builder.addCase(fetchLesson.pending, (state) =>{
             state.loading = true
+            state.error = null;
         })
         .addCase(fetchLesson.fulfilled, (state,action) =>{
+            console.log("lesson paylod is ",action.payload.data)
             state.loading = false
             state.lesson = action.payload.data
+            state.error = null;
         })
         .addCase(fetchLesson.rejected, (state,action) =>{
             state.loading = false

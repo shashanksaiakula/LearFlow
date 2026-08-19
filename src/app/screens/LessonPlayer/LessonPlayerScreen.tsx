@@ -15,6 +15,7 @@ import NotesView from './NotesView';
 import CommomBackGround from '../../components/common/CommomBackGround';
 import { BASE_URL } from '../../api/apiClinet';
 import { Spacing } from '../../theme/spacing';
+import { fetchLessonsByCousre } from '../../redux/thunk/coursesThunk';
 
 
 type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
@@ -31,12 +32,12 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   // const lessonID = useRef(lessonId)
   const [lessonID, setLessonID] = useState(lessonId)
   const dispatch = useDispatch<AppDispatch>()
-  const { loading, lesson, error } = useSelector((state: RootState) => state.lesson)
+  const { loading: lessonLoading, lesson, error } = useSelector((state: RootState) => state.lesson)
   const [selectTab, setSelectTab] = useState<LessonTabType>("video-list")
   const videoRef = useRef<VideoRef>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [currentSec, setCurrentSec] = useState(0)
-  const { lessons } = useSelector((state: RootState) => state.courses)
+  const { lessons, loading: coursesLoading } = useSelector((state: RootState) => state.courses)
   const { user } = useSelector((state: RootState) => state.auth)
   const { enrollments, enrolled } = useSelector((state: RootState) => state.enroll)
   const [resumePosition, setResumePosition] = useState(
@@ -44,8 +45,16 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   );
 
   useEffect(() => {
+    // If lessons hasn't loaded yet, or it's empty, fetch the course lessons list
+    if (courseId && (!lessons || !lessons.data)) {
+      dispatch(fetchLessonsByCousre({ courseCode: courseId }));
+    }
+  }, [dispatch, courseId, lessons]);
+
+  useEffect(() => {
     dispatch(fetchLesson({ cousreId: courseId, lessonId: lessonID }))
   }, [dispatch, lessonID, courseId])
+
 
   //   useEffect(() => {
   // if (hasRestoredPosition.current) {
@@ -67,7 +76,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   const enrolledId = enrollments?.filter(enroll => enroll.userId === user?._id)
     .find(course => (course.courseCode === courseId))
   console.log("enrolledis is 1 ", enrolledId?.lastPlayedLessonCode)
-  if (loading) {
+ if (lessonLoading || coursesLoading || !lessons || !lessons.data || !lesson) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
 
@@ -151,6 +160,11 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
         {selectTab === 'transcript' && (
           <TranscriptView vidoeUrl={`${BASE_URL}${lesson?.videoUrl}`} seekonPress={seekPress}
             currentTimeStamp={currentSec}
+            playResumeAction={(action: boolean) => {
+              setIsPaused(action)
+            }}
+            lessonId={lessonID}
+            courseId={courseId}
           />
         )}
       </View>

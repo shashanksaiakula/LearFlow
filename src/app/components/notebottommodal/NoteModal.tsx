@@ -16,10 +16,11 @@ interface NoteModalProps {
     timeStamp: string,
     note: string,
     onChangeValue: (e: string) => void,
-    title: string
+    title: string,
+    selectWord? : string
 }
 
-const NoteModal = ({ title, cancelBtnAction, saveBtnAction, showModel, timeStamp, note, onChangeValue }: NoteModalProps) => {
+const NoteModal = ({ title, cancelBtnAction, saveBtnAction, showModel, timeStamp, note, onChangeValue, selectWord }: NoteModalProps) => {
     return (
         <Modal
             visible={showModel}

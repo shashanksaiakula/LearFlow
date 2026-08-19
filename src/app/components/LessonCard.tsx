@@ -21,12 +21,15 @@ interface LessonProps {
 const LessonCard = ({ lesson, onClick, isActive, index, currentLesson, completedList, lastLessonPlayed }: LessonProps) => {
     const [isExpanded, setIsExpanded] = useState(false)
 
-    console.log("lesson is ",lastLessonPlayed)
+    console.log("lesson is ", lastLessonPlayed)
     const renderLessonIcon = (lessonCode: string) => {
         // 1. If it's the active lesson, show the play icon
         if (completedList?.includes(lessonCode)) {
             return <CommonIconWithLoder icon="check-circle-outline" loading={false} size={18} color={Colors.success} isBackground={false} />;
-        } 
+        }
+        if (lesson.order === 1) {
+            return <CommonIconWithLoder icon="play-circle-outline" loading={false} size={18} color={Colors.primary} isBackground={false} />;
+        }
         if (lastLessonPlayed === lessonCode) {
             return <CommonIconWithLoder icon="play-circle-outline" loading={false} size={18} color={Colors.primary} isBackground={false} />;
         }

@@ -92,5 +92,6 @@ export const Strings = {
      reset_password : "Reset Password",
      enter_email_address : "Enter Email address and we'll send \n a link to reset your password.",
      send : "Send",
-     token : "Token"
+     token : "Token",
+     meaning : "Meaning"
 }

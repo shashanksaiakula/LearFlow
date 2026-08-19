@@ -28,6 +28,7 @@ import { getEnrolledCourse } from '../../redux/thunk/enrollThunk';
 import MyCousrseCard from '../../components/MyCousrseCard';
 import { selectBookmarkedCourses } from '../../redux/selectors/bookmarkSelector';
 import { getBookmark } from '../../redux/thunk/thunkBookmark';
+import { fetchLesson } from '../../redux/thunk/lessonThunk';
 
 //router props
 type HomeScreenRoutProp = RouteProp<
@@ -50,12 +51,6 @@ type props = {
 
 const HomeScreen = ({ route, navigation }: props) => {
   const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    dispatch(requestAllCourses())
-    dispatch(getBookmark())
-    dispatch(homeRequest())
-    dispatch(getEnrolledCourse())
-  }, [dispatch])
   // const navigation = useNavigation<>()
 
   const user = useSelector((state: RootState) => state.auth.user)
@@ -65,7 +60,17 @@ const HomeScreen = ({ route, navigation }: props) => {
   const myBookermark = useSelector(selectBookmarkedCourses)
   const currentLearning = inProgressCousres.find(course => course.courseCode === homeResponse?.continueLearning.courseCode)
 
-console.log("bookmark us ",myBookermark)
+  useEffect(() => {
+    dispatch(requestAllCourses())
+    dispatch(getBookmark())
+    dispatch(homeRequest())
+    dispatch(getEnrolledCourse())
+  }, [dispatch,])
+
+  useEffect(() => {
+    dispatch(fetchLesson({ cousreId: currentLearning?.courseCode, lessonId: currentLearning?.currentLessonCode }))
+  }, [dispatch, currentLearning?.courseCode, currentLearning?.currentLessonCode])
+
   if (loading) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
@@ -102,7 +107,13 @@ console.log("bookmark us ",myBookermark)
           thumbnail: currentLearning.thumbnail,
           title: currentLearning.title,
           isCompleted: (currentLearning.progress === 100)
-        }} />}
+        }}
+          onPress={() => navigation.navigate("LessonPlayer", {
+            courseId: currentLearning.courseCode,
+            lessonId: currentLearning.currentLessonCode,
+            currentLessonPosition: currentLearning.currentLessonPosition
+          })}
+        />}
         <SectionHeader title={Strings.my_cousrses} onPress={() => { navigation.navigate('BottomTab', { screen: "myLearning" }) }} />
         <FlatList
           horizontal={true}
@@ -115,7 +126,7 @@ console.log("bookmark us ",myBookermark)
         <SectionHeader title={Strings.recommended_for_you} isShowViewAll={false} />
         {homeResponse?.recommendedCourses[0] && <CourseCard course={homeResponse?.recommendedCourses[0]} onClick={() => { }} />}
         <SectionHeader title={Strings.my_bookmarked} onPress={() => { navigation.navigate('BottomTab', { screen: "bookmarks" }) }} />
-        {myBookermark.length >0 && <CourseCard course={myBookermark[0]} onClick={() => { }} isBoomarked={true}/>}
+        {myBookermark.length > 0 && <CourseCard course={myBookermark[0]} onClick={() => { }} isBoomarked={true} />}
       </ScrollView>
     </CommomBackGround>
   )
