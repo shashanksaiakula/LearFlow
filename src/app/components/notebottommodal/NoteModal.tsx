@@ -36,6 +36,7 @@ const NoteModal = ({ title, cancelBtnAction, saveBtnAction, showModel, timeStamp
                         value={note}
                         onChangeText={onChangeValue}
                         height={100}
+                        isMultiline={true}
                     />
                     <View style={styles.bottomContainer}>
                         <View style={{ flex: 1 }}>

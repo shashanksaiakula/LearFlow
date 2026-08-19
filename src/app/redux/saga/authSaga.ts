@@ -1,6 +1,6 @@
 import { takeLatest, put, call, all } from "redux-saga/effects";
-import { changePasswordFailed, changePasswordRequest, changePasswordSuccess, checkAuthenticationRequested, editProfileFailed, editProfileRequest, editProfileSucess, emailVerifyError, emailVerifyRequest, emailVerifySuccess, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutFail, logoutRequested, profileSucess, registerRequest, registerSucess, resendEmailError, resendEmailRequest, resendEmailSuccess } from "../slices/authSlice";
-import { login, profile, register, logoutApi, changePasswordApi, editProfileApi, emailVerify, resendEmailVerifcation } from "../../api/authApi";
+import { changePasswordFailed, changePasswordRequest, changePasswordSuccess, checkAuthenticationRequested, editProfileFailed, editProfileRequest, editProfileSucess, emailVerifyError, emailVerifyRequest, emailVerifySuccess, forgotPasswordFailed, forgotPasswordRequest, forgotPasswordSuccess, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutFail, logoutRequested, profileSucess, registerRequest, registerSucess, resetPasswordFailed, resetPasswordRequest, resetPasswordSuccess, resendEmailError, resendEmailRequest, resendEmailSuccess } from "../slices/authSlice";
+import { login, profile, register, logoutApi, changePasswordApi, editProfileApi, emailVerify, resendEmailVerifcation, forgotPasswordApi, resetPasswordApi } from "../../api/authApi";
 import { authStorage } from "../../utils/AuthToken";
 import { AxiosError } from "axios";
 
@@ -25,6 +25,7 @@ function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any,
 
         const profileReponse = yield call(profile)
         console.log("profile response ", profileReponse.data.data)
+        console.log("profile response 2", profileReponse.data.data.isEmailVerified)
         yield put(profileSucess({
             user: profileReponse.data.data
         }))
@@ -227,6 +228,51 @@ function* registerWatcher() {
     )
 }
 
+function* forgotPasswordWorker(action: ReturnType<typeof forgotPasswordRequest>): Generator<any, void, any> {
+    try {
+        const response = yield call(forgotPasswordApi, action.payload)
+        yield put(forgotPasswordSuccess({
+            message: response.data.message
+        }))
+    } catch (err) {
+        const error = err as AxiosError<{
+            success: boolean;
+            message: string
+        }>
+        console.log("error is ", error?.response?.data)
+        yield put(forgotPasswordFailed(error?.response?.data?.message ?? "Something went wrong"))
+    }
+}
+
+function* forgotPasswordWatcher() {
+    yield takeLatest(
+        forgotPasswordRequest.type,
+        forgotPasswordWorker
+    )
+}
+
+function* resetPasswordWorker(action: ReturnType<typeof resetPasswordRequest>): Generator<any, void, any> {
+    try {
+        const response = yield call(resetPasswordApi, action.payload)
+        yield put(resetPasswordSuccess({
+            message: response.data.message
+        }))
+    } catch (err) {
+        const error = err as AxiosError<{
+            success: boolean;
+            message: string
+        }>
+        console.log("error is ", error?.response?.data)
+        yield put(resetPasswordFailed(error?.response?.data?.message ?? "Something went wrong"))
+    }
+}
+
+function* resetPasswordWatcher() {
+    yield takeLatest(
+        resetPasswordRequest.type,
+        resetPasswordWorker
+    )
+}
 
 
 export default function* authSaga() {
@@ -238,6 +284,8 @@ export default function* authSaga() {
         chagePasswordWatcher(),
         editProfileWatcher(),
         emailVerifyWatcher(),
-        resendEmailWatcher()
+        resendEmailWatcher(),
+        forgotPasswordWatcher(),
+        resetPasswordWatcher()
     ])
 }

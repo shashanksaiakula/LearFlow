@@ -1,25 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { emailVerify } from "../../api/authApi"
 
-const initialState ={
-    isLoggedIn : false,
-    isInitializing : true,
-    user : null,
-    token : null,
-    error : null,
-    loading : false,
-    iskeepMeLogin : false,
-    message : null,
-    resendEmailLoding : false,
-    resendEmailMessage : null,
-    verifyEmailLoding : false,
-    verifyEmailMessage : null
+const initialState = {
+    isLoggedIn: false,
+    isInitializing: true,
+    user: null,
+    token: null,
+    error: null,
+    loading: false,
+    iskeepMeLogin: false,
+    message: null,
+    resendEmailLoding: false,
+    resendEmailMessage: null,
+    verifyEmailLoding: false,
+    verifyEmailMessage: null,
+    isEmailverified: false,
+    resetPasswordLoading: false,
+    resetPasswordMessage: null,
+    resetPasswordError: null
 }
 
 const authSlice = createSlice({
-    name : 'auth',
-    initialState : initialState,
-    reducers :{
+    name: 'auth',
+    initialState: initialState,
+    reducers: {
 
         loginRequested: (state, action) => {
             state.loading = true
@@ -29,125 +32,157 @@ const authSlice = createSlice({
             state.loading = true
         },
 
-        loadingStarted: (state) =>{
+        loadingStarted: (state) => {
             state.loading = true
         },
 
-        loginFailed: (state, action) =>{
+        loginFailed: (state, action) => {
             console.log(JSON.stringify(action.payload))
             state.loading = false
             state.isLoggedIn = false
             state.error = action.payload
         },
 
-        registerRequest: (state, action) =>{
+        registerRequest: (state, action) => {
             state.loading = true
         },
-        registeFailed: (state, action) =>{
+        registeFailed: (state, action) => {
             state.loading = false
             state.isLoggedIn = false
             state.error = action.payload
         },
-        registerSucess : (state,action) =>{
+        registerSucess: (state, action) => {
             state.message = action.payload.message
             state.loading = false
             state.error = null
         },
-        
-        loginSuccess: (state, action) =>{
+
+        loginSuccess: (state, action) => {
             state.token = action.payload.token
             state.error = null
         },
-        profileSucess : (state, action) =>{
-            console.log("payload is ",JSON.stringify(action.payload))
+        profileSucess: (state, action) => {
             state.isLoggedIn = true
+            console.log("check",action.payload.user.isEmailVerified)
             state.user = action.payload.user
+            state.isEmailverified = action.payload.user.isEmailVerified
             state.loading = false
             state.error = null
         },
 
-        logout : (state) =>{
+        logout: (state) => {
             console.log("logout called ")
             state.loading = false
             state.isLoggedIn = false
             state.token = null
             state.user = null
         },
-        LogoutRequrst : (state) =>{
+        LogoutRequrst: (state) => {
             state.loading = true
         },
 
-        logoutFail :(state, action) =>{
+        logoutFail: (state, action) => {
             state.loading = false
             state.isLoggedIn = false
             state.error = action.payload
         },
 
-        initializationComplete: (state) =>{
+        initializationComplete: (state) => {
             state.isInitializing = false
         },
 
-        checkAuthenticationRequested: (state) =>{
+        checkAuthenticationRequested: (state) => {
             state.loading = true
         },
-        changePasswordRequest: (state, action) =>{
+        changePasswordRequest: (state, action) => {
             state.loading = true
         },
-        changePasswordFailed :(state, action)=>{
+        changePasswordFailed: (state, action) => {
             state.loading = false,
-             state.error = action.payload
+                state.error = action.payload
         },
-        changePasswordSuccess :(state , action)=>{
+        changePasswordSuccess: (state, action) => {
             state.loading = false,
-            state.message = action.payload.message
+                state.message = action.payload.message
         },
-        editProfileRequest : (state,action) =>{
+        editProfileRequest: (state, action) => {
             state.loading = true
         },
-        editProfileSucess: (state,action)=>{
+        editProfileSucess: (state, action) => {
             state.loading = false,
-            state.user = action.payload
+                state.user = action.payload
         },
-        editProfileFailed :(state,action) =>{
+        editProfileFailed: (state, action) => {
             state.loading = false,
-             state.error = action.payload
+                state.error = action.payload
         },
-        emailVerifyRequest :(state, action) =>{
-            console.log("slice is ",action.payload)
+        emailVerifyRequest: (state, action) => {
+            console.log("slice is ", action.payload)
             state.verifyEmailLoding = true
         },
-        emailVerifyError :(state, action) =>{
+        emailVerifyError: (state, action) => {
             state.verifyEmailLoding = false
-            state.error = action.payload 
+            state.error = action.payload
         },
-        emailVerifySuccess :(state, action) =>{
+        emailVerifySuccess: (state, action) => {
             state.verifyEmailLoding = false
-            state.verifyEmailMessage = action.payload
+            state.verifyEmailMessage = action.payload.message
+             state.isEmailverified = true
         },
-        resendEmailRequest :(state, action) =>{
+        resendEmailRequest: (state, action) => {
             state.resendEmailLoding = true
         },
-        resendEmailError :(state, action) =>{
+        resendEmailError: (state, action) => {
             state.resendEmailLoding = false
-            state.error = action.payload 
+            state.error = action.payload
         },
-        resendEmailSuccess :(state, action) =>{
+        resendEmailSuccess: (state, action) => {
             state.resendEmailLoding = false
-            state.resendEmailMessage = action.payload
+            state.resendEmailMessage = action.payload.message
+        },
+        forgotPasswordRequest: (state, action) => {
+            state.loading = true
+            state.error = null
+            state.message = null
+        },
+        forgotPasswordSuccess: (state, action) => {
+            state.loading = false
+            state.message = action.payload.message
+            state.error = null
+        },
+        forgotPasswordFailed: (state, action) => {
+            state.loading = false
+            state.error = action.payload
+            state.message = null
+        },
+        resetPasswordRequest: (state, action) => {
+            state.resetPasswordLoading = true
+            state.resetPasswordError = null
+            state.resetPasswordMessage = null
+        },
+        resetPasswordSuccess: (state, action) => {
+            state.resetPasswordLoading = false
+            state.resetPasswordMessage = action.payload.message
+            state.resetPasswordError = null
+        },
+        resetPasswordFailed: (state, action) => {
+            state.resetPasswordLoading = false
+            state.resetPasswordError = action.payload
+            state.resetPasswordMessage = null
         }
 
     }
 }
 )
 
-export  const {
-    loginSuccess, 
-    logout, 
-    initializationComplete, 
-    loadingStarted, 
-    loginFailed, 
-    loginRequested, 
-    logoutRequested, 
+export const {
+    loginSuccess,
+    logout,
+    initializationComplete,
+    loadingStarted,
+    loginFailed,
+    loginRequested,
+    logoutRequested,
     checkAuthenticationRequested,
     registerRequest,
     registeFailed,
@@ -167,5 +202,11 @@ export  const {
     resendEmailError,
     resendEmailRequest,
     resendEmailSuccess,
+    forgotPasswordRequest,
+    forgotPasswordSuccess,
+    forgotPasswordFailed,
+    resetPasswordRequest,
+    resetPasswordSuccess,
+    resetPasswordFailed,
 } = authSlice.actions
 export default authSlice.reducer

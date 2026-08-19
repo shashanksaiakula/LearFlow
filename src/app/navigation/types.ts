@@ -36,13 +36,17 @@ export type RootStackParamList = {
         courseCode: string,
         lessonId: string,
     }
-    PaymentSuccess: undefined
+    PaymentSuccess: undefined,
 }
 
 export type AuthStackParamsList = {
     Login: undefined;
     Register: undefined;
-    Forgot: undefined
+    Forgot: undefined,
+    EmailVerification: {
+        email: string
+    }
+    ResetPassword: undefined
 }
 
 export type BottomTabParamsList = {

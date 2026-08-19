@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Pressable,
   StyleProp,
-  StyleSheet,
   Text,
   TextInput,
   TextInputProps,
@@ -24,7 +23,8 @@ interface InputProps extends TextInputProps {
   disabled? :boolean,
   placeHolder? : string,
   containerStyle?: StyleProp<ViewStyle>;
-  height? : number 
+  height? : number,
+  isMultiline? : boolean
 }
 
 const Input = ({
@@ -41,6 +41,7 @@ const Input = ({
   placeHolder,
   containerStyle,
   height =56,
+  isMultiline = false,
   ...props
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -84,8 +85,8 @@ const Input = ({
             setIsFocused(false)
             onBlur?.(event);
           }}
-            numberOfLines={4}
-            multiline={true}   
+          multiline={isMultiline}   
+         numberOfLines={isMultiline ? 4 : 1}
         />
 
         {rightIcon && (

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../../theme/colors'
 
@@ -6,10 +6,11 @@ type OutParamsProps = {
     text: string
     color: string,
     onPress: () => void
-    icon?: React.ReactNode
+    icon?: React.ReactNode,
+    loading?: boolean
 }
 
-const OutLineButton = ({ color = Colors.primary, icon, onPress, text }: OutParamsProps) => {
+const OutLineButton = ({ color = Colors.primary, icon, onPress, text, loading }: OutParamsProps) => {
     return (
         <Pressable onPress={onPress}
             style={({ pressed }) => [
@@ -27,7 +28,13 @@ const OutLineButton = ({ color = Colors.primary, icon, onPress, text }: OutParam
         >
             <View style={styles.buttonRaper}>
                 {icon}
-                <Text style={{color:color}}>{text}</Text>
+                {loading && (
+                    <ActivityIndicator
+                        size="small"
+                        color={Colors.primaryLight2}
+                    />
+                )}
+                <Text style={{ color: color }}>{text}</Text>
             </View>
         </Pressable>
     )
@@ -42,11 +49,11 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 10
     },
-    buttonRaper:{
+    buttonRaper: {
         flexDirection: 'row',
         width: "100%",
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 
 })

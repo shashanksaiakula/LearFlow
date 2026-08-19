@@ -110,6 +110,25 @@ export interface ChangePasswordResponse {
     message: string;
 }
 
+export interface ForgotPasswordRequest {
+    email: string;
+}
+
+export interface ForgotPasswordResponse {
+    success: boolean;
+    message: string;
+}
+
+export interface ResetPasswordRequest {
+    token: string;
+    newPassword: string;
+}
+
+export interface ResetPasswordResponse {
+    success: boolean;
+    message: string;
+}
+
 export interface LogoutResponse {
     success: string;
     message: string;

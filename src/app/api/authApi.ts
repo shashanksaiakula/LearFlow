@@ -1,6 +1,6 @@
 import apiClient from './apiClinet';
 import { ENDPOINTS } from './endpoint';
-import { ChangePasswordRequest, ChangePasswordResponse, EditPriofileRequest, EditPriofileResponse, emailVerifyRequest, emailVerifyResponse, LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse, resendEmailVerifyRequest, resendEmailVerifyResponse, User } from './types';
+import { ChangePasswordRequest, ChangePasswordResponse, EditPriofileRequest, EditPriofileResponse, emailVerifyRequest, emailVerifyResponse, ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse, ResetPasswordRequest, ResetPasswordResponse, resendEmailVerifyRequest, resendEmailVerifyResponse, User } from './types';
 
 export const login = (
   loginRequest: LoginRequest
@@ -42,4 +42,16 @@ export const resendEmailVerifcation =(
   request : resendEmailVerifyRequest
 )=>{
   return apiClient.post<resendEmailVerifyResponse>(ENDPOINTS.RESEND_EMAIL_VERIFY, request)
+}
+
+export const forgotPasswordApi =(
+  request : ForgotPasswordRequest
+)=>{
+  return apiClient.post<ForgotPasswordResponse>(ENDPOINTS.FORGOT_PASSWORD, request)
+}
+
+export const resetPasswordApi =(
+  request : ResetPasswordRequest
+)=>{
+  return apiClient.post<ResetPasswordResponse>(ENDPOINTS.RESET_PASSWORD, request)
 }
