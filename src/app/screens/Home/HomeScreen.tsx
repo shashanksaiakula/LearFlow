@@ -1,4 +1,4 @@
-import { ActivityIndicator, Button, StyleSheet, Text, View, FlatList, ScrollView } from 'react-native'
+import { ActivityIndicator, Button, StyleSheet, Text, View, FlatList, ScrollView, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/types';
@@ -29,6 +29,7 @@ import MyCousrseCard from '../../components/MyCousrseCard';
 import { selectBookmarkedCourses } from '../../redux/selectors/bookmarkSelector';
 import { getBookmark } from '../../redux/thunk/thunkBookmark';
 import { fetchLesson } from '../../redux/thunk/lessonThunk';
+import CommonEmptyCard from '../../components/CommonEmptyCard';
 
 //router props
 type HomeScreenRoutProp = RouteProp<
@@ -93,16 +94,16 @@ const HomeScreen = ({ route, navigation }: props) => {
         />
       </View>
       <ScrollView>
-        <View style={styles.WelcomeStyle}>
+        <Pressable style={styles.WelcomeStyle} onPress={()=> navigation.navigate("BottomTab", {screen : "ProfileStack"})}>
           <View>
             <Text style={styles.WelcomeTextStyle} >{Strings.welcome}</Text>
             <Text style={styles.nameStyle} >{user?.name} 👋</Text>
             <Text style={styles.WelcomeTextStyle} >{Strings.keep_learning}</Text>
           </View>
           <HomeIcon width="40%" height="100%" />
-        </View>
+        </Pressable>
         <SectionHeader title={Strings.contine_learning} isShowViewAll={false} />
-        {currentLearning && <ContinueLearningCard continueLearning={{
+        {currentLearning ?<ContinueLearningCard continueLearning={{
           progress: currentLearning.progress,
           thumbnail: currentLearning.thumbnail,
           title: currentLearning.title,
@@ -113,20 +114,50 @@ const HomeScreen = ({ route, navigation }: props) => {
             lessonId: currentLearning.currentLessonCode,
             currentLessonPosition: currentLearning.currentLessonPosition
           })}
-        />}
+        /> 
+      :
+       <CommonEmptyCard buttomTitle={Strings.expolore_cousres}  icon="play-box-outline" onPress={()=>{
+          navigation.navigate('BottomTab', { screen: "courses" })
+         }} title={Strings.no_bookmark}/>
+         }
         <SectionHeader title={Strings.my_cousrses} onPress={() => { navigation.navigate('BottomTab', { screen: "myLearning" }) }} />
-        <FlatList
+        {inProgressCousres ?<FlatList
           horizontal={true}
           data={inProgressCousres.slice(0, 2)}
           keyExtractor={item => item.id}
           renderItem={({ item }) =>
-            <MyCousrseCard course={item} onClick={() => { }} />
+            <MyCousrseCard course={item} onClick={() => {
+              navigation.navigate("CourseDetails",{
+                courseId : item.courseCode,
+                isEnrolled : true,
+                currentLessonCode : item.currentLessonCode,
+                currentLessonPosition : item.currentLessonPosition,
+                progress : item.progress
+              })
+             }} />
           }
-        />
+        /> : 
+        <CommonEmptyCard buttomTitle={Strings.expolore_cousres}  icon="book-open-page-variant" onPress={()=>{
+          navigation.navigate('BottomTab', { screen: "courses" })
+         }} title={Strings.no_bookmark}/>
+         }
+        }
         <SectionHeader title={Strings.recommended_for_you} isShowViewAll={false} />
         {homeResponse?.recommendedCourses[0] && <CourseCard course={homeResponse?.recommendedCourses[0]} onClick={() => { }} />}
         <SectionHeader title={Strings.my_bookmarked} onPress={() => { navigation.navigate('BottomTab', { screen: "bookmarks" }) }} />
-        {myBookermark.length > 0 && <CourseCard course={myBookermark[0]} onClick={() => { }} isBoomarked={true} />}
+        {myBookermark.length > 0 ? <CourseCard course={myBookermark[0]} onClick={() => {
+           navigation.navigate("CourseDetails",{
+                courseId : myBookermark[0].courseCode,
+                isEnrolled : false,
+                currentLessonCode : "",
+                currentLessonPosition : 0,
+                progress : 0
+              })
+         }} isBoomarked={myBookermark[0].isBookmarked} /> 
+         : 
+         <CommonEmptyCard buttomTitle={Strings.expolore_cousres}  icon="bookmark-outline" onPress={()=>{
+          navigation.navigate('BottomTab', { screen: "courses" })
+         }} title={Strings.no_bookmark}/>}
       </ScrollView>
     </CommomBackGround>
   )

@@ -93,5 +93,10 @@ export const Strings = {
      enter_email_address : "Enter Email address and we'll send \n a link to reset your password.",
      send : "Send",
      token : "Token",
-     meaning : "Meaning"
+     meaning : "Meaning",
+     no_bookmark : "No Bookedmarked cousres yet",
+     no_recommended: "No Recommanded0cousres yet",
+     no_enrolled: "No Enrolled cousres yet",
+     no_progress: "No cousres in progress yet",
+     expolore_cousres : "Explore Courses"
 }

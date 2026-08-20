@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { Course } from '../models/course';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -16,7 +17,8 @@ export type RootStackParamList = {
         progress: number,
         isEnrolled: boolean,
         currentLessonCode: string,
-        currentLessonPosition: number
+        currentLessonPosition: number,
+        isBookmarked? : boolean
     }
     LessonPlayer: {
         lessonId: string,
@@ -37,6 +39,9 @@ export type RootStackParamList = {
         lessonId: string,
     }
     PaymentSuccess: undefined,
+    RecommendedForYotScreen:{
+        cousres : Course[]
+    }
 }
 
 export type AuthStackParamsList = {

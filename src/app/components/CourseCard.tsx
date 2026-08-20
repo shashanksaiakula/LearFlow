@@ -1,20 +1,21 @@
 import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Course } from '../models/course'
-import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
 import { Strings } from '../strings/String';
 import { BASE_URL } from '../api/apiClinet';
+import CommonIconWithLoder from './CommonIconWithLoder';
 
 interface CourseCardProps {
   course: Course;
   onClick: () => void,
   isBoomarked? : boolean,
-  bookmarkPressed?: ()=>void
+  bookmarkPressed?: ()=>void,
+  isLoding? : boolean
 }
 
-export default function CourseCard({ course, onClick, isBoomarked, bookmarkPressed }: CourseCardProps) {
+export default function CourseCard({ course, onClick, isBoomarked, bookmarkPressed,isLoding }: CourseCardProps) {
 
   console.log("level is ",course.level)
   let leveColor = ""
@@ -40,14 +41,15 @@ export default function CourseCard({ course, onClick, isBoomarked, bookmarkPress
           <Text style={[styles.bottomText, { color: leveColor }]}>{course.level}</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={bookmarkPressed}>
-        <MaterialDesignIcons
-          name={isBoomarked ? 'bookmark' :'bookmark-outline'}
+        <CommonIconWithLoder
+          icon={isBoomarked ? 'bookmark' :'bookmark-outline'}
           size={28}
           color={isBoomarked ? Colors.primary : Colors.iconsColor}
+          loding={isLoding ?? false}
+          isBackground = {false}
+          onPress={bookmarkPressed}
         />
       </TouchableOpacity>
-    </TouchableOpacity>
   )
 }
 

@@ -40,7 +40,7 @@ const CousresListScreen = () => {
   const inProgressCourses = useSelector(selectInProgressCourses);
   const yetToEnrollCourses = useSelector(selectYetToEnrollCourses);
   const completedCourses = useSelector(selectCompletedCourses);
-
+  const [loadingBookmarkId, setLoadingBookmarkId] = useState<string | null>(null);
   useEffect(() => {
     dispatch(getEnrolledCourse())
     dispatch(getBookmark())
@@ -109,6 +109,21 @@ const CousresListScreen = () => {
     },
   ];
 
+  const handleBookmarkPress = async (item: CourseWithBookmark) => {
+    setLoadingBookmarkId(item.courseCode)
+    try {
+      if (item.isBookmarked) {
+        await dispatch(deleteBookmark({ id: item.bookmarkId })).unwrap()
+      } else {
+        await dispatch(addBookmark({ courseCode: item.courseCode })).unwrap()
+      }
+      dispatch(getBookmark())
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingBookmarkId(null);
+    }
+  };
 
   return (
     <CommomBackGround>
@@ -231,18 +246,13 @@ const CousresListScreen = () => {
                   isEnrolled: false,
                   progress: 0,
                   currentLessonCode: "",
-                  currentLessonPosition: 0
+                  currentLessonPosition: 0,
+                  isBookmarked : item.isBookmarked
                 });
               }}
-              bookmarkPressed={async () => {
-                if (item.isBookmarked) {
-                  await dispatch(deleteBookmark({ id: item.bookmarkId })).unwrap()
-                } else {
-                  await dispatch(addBookmark({ courseCode: item.courseCode })).unwrap()
-                }
-                dispatch(getBookmark())
-              }}
+              bookmarkPressed={() => handleBookmarkPress(item)}
               isBoomarked={item.isBookmarked}
+              isLoding={loadingBookmarkId === item.courseCode}
             />
           );
         }}

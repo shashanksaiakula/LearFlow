@@ -8,7 +8,7 @@ import BottomNavigation from './BottomNavigation'
 import EditProfile from '../screens/EditProfile'
 import ChangePassword from '../screens/ChangePassword'
 import PaymentSuccess, { Checkout, Payment } from '../screens/payment'
-import ResetPasswordScreen from '../screens/Forgot/ResetPasswordScreen'
+import RecommendedForYotScreen from '../screens/bookmark/RecommendedForYotScreen'
 
 
 const stack = createStackNavigator<RootStackParamList>()
@@ -23,6 +23,7 @@ export default function MainStack() {
       <stack.Screen name='Payment' component={Payment} options={{ headerShown: false }} />
       <stack.Screen name='Checkout' component={Checkout} options={{ headerShown: false }} />
       <stack.Screen name='PaymentSuccess' component={PaymentSuccess} options={{ headerShown: false }} />
+      <stack.Screen name='RecommendedForYotScreen' component={RecommendedForYotScreen} options={{ headerShown: false }} />
     </stack.Navigator>
   )
 }

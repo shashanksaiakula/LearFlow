@@ -34,10 +34,6 @@ const LessonCard = ({ lesson, onClick, isActive, index, currentLesson, completed
             return <CommonIconWithLoder icon="play-circle-outline" loading={false} size={18} color={Colors.primary} isBackground={false} />;
         }
 
-        // 2. If the lesson is finished, show the checkmark icon
-
-
-        // 3. Otherwise, show the lock icon
         return <CommonIconWithLoder icon="lock" loading={false} size={18} isBackground={false} color={Colors.iconsColor} />;
     };
     return (

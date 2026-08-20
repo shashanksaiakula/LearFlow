@@ -80,15 +80,25 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
             />
           }
           onPressRight={() => { navigation.pop() }}
-          leftIcon={
-            !route.params?.isEnrolled ? (
-              <MaterialDesignIcons
-                name='bookmark-outline'
-                size={28}
-                color={Colors.iconsColor}
-              />
-            ) : undefined
-          }
+          // leftIcon={
+          //   !route.params?.isEnrolled ? (
+          //     <CommonIconWithLoder
+          //       icon='bookmark-outline'
+          //       size={28}
+          //       color={Colors.iconsColor}
+          //       loding={false}
+          //       onPress={ async () => {
+          //         if (route.params.isBookmarked) {
+          //           await dispatch(deleteBookmark({ id: route.params.bookmarkId })).unwrap()
+          //         } else {
+          //           await dispatch(addBookmark({ courseCode: route.params.courseCode })).unwrap()
+          //         }
+          //         dispatch(getBookmark())
+          //       }}
+          //     />
+          //   ) : undefined
+          // }
+
         />
 
         <CommonCard>

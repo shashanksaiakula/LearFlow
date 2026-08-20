@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { enrollIntoCousre } from '../../redux/thunk/enrollThunk';
 import { RouteProp } from '@react-navigation/native';
+import { deleteBookmark } from '../../redux/thunk/thunkBookmark';
 
 type PaymentScreemProps = RouteProp<RootStackParamList, "Payment">
 type PaymentScreenPropsNavigationProps = StackNavigationProp<RootStackParamList, "Payment">
@@ -26,9 +27,12 @@ const Payment = ({ route, navigation }: Props) => {
 
     const dispacth = useDispatch<AppDispatch>()
     const { loading, enrolled, error } = useSelector((state: RootState) => state.enroll)
+    const { bookmarks, error: bookmarkedError } = useSelector((state: RootState) => state.bookmark)
 
+    const bookemardkCosure = bookmarks?.find( course => course.courseCode === route.params.courseCode)?._id
     useEffect(() => {
         dispacth(enrollIntoCousre({ courseCode: route.params.courseCode, lessonCode : route.params.lessonId }))
+        dispacth(deleteBookmark({id : bookemardkCosure}))
     }, [dispacth])
 
     return (
