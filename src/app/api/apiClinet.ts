@@ -2,6 +2,7 @@ import axios from 'axios';
 import { store } from '../redux/store';
 import { logout } from '../redux/slices/authSlice';
 import { authStorage } from '../utils/AuthToken';
+import { ENDPOINTS } from './endpoint';
 
 // const apiClient = axios.create({
 //   baseURL: 'https://reqres.in/api',
@@ -23,7 +24,7 @@ apiClient.interceptors.request.use(
   async (config) => {
 
     // console.log("URL:", config.baseURL + config.url);
-    const token = await authStorage.getToken()
+    const token = await authStorage.getAccessToken()
 
     if (token) {
       // Correct way to assign headers in modern Axios
@@ -44,21 +45,114 @@ apiClient.interceptors.request.use(
 
 
 apiClient.interceptors.response.use(
-  (response) => {
-    console.log("Response Status:", response);
+  response => {
+    console.log(
+      "API SUCCESS:",
+      response.config.url,
+      response.status
+    );
+
     return response;
   },
-  async (error) => {
-  //   const originalRequest = error.config;
-  //   console.error('Response Error:', error);
-  //   if (error.response?.status === 401) {
-  //     // && !originalRequest._retry) {
-  //     //  originalRequest._retry = true;      
-  //     //  await authStorage.clearToken();
-  //     // // Handle 401 Unauthorized error
-  //     // console.log("Unauthorized access. Redirecting to login...");
-  //     // store.dispatch(logout());
-  //   }
+
+  async error => {
+
+    console.log(
+      "API ERROR:",
+      error.config?.url,
+      error.response?.status,
+      error.response?.data
+    );
+
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+
+      console.log("401 → Trying refresh token");
+
+      originalRequest._retry = true;
+
+      try {
+
+        const refreshToken =
+          await authStorage.getRefreshToken();
+
+        console.log(
+          "Refresh token exists:",
+          !!refreshToken
+        );
+
+        if (!refreshToken) {
+          console.log("NO REFRESH TOKEN");
+
+          await authStorage.clearTokens();
+          store.dispatch(logout());
+
+          return Promise.reject(error);
+        }
+
+        console.log("Calling refresh API");
+
+        const response = await axios.post(
+          `${BASE_URL}${ENDPOINTS.REFRESH_TOKEN}`,
+          {
+            refreshToken,
+          }
+        );
+
+        console.log(
+          "REFRESH RESPONSE:",
+          response.status,
+          response.data
+        );
+
+        const newAccessToken =
+          response.data.accessToken;
+
+        if (!newAccessToken) {
+          throw new Error(
+            "No accessToken returned from refresh API"
+          );
+        }
+
+        await authStorage.saveAccessToken(
+          newAccessToken
+        );
+
+        console.log(
+          "New access token saved"
+        );
+
+        originalRequest.headers.Authorization =
+          `Bearer ${newAccessToken}`;
+
+        console.log(
+          "Retrying:",
+          originalRequest.url
+        );
+
+        return apiClient(originalRequest);
+
+      } catch (refreshError: any) {
+
+        console.log(
+          "REFRESH FAILED:",
+          refreshError.response?.status,
+          refreshError.response?.data,
+          refreshError.message
+        );
+
+        await authStorage.clearTokens();
+
+        store.dispatch(logout());
+
+        return Promise.reject(refreshError);
+      }
+    }
+
     return Promise.reject(error);
   }
 );

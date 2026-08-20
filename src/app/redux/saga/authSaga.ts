@@ -9,13 +9,10 @@ function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any,
     try {
         const response = yield call(login, action.payload);
 
-        const { iskeepMeLogin } = action.payload
         console.log("save ", response)
-        // if (iskeepMeLogin) {
-        yield call(
-            authStorage.saveToken, response.data.token
-        )
-        // }
+        yield call(authStorage.saveAccessToken, response.data.accessToken,)
+
+        yield call(authStorage.saveRefreshToken, response.data.refreshToken)
 
 
         yield put(loginSuccess({
@@ -53,7 +50,7 @@ function* logoutWorker(): Generator<any, void, any> {
 
         const response = yield call(logoutApi)
         console.log("request", JSON.stringify(response.data))
-        yield call(authStorage.clearToken);
+        yield call(authStorage.clearTokens);
         yield put(logout());
     } catch (err) {
         yield put(logoutFail(err?.message ?? 'Something went wrong'));
@@ -63,7 +60,7 @@ function* logoutWorker(): Generator<any, void, any> {
 function* checkAuthenticationWorker(): Generator<any, void, any> {
 
     try {
-        const token = yield call(authStorage.getToken);
+        const token = yield call(authStorage.getAccessToken);
         if (token) {
             yield put(loginSuccess({
                 token: token
@@ -136,7 +133,7 @@ function* editProfileWorker(action: ReturnType<typeof editProfileRequest>): Gene
             success: boolean;
             message: string
         }>
-         console.log("error is ", error?.response?.data)
+        console.log("error is ", error?.response?.data)
         yield put(editProfileFailed(error.response?.data.message ?? "Something went wrong"))
     }
 }

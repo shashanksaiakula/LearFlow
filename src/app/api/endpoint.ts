@@ -7,6 +7,7 @@ export const ENDPOINTS = {
     UPDATE_PASSWORD: '/auth/changePassword',
     FORGOT_PASSWORD: '/auth/forgotPassword',
     RESET_PASSWORD: '/auth/resetPassword',
+    REFRESH_TOKEN: '/auth/refreshToken',
     GETALLCOURSES : '/courses',
     GETCOURSEBYID : '/course/code',
     GETLESSONSBYCOURSE : '/course/lessons',
