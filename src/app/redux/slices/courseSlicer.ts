@@ -110,7 +110,7 @@ const courseSlicer = createSlice({
         builder.addCase(fetchCourseReviews.fulfilled, (state,action)=>{
             console.log("reviews", action.payload)
             state.loading = false,
-            state.reviews = action.payload
+            state.reviews = action.payload.data
         }),
         builder.addCase(fetchCourseReviews.rejected, (state,action) =>{
              state.loading = false,

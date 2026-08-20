@@ -60,7 +60,7 @@ const CourseDetialsScreen = ({ route, navigation }: Props) => {
       case Strings.instructor:
         return <Instructor instructor={instructor} />;
       case Strings.reviews:
-        return <Reviews />;
+        return <Reviews reviews={reviews} courseRating={course?.rating} />;
       default:
         return <Overview description={course?.overview.description.value} whatYouWillLearn={course?.overview.whatYouWillLearn} />;
     }

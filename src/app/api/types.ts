@@ -73,7 +73,7 @@ export interface getReviewsRequest {
 
 export interface getReviewsResponse {
     success: boolean,
-    data: Review
+    data: Review[]
 }
 
 export interface homeResponse {
