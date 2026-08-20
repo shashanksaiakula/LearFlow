@@ -80,9 +80,6 @@ const HomeScreen = ({ route, navigation }: props) => {
     return <Text style={styles.errorStyle}>{error}</Text>
   }
 
-  // if(courses.length === 0){
-  //   return <Text>No Courses avalible</Text>
-
   return (
     <CommomBackGround>
       <View style={styles.headerContainer}>
