@@ -19,7 +19,7 @@ export const fetchCourses = createAsyncThunk<
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data?.error ??
-                    "Unable to fetch cousre"
+                    "Unable to fetch course"
                 )
             }
             console.log("leson error is " + error?.message)
@@ -28,7 +28,7 @@ export const fetchCourses = createAsyncThunk<
     }
 )
 
-export const fetchLessonsByCousre = createAsyncThunk<
+export const fetchLessonsByCourse = createAsyncThunk<
     getLessonsByCourseCodeResponse,
     getLessonsByCourseCodeRequest,
     {
@@ -45,7 +45,7 @@ export const fetchLessonsByCousre = createAsyncThunk<
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(
                     error.response?.data?.error ??
-                    "Unable to fetch all lesson by cousreCode"
+                    "Unable to fetch lessons by course code"
                 )
             }
             console.log("leson error is " + error?.message)
@@ -79,7 +79,7 @@ export const fetchCourseReviews = createAsyncThunk<
     }
 )
 
-export const fetchCourseInsrtuctor = createAsyncThunk<
+export const fetchCourseInstructor = createAsyncThunk<
     getInsructorResponse,
     getInsructorRequest,
     {

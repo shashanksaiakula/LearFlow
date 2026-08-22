@@ -4,20 +4,20 @@ import { TranscriptResponse } from "../../api/types";
 
 
 
-export interface transcriptState {
+export interface TranscriptState {
     loading : boolean
     transcript : TranscriptResponse | null
     error : string | null
 }
 
-const initialState : transcriptState ={
+const initialState : TranscriptState ={
     loading : false,
     transcript : null,
     error : null
 
 }
 
-const transcriptSclicer  = createSlice({
+const transcriptSlice = createSlice({
     name : 'transcript',
     initialState : initialState,
     reducers: {},
@@ -30,10 +30,11 @@ const transcriptSclicer  = createSlice({
             state.transcript = action.payload
         })
         .addCase(fetchTranscript.rejected, (state, action) =>{
+            console.log("Transcript error:", action.payload)
             state.loading = false
-            state.error = action.payload ?? "some thing went wrong"
+            state.error = action.payload ?? "Something went wrong"
         })
     }
 })
 
-export default transcriptSclicer.reducer
+export default transcriptSlice.reducer

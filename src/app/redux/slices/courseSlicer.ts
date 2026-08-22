@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Course } from "../../models/course";
-import { fetchCourseInsrtuctor, fetchCourseReviews, fetchCourses, fetchLessonsByCousre } from "../thunk/coursesThunk";
+import { fetchCourseInstructor, fetchCourseReviews, fetchCourses, fetchLessonsByCourse } from "../thunk/coursesThunk";
 import { Lesson } from "../../models/Lesson";
 import { Review } from "../../models/Reviews";
 import { Instructor } from "../../models/Instructor";
@@ -39,7 +39,7 @@ const courseSlicer = createSlice({
             state.loading = true
         },
 
-        requestCoueseById:(state,action) => {
+        requestCourseById:(state,action) => {
             state.loading = true
         },
 
@@ -76,29 +76,29 @@ const courseSlicer = createSlice({
         }),
 
         //fetch lesson by cousres
-        builder.addCase(fetchLessonsByCousre.pending, (state)=>{
+        builder.addCase(fetchLessonsByCourse.pending, (state) =>{
              state.loading = true
         }),
-        builder.addCase(fetchLessonsByCousre.fulfilled, (state,action)=>{
+        builder.addCase(fetchLessonsByCourse.fulfilled, (state,action)=>{
             console.log("lessons", action.payload)
             state.loading = false,
             state.lessons = action.payload
         }),
-        builder.addCase(fetchLessonsByCousre.rejected, (state,action) =>{
+        builder.addCase(fetchLessonsByCourse.rejected, (state,action) =>{
              state.loading = false,
             state.error = action.payload ?? "Something went wrong";
         })
         
         //fetch instructor by cousres
-         builder.addCase(fetchCourseInsrtuctor.pending, (state)=>{
+         builder.addCase(fetchCourseInstructor.pending, (state)=>{
              state.loading = true
         }),
-        builder.addCase(fetchCourseInsrtuctor.fulfilled, (state,action)=>{
+        builder.addCase(fetchCourseInstructor.fulfilled, (state,action)=>{
             console.log("instructor paylod", action.payload.data)
             state.loading = false,
             state.instructor = action.payload.data
         }),
-        builder.addCase(fetchCourseInsrtuctor.rejected, (state,action) =>{
+        builder.addCase(fetchCourseInstructor.rejected, (state,action) =>{
              state.loading = false,
             state.error = action.payload ?? "Something went wrong";
         })
@@ -120,5 +120,5 @@ const courseSlicer = createSlice({
 
 })
 
-export const { requestAllCourses, allCourses, getAllCoursesError,requestCoueseById,getCourseById,getCourseByIdError } = courseSlicer.actions
+export const { requestAllCourses, allCourses, getAllCoursesError,requestCourseById,getCourseById,getCourseByIdError } = courseSlicer.actions
 export default courseSlicer.reducer

@@ -14,14 +14,14 @@ const initialState: HomeState = {
     error: null
 };
 
-const homeSlicer = createSlice({
+const homeSlice = createSlice({
     name: 'home',
     initialState : initialState,
     reducers:{
         homeRequest: (state)=>{
             state.loading = true
         },
-        homeSucess : (state,action) =>{
+        homeSuccess : (state,action) =>{
             state.loading = false
             state.homeResponse = action.payload
         },
@@ -32,5 +32,5 @@ const homeSlicer = createSlice({
     }
 })
 
-export const {homeRequest, homeSucess, homeError } = homeSlicer.actions
-export default homeSlicer.reducer
+export const {homeRequest, homeSuccess, homeError } = homeSlice.actions
+export default homeSlice.reducer

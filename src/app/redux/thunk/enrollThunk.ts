@@ -1,20 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getEnrollResponse, postEnrollRequest, postEnrollResponse, updateEnrollmentRequest, updateEnrollmentResponse } from "../../api/types";
 import axios from "axios";
-import { enrollToCousre, getAllENrolleCousrses, updateEnrollment } from "../../api/enrollApi";
+import { enrollToCourse, getAllEnrolledCourses, updateEnrollment } from "../../api/enrollApi";
 
-export const enrollIntoCousre = createAsyncThunk<
+export const enrollIntoCourse = createAsyncThunk<
     postEnrollResponse,
     postEnrollRequest,
     {
         rejectValue: string
     }
 >(
-    "enrollIntoCousre/add",
+    "enrollIntoCourse/add",
     async (request, { rejectWithValue }) => {
         try {
             console.log(JSON.stringify(request))
-            const response = await enrollToCousre(request)
+            const response = await enrollToCourse(request)
             console.log("enroll is", response)
             return response.data
         } catch (error) {
@@ -40,7 +40,7 @@ export const getEnrolledCourse = createAsyncThunk<
     "getEnrolledCourse/fetch",
     async (request, { rejectWithValue }) => {
         try {
-            const response = await getAllENrolleCousrses()
+            const response = await getAllEnrolledCourses()
             return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -55,7 +55,7 @@ export const getEnrolledCourse = createAsyncThunk<
     }
 )
 
-export const updateEnrollent = createAsyncThunk<
+export const updateEnrollmentThunk = createAsyncThunk<
     updateEnrollmentResponse,
     updateEnrollmentRequest,
     {

@@ -9,7 +9,7 @@ import { Spacing } from '../../theme/spacing';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AppDispatch, RootState, useAppDispatch } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getEnrolledCourse, updateEnrollent } from '../../redux/thunk/enrollThunk';
+import { getEnrolledCourse, updateEnrollmentThunk } from '../../redux/thunk/enrollThunk';
 
 
 interface LessonVideoPlayerProps {
@@ -55,7 +55,7 @@ const LessonVideoPlayer = ({
       const onHardwareBackPress = async () => {
         // 1. Run your exact same dispatch action
         await dispatch(
-          updateEnrollent({
+          updateEnrollmentThunk({
             id: enrolledId,
             currentLessonCode: lesson.lessonCode,
             currentLessonPosition: currentSec,
@@ -121,7 +121,7 @@ const LessonVideoPlayer = ({
           if (nextLesson === undefined) {
             return
           }
-          await dispatch(updateEnrollent({
+          await dispatch(updateEnrollmentThunk({
             id: enrolledId, currentLessonCode: nextLesson.lessonCode, currentLessonPosition: 0, progress: progress,
             completedLessonCode: lesson.lessonCode,
             lastPlayedLessonCode: nextLesson?.lessonCode,
@@ -136,7 +136,7 @@ const LessonVideoPlayer = ({
       <View style={styles.backArrow}>
         <CommonIconWithLoder icon="arrow-left" loding={false} isBackground={false} color={Colors.white} size={26} onPress={async () => {
           console.log("cousre porgress ", progress)
-          await dispatch(updateEnrollent({ id: enrolledId, currentLessonCode: lesson.lessonCode, currentLessonPosition: currentSec, progress: progress })).unwrap()
+          await dispatch(updateEnrollmentThunk({ id: enrolledId, currentLessonCode: lesson.lessonCode, currentLessonPosition: currentSec, progress: progress })).unwrap()
           await dispatch(getEnrolledCourse()).unwrap()
           setCurrentSec(0)
           navigation.pop()

@@ -18,6 +18,7 @@ export const fetchTranscript = createAsyncThunk<
                console.log("response is " + JSON.stringify(response))
                return response.data
           } catch (error) {
+               console.log("error is " + JSON.stringify(error))
                if(axios.isAxiosError(error)){
                     return rejectWithValue(
                      error.response?.data?.error ?? 

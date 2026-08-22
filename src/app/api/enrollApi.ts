@@ -2,13 +2,13 @@ import apiClient from "./apiClinet";
 import { ENDPOINTS } from "./endpoint";
 import {  getEnrollResponse, postEnrollRequest, postEnrollResponse, updateEnrollmentRequest, updateEnrollmentResponse } from "./types";
 
-export function enrollToCousre(
+export function enrollToCourse(
     request : postEnrollRequest
 ){
     return apiClient.post<postEnrollResponse>(`${ENDPOINTS.ENROLLMENT}/${request.courseCode}/${request.lessonCode}`)
 }
 
-export function getAllENrolleCousrses(){
+export function getAllEnrolledCourses(){
     return apiClient.get<getEnrollResponse>(ENDPOINTS.ENROLLMENT)
 }
 

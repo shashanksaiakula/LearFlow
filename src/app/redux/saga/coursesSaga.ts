@@ -1,6 +1,6 @@
 import { call, takeLatest, put,all } from "redux-saga/effects";
 import { getAllCoursesData, getCourseByIdApi } from "../../api/coursesApi";
-import { allCourses, getAllCoursesError, getCourseById, requestAllCourses, requestCoueseById } from "../slices/courseSlicer";
+import { allCourses, getAllCoursesError, getCourseById, requestAllCourses, requestCourseById } from "../slices/courseSlicer";
 
 
 
@@ -37,7 +37,7 @@ function* coursesWatcher() {
 
 function* getCourseByIdWatcher(){
     yield takeLatest(
-        requestCoueseById.type,
+        requestCourseById.type,
         getCourseByIdrWorker
     )
 }

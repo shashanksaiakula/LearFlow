@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../redux/store"
 import { useEffect } from "react"
-import { requestCoueseById } from "../redux/slices/courseSlicer"
-import { fetchCourseInsrtuctor, fetchCourseReviews, fetchLessonsByCousre } from "../redux/thunk/coursesThunk"
+import { requestCourseById } from "../redux/slices/courseSlicer"
+import { fetchCourseInstructor, fetchCourseReviews, fetchLessonsByCourse } from "../redux/thunk/coursesThunk"
 
 function useCousre(courseId : string){
 
@@ -11,14 +11,14 @@ function useCousre(courseId : string){
 
   useEffect(()=>{
     if (!courseId) return;
-    dispatch(requestCoueseById(courseId))
-    dispatch(fetchLessonsByCousre({courseCode: courseId}))
+    dispatch(requestCourseById(courseId))
+    dispatch(fetchLessonsByCourse({courseCode: courseId}))
     dispatch(fetchCourseReviews({courseCode: courseId}))
 },[courseId,dispatch])
 
 useEffect(()=>{
     if(course?.instructor){
-      dispatch(fetchCourseInsrtuctor({name : course?.instructor}))
+      dispatch(fetchCourseInstructor({name : course?.instructor}))
     }
 },[course?.instructor])
 return {

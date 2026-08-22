@@ -23,7 +23,7 @@ import HomeIcon from '../../assets/svg/home-icon.svg'
 import { Input } from '../../components/Input';
 import { requestAllCourses } from '../../redux/slices/courseSlicer';
 import { selectInProgressCourses } from '../../redux/selectors/courseSelectors';
-import { getAllENrolleCousrses } from '../../api/enrollApi';
+import { getAllEnrolledCourses } from '../../api/enrollApi';
 import { getEnrolledCourse } from '../../redux/thunk/enrollThunk';
 import MyCousrseCard from '../../components/MyCousrseCard';
 import { selectBookmarkedCourses } from '../../redux/selectors/bookmarkSelector';

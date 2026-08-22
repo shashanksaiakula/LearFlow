@@ -1,5 +1,5 @@
 import { takeLatest, put, call, all } from "redux-saga/effects";
-import { changePasswordFailed, changePasswordRequest, changePasswordSuccess, checkAuthenticationRequested, editProfileFailed, editProfileRequest, editProfileSucess, emailVerifyError, emailVerifyRequest, emailVerifySuccess, forgotPasswordFailed, forgotPasswordRequest, forgotPasswordSuccess, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutFail, logoutRequested, profileSucess, registerRequest, registerSucess, resetPasswordFailed, resetPasswordRequest, resetPasswordSuccess, resendEmailError, resendEmailRequest, resendEmailSuccess } from "../slices/authSlice";
+import { changePasswordFailed, changePasswordRequest, changePasswordSuccess, checkAuthenticationRequested, editProfileFailed, editProfileRequest, editProfileSuccess, emailVerifyError, emailVerifyRequest, emailVerifySuccess, forgotPasswordFailed, forgotPasswordRequest, forgotPasswordSuccess, initializationComplete, loginFailed, loginRequested, loginSuccess, logout, logoutFail, logoutRequested, profileSuccess, registerRequest, registerSuccess, resetPasswordFailed, resetPasswordRequest, resetPasswordSuccess, resendEmailError, resendEmailRequest, resendEmailSuccess } from "../slices/authSlice";
 import { login, profile, register, logoutApi, changePasswordApi, editProfileApi, emailVerify, resendEmailVerifcation, forgotPasswordApi, resetPasswordApi } from "../../api/authApi";
 import { authStorage } from "../../utils/AuthToken";
 import { AxiosError } from "axios";
@@ -23,7 +23,7 @@ function* loginWorker(action: ReturnType<typeof loginRequested>): Generator<any,
         const profileReponse = yield call(profile)
         console.log("profile response ", profileReponse.data.data)
         console.log("profile response 2", profileReponse.data.data.isEmailVerified)
-        yield put(profileSucess({
+        yield put(profileSuccess({
             user: profileReponse.data.data
         }))
     } catch (err) {
@@ -68,7 +68,7 @@ function* checkAuthenticationWorker(): Generator<any, void, any> {
         }
         const profileReponse = yield call(profile)
         console.log("profile response ", profileReponse.data.data)
-        yield put(profileSucess({
+        yield put(profileSuccess({
             user: profileReponse.data.data
         }))
     } catch (err) {
@@ -84,7 +84,7 @@ function* registerRequestWorker(action: ReturnType<typeof registerRequest>): Gen
     try {
         const response = yield call(register, action.payload)
         console.log("request", JSON.stringify(response))
-        yield put(registerSucess({
+        yield put(registerSuccess({
             message: response.message
         }))
     } catch (error) {
@@ -124,7 +124,7 @@ function* editProfileWorker(action: ReturnType<typeof editProfileRequest>): Gene
     try {
         const response = yield call(editProfileApi, action.payload)
         console.log(response.data.message)
-        yield put(editProfileSucess({
+        yield put(editProfileSuccess({
             message: response.data.message,
             user: response.data.user
         }))

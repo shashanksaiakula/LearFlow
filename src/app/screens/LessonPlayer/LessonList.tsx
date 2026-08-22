@@ -8,7 +8,7 @@ import { Typography } from '../../theme/typography'
 import { Spacing } from '../../theme/spacing'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
-import { getEnrolledCourse, updateEnrollent } from '../../redux/thunk/enrollThunk'
+import { getEnrolledCourse, updateEnrollmentThunk } from '../../redux/thunk/enrollThunk'
 
 type LessonProps = {
     courseId: string,
@@ -30,7 +30,7 @@ const LessonList = ({ onClick, lessonId, lessons, completedList, lastLessonPlaye
 
     async function handleLastPlayedVider(lessonID: string) {
         if (!completedList?.includes(lessonId)) {
-            await dispatch(updateEnrollent({
+            await dispatch(updateEnrollmentThunk({
                 id: enrolledId,
                 lastPlayedLessonPosition: currentVideoSec,
                 lastPlayedLessonCode: lessonId

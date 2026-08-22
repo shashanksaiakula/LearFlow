@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Enrollment } from "../../models/Enrollment";
-import { enrollIntoCousre, getEnrolledCourse, updateEnrollent } from "../thunk/enrollThunk";
+import { enrollIntoCourse, getEnrolledCourse, updateEnrollmentThunk } from "../thunk/enrollThunk";
 
 interface enrollSlicProps {
     loading: boolean,
@@ -22,14 +22,14 @@ const enrollSlicer = createSlice({
     reducers: {},
     extraReducers(builder) {
         // enroll to course
-        builder.addCase(enrollIntoCousre.pending, (state) => {
+        builder.addCase(enrollIntoCourse.pending, (state) => {
             state.loading = true
         }),
-            builder.addCase(enrollIntoCousre.fulfilled, (state, action) => {
+            builder.addCase(enrollIntoCourse.fulfilled, (state, action) => {
                 state.loading = false
                 state.enrolled = action.payload
             }),
-            builder.addCase(enrollIntoCousre.rejected, (state, action) => {
+            builder.addCase(enrollIntoCourse.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload ?? "Something went wrong"
             })
@@ -49,14 +49,14 @@ const enrollSlicer = createSlice({
             })
 
             // update enrolled data
-            .addCase(updateEnrollent.pending, (state) => {
+            .addCase(updateEnrollmentThunk.pending, (state) => {
             state.loading = true
         }),
-            builder.addCase(updateEnrollent.fulfilled, (state, action) => {
+            builder.addCase(updateEnrollmentThunk.fulfilled, (state, action) => {
                 state.loading = false
                 state.enrolled = action.payload
             }),
-            builder.addCase(updateEnrollent.rejected, (state, action) => {
+            builder.addCase(updateEnrollmentThunk.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload ?? "Something went wrong"
             })

@@ -46,12 +46,12 @@ const authSlice = createSlice({
         registerRequest: (state, action) => {
             state.loading = true
         },
-        registeFailed: (state, action) => {
+        registerFailed: (state, action) => {
             state.loading = false
             state.isLoggedIn = false
             state.error = action.payload
         },
-        registerSucess: (state, action) => {
+        registerSuccess: (state, action) => {
             state.message = action.payload.message
             state.loading = false
             state.error = null
@@ -61,7 +61,7 @@ const authSlice = createSlice({
             state.token = action.payload.token
             state.error = null
         },
-        profileSucess: (state, action) => {
+        profileSuccess: (state, action) => {
             state.isLoggedIn = true
             console.log("check",action.payload.user.isEmailVerified)
             state.user = action.payload.user
@@ -108,7 +108,7 @@ const authSlice = createSlice({
         editProfileRequest: (state, action) => {
             state.loading = true
         },
-        editProfileSucess: (state, action) => {
+        editProfileSuccess: (state, action) => {
             state.loading = false,
                 state.user = action.payload
         },
@@ -185,9 +185,9 @@ export const {
     logoutRequested,
     checkAuthenticationRequested,
     registerRequest,
-    registeFailed,
-    registerSucess,
-    profileSucess,
+    registerFailed,
+    registerSuccess,
+    profileSuccess,
     LogoutRequrst,
     logoutFail,
     changePasswordFailed,
@@ -195,7 +195,7 @@ export const {
     changePasswordSuccess,
     editProfileFailed,
     editProfileRequest,
-    editProfileSucess,
+    editProfileSuccess,
     emailVerifyError,
     emailVerifyRequest,
     emailVerifySuccess,

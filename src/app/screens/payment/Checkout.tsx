@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { RouteProp } from '@react-navigation/native';
 import React from 'react'
 import { RootStackParamList } from '../../navigation/types';
@@ -10,44 +10,85 @@ import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import { Strings } from '../../strings/String';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import { Colors } from '../../theme/colors';
+import { toRupee } from '../../utils/paymentUtils';
 
-
-type ChecoutScreenProps = RouteProp<RootStackParamList, "Checkout">
+type CheckoutScreenProps = RouteProp<RootStackParamList, "Checkout">
 
 type CheckoutScreenPropsNavigationProps = StackNavigationProp<RootStackParamList, "Checkout">
 
 type Props = {
-    route: ChecoutScreenProps
+    route: CheckoutScreenProps
     navigation: CheckoutScreenPropsNavigationProps
 }
-const Checkout = ({route, navigation} :Props) => {
-    console.log("lass id is ", route.params.lessonId)
-  return (
-   <CommomBackGround>
-            <ComnonHeader title={Strings.checkout} 
-            rightIcon={
-                <MaterialDesignIcons
-                name='arrow-left'
-                size={22}
-                color={Colors.iconsColor}
-                />
-            }
-            onPressRight={()=>{navigation.pop()}}
+
+const Checkout = ({ route, navigation }: Props) => {
+    const { amount, courseCode } = route.params
+
+    return (
+        <CommomBackGround>
+            <ComnonHeader
+                title={Strings.checkout}
+                rightIcon={
+                    <MaterialDesignIcons
+                        name='arrow-left'
+                        size={22}
+                        color={Colors.iconsColor}
+                    />
+                }
+                onPressRight={() => { navigation.pop() }}
             />
-            <View style={styles.mainContainer}>
-                <Text>{route.params.amount}</Text>
-                <PrimaryButton onPress={() => {
-                    navigation.navigate('Payment',{
-                        amount: route.params.amount,
-                        courseCode: route.params.courseCode,
-                        lessonId :route.params.lessonId
-                    })
-                }}
-                    title={Strings.make_payment}
-                />
-            </View>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.content}
+            >
+                <View style={styles.summaryCard}>
+                    <View style={styles.summaryRow}>
+                        <Text style={styles.summaryLabel}>Course code</Text>
+                        <Text style={styles.summaryValue}>{courseCode}</Text>
+                    </View>
+                    <View style={styles.summaryRow}>
+                        <Text style={styles.summaryLabel}>Course access</Text>
+                        <Text style={styles.summaryValue}>Lifetime</Text>
+                    </View>
+                    <View style={styles.summaryRow}>
+                        <Text style={styles.summaryLabel}>Support</Text>
+                        <Text style={styles.summaryValue}>Included</Text>
+                    </View>
+
+                    <View style={styles.divider} />
+
+                    <View style={styles.amountRow}>
+                        <Text style={styles.amountTitle}>Total</Text>
+                        <Text style={styles.amountValue}>{toRupee(amount)}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.secureNoteRow}>
+                    <MaterialDesignIcons
+                        name='shield-check-outline'
+                        size={16}
+                        color={Colors.textSecondary}
+                    />
+                    <Text style={styles.secureNoteText}>
+                        Your purchase is protected and encrypted
+                    </Text>
+                </View>
+
+                <View style={styles.bottomButtonContainer}>
+                    <PrimaryButton
+                        onPress={() => {
+                            navigation.navigate('Payment', {
+                                amount: route.params.amount,
+                                courseCode: route.params.courseCode,
+                                lessonId: route.params.lessonId,
+                            })
+                        }}
+                        title={Strings.complete_payment}
+                    />
+                </View>
+            </ScrollView>
         </CommomBackGround>
-  )
+    )
 }
 
 export default Checkout

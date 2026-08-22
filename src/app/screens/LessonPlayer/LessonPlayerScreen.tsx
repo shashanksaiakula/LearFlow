@@ -15,7 +15,7 @@ import NotesView from './NotesView';
 import CommomBackGround from '../../components/common/CommomBackGround';
 import { BASE_URL } from '../../api/apiClinet';
 import { Spacing } from '../../theme/spacing';
-import { fetchLessonsByCousre } from '../../redux/thunk/coursesThunk';
+import { fetchLessonsByCourse } from '../../redux/thunk/coursesThunk';
 
 
 type LessonPlayerScreenProps = RouteProp<RootStackParamList, "LessonPlayer">
@@ -47,7 +47,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   useEffect(() => {
     // If lessons hasn't loaded yet, or it's empty, fetch the course lessons list
     if (courseId && (!lessons || !lessons.data)) {
-      dispatch(fetchLessonsByCousre({ courseCode: courseId }));
+      dispatch(fetchLessonsByCourse({ courseCode: courseId }));
     }
   }, [dispatch, courseId, lessons]);
 
