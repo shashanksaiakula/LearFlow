@@ -27,8 +27,9 @@ apiClient.interceptors.request.use(
     const token = await authStorage.getAccessToken()
 
     if (token) {
-      // Correct way to assign headers in modern Axios
-      config.headers.Authorization = `Bearer ${token}`;
+      // Attach bearer token when available
+      (config.headers as any).Authorization = `Bearer ${token}`;
+      (config.headers as any).Authorization = `Bearer ${token}`;
       console.log("Token attached successfully");
     }
     console.log("Headers:", config.headers);
