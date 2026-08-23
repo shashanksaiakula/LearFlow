@@ -70,6 +70,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   //   }, [route.params.currentLessonPosition]);
 
   const seekPress = useCallback((seek: number) => {
+    setIsPaused(false)
     videoRef.current?.seek(seek + 1)
   }, [])
 

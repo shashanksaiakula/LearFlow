@@ -9,7 +9,9 @@ type TranscriptCardProps = {
   time: string;
   text: string;
   onClick: (seek: number) => void;
+  onLongPress?: (text: string, seek: number) => void;
   isActive: boolean;
+  selectedWord?: string | null;
 };
 
 const TranscriptCard = memo(
@@ -17,10 +19,13 @@ const TranscriptCard = memo(
     time,
     text,
     onClick,
+    onLongPress,
     isActive = false,
+    selectedWord = null,
   }: TranscriptCardProps) => {
 
     const timeStamp = formatTime(parseInt(time));
+    const words = text.split(/\s+/).filter(Boolean);
 
     return (
       <Pressable
@@ -42,15 +47,28 @@ const TranscriptCard = memo(
         </View>
 
         <View style={styles.textContainer}>
-          <Text
-            style={styles.textStyle}
-            selectable={true}
-            onLongPress={() => {
-              onClick(parseInt(time))
-            }}
-          >
-            {text}
-          </Text>
+          {words.map((word, index) => {
+            const isSelected = selectedWord === word;
+
+            return (
+              <Pressable
+                key={`${word}-${index}-${time}`}
+                hitSlop={4}
+                onPress={() => onClick(parseInt(time))}
+                onLongPress={() => {
+                  if (onLongPress) {
+                    onLongPress(word, parseInt(time));
+                  }
+                }}
+                style={[
+                  styles.wordButton,
+                  isSelected && styles.selectedWordButton,
+                ]}
+              >
+                <Text style={[styles.textStyle, isSelected && styles.selectedTextStyle]}>{word}</Text>
+              </Pressable>
+            );
+          })}
         </View>
 
       </Pressable>
@@ -82,11 +100,35 @@ const styles = StyleSheet.create({
 
   textContainer: {
     flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+
+  wordButton: {
+    marginRight: 4,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingHorizontal: 1,
+    paddingVertical: 0,
+    borderRadius: 4,
+  },
+
+  selectedWordButton: {
+    backgroundColor: Colors.primaryLight1,
+    borderRadius: 6,
   },
 
   textStyle: {
     ...Typography.body1,
-    marginTop: Spacing.xs,
+    marginTop: 0,
+    color: Colors.text,
+    lineHeight: 22,
+  },
+
+  selectedTextStyle: {
+    color: Colors.primary,
+    fontWeight: '600',
   },
 
   timeStampStyle: {

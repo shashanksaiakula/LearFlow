@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, View } from 'react-native'
+import { Modal, StyleSheet, Text, View, KeyboardAvoidingView, Platform } from 'react-native'
 import React from 'react'
 import OutLineButton from '../common/OutLineButton'
 import { Colors } from '../../theme/colors'
@@ -28,7 +28,11 @@ const NoteModal = ({ title, cancelBtnAction, saveBtnAction, showModel, timeStamp
             animationType="fade"
             transparent={true}
         >
-            <View style={styles.overlay}>
+            {/* KeyboardAvoidingView handles pushing the card up on iOS */}
+            <KeyboardAvoidingView 
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.overlay}
+            >
                 <CommonCard>
                     <Text style={styles.title}>{title}</Text>
                     <Text style={styles.timeStamp}>{Strings.Time_stamp} {timeStamp}</Text>
@@ -48,7 +52,7 @@ const NoteModal = ({ title, cancelBtnAction, saveBtnAction, showModel, timeStamp
                         </View>
                     </View>
                 </CommonCard>
-            </View>
+            </KeyboardAvoidingView>
         </Modal>
     )
 }
@@ -57,7 +61,6 @@ export default NoteModal
 
 const styles = StyleSheet.create({
     bottomContainer: {
-        // flex:1,
         flexDirection: 'row',
         paddingHorizontal: Spacing.md
     },
@@ -72,11 +75,12 @@ const styles = StyleSheet.create({
     overlay: {
         flex: 1,
         justifyContent: 'flex-end',
-    }, title: {
+    }, 
+    title: {
         ...Typography.h1,
         padding: Spacing.xxs
-
-    }, timeStamp: {
+    }, 
+    timeStamp: {
         ...Typography.body1,
         color: Colors.primary,
         fontWeight: 'bold',

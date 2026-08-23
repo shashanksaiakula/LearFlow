@@ -2,7 +2,6 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import React, { useEffect, useRef, useState } from 'react';
 import TranscriptCard from '../../components/TranscriptCard';
 import useTranscript from '../../hooks/useTranscript';
-import Clipboard from '@react-native-clipboard/clipboard';
 import NoteModal from '../../components/notebottommodal/NoteModal';
 import { Strings } from '../../strings/String';
 import { formatTime } from '../../utils/timeUtils';
@@ -37,12 +36,13 @@ export const TranscriptView = ({
 
   const [definition, setDefinition] = useState('');
   const [word, setWord] = useState('');
+  const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [isShowModal, setIsShowModal] = useState(false)
   const [timeStamp, setTimeStamp] = useState(0)
   // 1. Locally calculate the absolute correct active index based on timestamps
   const transcriptList = transcript?.transcript || [];
   const localActiveIndex = transcriptList.findIndex(
-    item => currentTimeStamp >= item.start && currentTimeStamp <= item.end
+    item => currentTimeStamp >= Number(item.start) && currentTimeStamp <= Number(item.end)
   );
 
   async function handleSaveNote() {
@@ -50,6 +50,7 @@ export const TranscriptView = ({
     setDefinition("")
     playResumeAction(false)
     setIsShowModal(false)
+    setSelectedWord(null)
     await dispatch(postNotes({ courseCode: courseId, lessonCode: lessonId, selectedText: word, timestamp: timeStamp, note: definition })).unwrap()
     // }
     dispatch(getNotes({ courseCode: courseId, lessonCode: lessonId }))
@@ -60,17 +61,39 @@ export const TranscriptView = ({
     setDefinition("")
     setIsShowModal(false)
     playResumeAction(false)
+    setSelectedWord(null)
     // setActiveCardId(null)
   }
 
+  const openNoteModal = (selectedText: string, selectedTimeStamp = currentTimeStamp) => {
+    const cleanedText = selectedText.trim();
+
+    if (!cleanedText) {
+      return;
+    }
+
+    setSelectedWord(cleanedText);
+    setWord(cleanedText);
+    setTimeStamp(selectedTimeStamp);
+    setDefinition('Loading definition...');
+    setIsShowModal(true);
+  };
+
   const fetchMeaning = async (text: string) => {
+    const selectedText = text.trim().replace(/(\w+)[.?]/g, '$1');
+    if (!selectedText) {
+      return;
+    }
+
+    openNoteModal(selectedText);
+
     try {
-      const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`);
+      const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`);
       const data = await response.json();
-      if (data && data[0]) {
-        const meaning = data[0].meanings[0].definitions[0].definition;
+      const meaning = data?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
+
+      if (meaning) {
         setDefinition(meaning);
-        setIsShowModal(true)
       } else {
         setDefinition('No definition found.');
       }
@@ -100,29 +123,6 @@ export const TranscriptView = ({
       });
     }
   }, [localActiveIndex]); // Re-run whenever the true calculated index changes
-
-  useEffect(() => {
-    const listener = Clipboard.addListener(() => {
-
-      Clipboard.getString().then(text => {
-
-        if (text) {
-          playResumeAction(true)
-          setWord(text)
-          fetchMeaning(text)
-          // Open your modal here
-          // setSelectedText(text);
-          // setShowModal(true);
-        }
-
-      });
-    });
-
-    return () => {
-      listener.remove();
-    };
-  }, []);
-
 
   if (loading) {
     return <ActivityIndicator size="large" style={styles.indicatorStyle} />;
@@ -156,24 +156,31 @@ export const TranscriptView = ({
                   console.log("seek us , ", seek)
                   seekonPress(seek)
                   setTimeStamp(seek)
+                  playResumeAction(true)
+                }}
+                onLongPress={(selectedText, seek) => {
+                  seekonPress(seek)
+                  setTimeStamp(seek)
+                  playResumeAction(true)
+                  openNoteModal(selectedText, seek);
+                  fetchMeaning(selectedText);
                 }}
                 isActive={isCurrentlyActive}
+                selectedWord={selectedWord}
               />
             </View>
           );
         })}
       </ScrollView>
-      {isShowModal &&
-        <NoteModal
-          cancelBtnAction={() => { handelCancel() }}
-          saveBtnAction={() => handleSaveNote()}
-          showModel={isShowModal}
-          timeStamp={formatTime(timeStamp)}
-          note={definition}
-          onChangeValue={setDefinition}
-          title={word}
-        />
-      }
+      <NoteModal
+        cancelBtnAction={() => { handelCancel() }}
+        saveBtnAction={() => handleSaveNote()}
+        showModel={isShowModal}
+        timeStamp={formatTime(timeStamp)}
+        note={definition}
+        onChangeValue={setDefinition}
+        title={word || 'Note'}
+      />
     </View>
   );
 };
