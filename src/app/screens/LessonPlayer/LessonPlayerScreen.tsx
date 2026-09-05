@@ -40,6 +40,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   const { lessons, loading: coursesLoading } = useSelector((state: RootState) => state.courses)
   const { user } = useSelector((state: RootState) => state.auth)
   const { enrollments, enrolled } = useSelector((state: RootState) => state.enroll)
+  const [loder, setLoder] = useState(false)
   const [resumePosition, setResumePosition] = useState(
     route.params.currentLessonPosition ?? 0
   );
@@ -77,7 +78,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   const enrolledId = enrollments?.filter(enroll => enroll.userId === user?._id)
     .find(course => (course.courseCode === courseId))
   console.log("enrolledis is 1 ", enrolledId?.lastPlayedLessonCode)
- if (lessonLoading || coursesLoading || !lessons || !lessons.data || !lesson) {
+  if (lessonLoading || coursesLoading || !lessons || !lessons.data || !lesson) {
     return <ActivityIndicator size={'large'} style={styles.indicatorStyle} />
   }
 
@@ -126,6 +127,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
             }}
             enrolledId={enrolledId?._id}
             progress={enrolled?.progress}
+            isBackPressed={setLoder}
           />}
         <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
 
@@ -169,6 +171,18 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
           />
         )}
       </View>
+      {loder && <View style={{
+        position: 'absolute',
+        top: 10,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <ActivityIndicator size={'large'} />
+      </View>}
     </CommomBackGround>
   )
 }

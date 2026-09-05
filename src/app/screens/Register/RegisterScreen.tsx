@@ -27,8 +27,8 @@ import { AuthStackParamsList } from "../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Strings } from "../../strings/String";
 import styles from "./styles";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import { registerRequest } from "../../redux/slices/authSlice";
 import CommomBackGround from "../../components/common/CommomBackGround";
 
@@ -40,6 +40,7 @@ const RegisterScreen = () => {
     const [isEnabled, setIsEnabled] = useState(false)
     const navigation = useNavigation<AuthNavigationProp>()
     const dispach = useDispatch<AppDispatch>()
+    const { loading } = useSelector((state : RootState) => state.auth)
 
     const {
         control,
@@ -255,7 +256,7 @@ const RegisterScreen = () => {
                                 <Text>{Strings.and} </Text>
                                 <TextPressable text={Strings.policy} onPress={() => { }} />
                             </View>
-                            <PrimaryButton disabled={!isEnabled} onPress={handleSubmit(onRegister)} title={Strings.create_account} />
+                            <PrimaryButton disabled={!isEnabled} onPress={handleSubmit(onRegister)} title={Strings.create_account} loading={loading}/>
 
                             <View style={styles.dividerStyle}>
                                 <Divvider style={{ flex: 1 }} />

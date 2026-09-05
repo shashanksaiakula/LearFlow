@@ -27,7 +27,7 @@ const OutLineButton = ({ color = Colors.primary, icon, onPress, text, loading }:
             ]}
         >
             <View style={styles.buttonRaper}>
-                {icon}
+                {!loading && icon}
                 {loading && (
                     <ActivityIndicator
                         size="small"

@@ -137,7 +137,8 @@ export interface LogoutResponse {
 export interface EditPriofileRequest {
     name: string,
     profileImage: string
-    dateOfBirth: string
+    dateOfBirth: string,
+    phoneNumber : number
 }
 
 export interface EditPriofileResponse {

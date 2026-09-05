@@ -24,7 +24,8 @@ interface InputProps extends TextInputProps {
   placeHolder? : string,
   containerStyle?: StyleProp<ViewStyle>;
   height? : number,
-  isMultiline? : boolean
+  isMultiline? : boolean,
+  keyboardType? : TextInputProps['keyboardType'];
 }
 
 const Input = ({
@@ -42,6 +43,7 @@ const Input = ({
   containerStyle,
   height =56,
   isMultiline = false,
+  keyboardType,
   ...props
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -87,6 +89,7 @@ const Input = ({
           }}
           multiline={isMultiline}   
          numberOfLines={isMultiline ? 4 : 1}
+         keyboardType={keyboardType ?? "default"}
         />
 
         {rightIcon && (

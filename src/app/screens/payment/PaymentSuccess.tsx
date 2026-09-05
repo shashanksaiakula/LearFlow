@@ -30,9 +30,9 @@ const PaymentSuccess = ({ navigation }: Props) => {
                     />
                 </View>
 
-                <Text style={styles.successTitle}>Payment Successful</Text>
+                <Text style={styles.successTitle}>{Strings.payment_successful}</Text>
                 <Text style={styles.successSubtitle}>
-                    You now have lifetime access to this course. Happy learning!
+                    {Strings.life_time_access}
                 </Text>
 
                 <View style={styles.successCard}>
@@ -47,13 +47,14 @@ const PaymentSuccess = ({ navigation }: Props) => {
                         <Text style={styles.successCardValue}>Lifetime</Text>
                     </View>
                 </View>
-
-                <PrimaryButton
-                    onPress={() => {
-                        navigation.navigate('BottomTab', { screen: 'myLearning' })
-                    }}
-                    title={Strings.contine_learning}
-                />
+                <View style={{  width: "100%",}}>
+                    <PrimaryButton
+                        onPress={() => {
+                            navigation.navigate('BottomTab', { screen: 'myLearning' })
+                        }}
+                        title={Strings.contine_learning}
+                    />
+                </View>
             </ScrollView>
         </CommomBackGround>
     )

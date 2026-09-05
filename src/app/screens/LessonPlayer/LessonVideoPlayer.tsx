@@ -21,7 +21,8 @@ interface LessonVideoPlayerProps {
   onLessonComplete: (nextLesson: string) => void,
   lessons: Lesson[],
   enrolledId: string,
-  progress: number
+  progress: number,
+  isBackPressed: (isPressed: Boolean) => void
 }
 
 
@@ -34,7 +35,8 @@ const LessonVideoPlayer = ({
   onLessonComplete,
   lessons,
   enrolledId,
-  progress
+  progress,
+  isBackPressed
 }: LessonVideoPlayerProps) => {
 
   console.log("is lesson is update ", lesson.lessonCode)
@@ -53,7 +55,7 @@ const LessonVideoPlayer = ({
   useFocusEffect(
     useCallback(() => {
       const onHardwareBackPress = async () => {
-        // 1. Run your exact same dispatch action
+        isBackPressed(true)
         await dispatch(
           updateEnrollmentThunk({
             id: enrolledId,
@@ -135,6 +137,7 @@ const LessonVideoPlayer = ({
       />
       <View style={styles.backArrow}>
         <CommonIconWithLoder icon="arrow-left" loding={false} isBackground={false} color={Colors.white} size={26} onPress={async () => {
+          isBackPressed(true)
           console.log("cousre porgress ", progress)
           await dispatch(updateEnrollmentThunk({ id: enrolledId, currentLessonCode: lesson.lessonCode, currentLessonPosition: currentSec, progress: progress })).unwrap()
           await dispatch(getEnrolledCourse()).unwrap()

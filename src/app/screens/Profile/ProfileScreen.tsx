@@ -1,5 +1,5 @@
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RootState } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './style'
@@ -19,17 +19,21 @@ import { logoutRequested } from '../../redux/slices/authSlice'
 import { ProfileStackParamList } from '../../navigation/types'
 import { useNavigation } from '@react-navigation/native';
 import CommomBackGround from '../../components/common/CommomBackGround'
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
 
 type ProfileNavigationProps = NativeStackNavigationProp<ProfileStackParamList>;
 
 
 const ProfileScreen = () => {
 
-    const user = useSelector((state: RootState) => state.auth.user)
+    const {user,loading} = useSelector((state: RootState) => state.auth)
     const tabBarHeight = useBottomTabBarHeight();
     const dispatch = useDispatch()
     const navigation = useNavigation<ProfileNavigationProps>()
-
+    
+    useEffect(()=>{
+        // dispatch()
+    },[])
     const onLogout = () => {
         dispatch(logoutRequested())
     }
@@ -51,7 +55,7 @@ const ProfileScreen = () => {
                     contentContainerStyle={{ paddingBottom: tabBarHeight }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Avather isEditScreen={false} />
+                    <Avather isEditScreen={false} image={user.profileImage}/>
                     <View style={styles.nameCointer}>
                         <Text style={styles.nameStyle}>{user.name}</Text>
                         <Text style={styles.emailStyle}>{user.email}</Text>
@@ -83,7 +87,7 @@ const ProfileScreen = () => {
                         <Divider />
                         <ProfileCard
                             titel={Strings.phone_number}
-                            subText={user.phone}
+                            subText={user.phoneNumber && `+91 ${user.phoneNumber}`}
                             rightIcon={
                                 <MaterialCommunityIcons
                                     name="phone"
@@ -95,7 +99,7 @@ const ProfileScreen = () => {
                         <Divider />
                         <ProfileCard
                             titel={Strings.joined_date}
-                            subText={user.createdAt}
+                            subText={new Date(user.createdAt).toLocaleDateString()}
                             rightIcon={
                                 <MaterialCommunityIcons
                                     name="calendar-month"
@@ -152,6 +156,7 @@ const ProfileScreen = () => {
                     </CommonCard>
                     <View style={styles.logoutBtm}>
                         <OutLineButton color={Colors.danger} text={Strings.logout}
+                            loading={loading}
                             onPress={onLogout}
                             icon={
                                 <MaterialCommunityIcons
@@ -159,8 +164,8 @@ const ProfileScreen = () => {
                                     color={Colors.danger}
                                     size={22}
                                 />
-
                             } />
+                    <PrimaryButton onPress={() => { }} title={Strings.delete_account} variant='danger' />
                     </View>
                 </ScrollView>
 

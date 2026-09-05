@@ -29,8 +29,8 @@ import TextPressable from "../../components/common/TextPressable";
 import { AuthStackParamsList } from "../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Strings } from "../../strings/String";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import { loginRequested } from "../../redux/slices/authSlice";
 import Divider from "../../components/Divider/Divider";
 import CommomBackGround from "../../components/common/CommomBackGround";
@@ -42,6 +42,7 @@ const LoginScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false)
   const navigation = useNavigation<AuthNavigationProp>()
   const dispatch = useDispatch<AppDispatch>()
+  const { loading } = useSelector((state : RootState) =>state.auth)
 
   const {
     control,
@@ -193,7 +194,7 @@ const LoginScreen = () => {
                 navigation.navigate("Forgot")
               }} />
             </View>
-            <PrimaryButton onPress={handleSubmit(onLogin)} title={Strings.login} />
+            <PrimaryButton onPress={handleSubmit(onLogin)} title={Strings.login} loading= {loading} />
 
             <View style={styles.dividerStyle}>
               <Divider style={{ flex: 1 }} />

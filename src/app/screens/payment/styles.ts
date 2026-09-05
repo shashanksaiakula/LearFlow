@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.lg,
+    marginBottom : Spacing.md
   },
 
   // ===== Checkout =====

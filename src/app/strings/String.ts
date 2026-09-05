@@ -98,5 +98,8 @@ export const Strings = {
      no_recommended: "No Recommanded0cousres yet",
      no_enrolled: "No Enrolled cousres yet",
      no_progress: "No cousres in progress yet",
-     expolore_cousres : "Explore Courses"
+     expolore_cousres : "Explore Courses",
+     payment_successful:"Payment Successful",
+     life_time_access:"You now have lifetime access to this course. Happy learning!",
+     delete_account: "Delete Account"
 }
