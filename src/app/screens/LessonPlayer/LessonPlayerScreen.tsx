@@ -1,4 +1,4 @@
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from '../../navigation/types'
 import { RouteProp } from '@react-navigation/native';
@@ -71,7 +71,12 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   //   }, [route.params.currentLessonPosition]);
 
   const seekPress = useCallback((seek: number) => {
-    setIsPaused(false)
+    if (Platform.OS === 'ios') {
+      // On iOS: pause → seek → onSeekComplete will unpause
+      setIsPaused(true);
+    } else {
+      setIsPaused(false);
+    }
     videoRef.current?.seek(seek + 1)
   }, [])
 
@@ -128,6 +133,10 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
             enrolledId={enrolledId?._id}
             progress={enrolled?.progress}
             isBackPressed={setLoder}
+            onSeekComplete={() => {
+              // iOS: seek is done, now start playing
+              setIsPaused(false)
+            }}
           />}
         <LessonTab selectedTab={selectTab} onTabChange={setSelectTab} />
 
@@ -152,8 +161,11 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
             }}
             onClick={(timeStamp: number) => {
               console.log(" note", timeStamp)
+              if (Platform.OS === 'ios') {
+                // On iOS: pause → seek → onSeekComplete will unpause
+                setIsPaused(true);
+              }
               videoRef.current?.seek(timeStamp)
-              setIsPaused(false)
             }}
             lessonId={lessonID}
             courseId={courseId}

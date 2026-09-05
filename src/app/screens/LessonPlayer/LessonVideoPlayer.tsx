@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, BackHandler, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, BackHandler, Platform, StyleSheet, View } from 'react-native';
 import Video, { OnProgressData, VideoRef } from 'react-native-video';
 import { Lesson } from '../../models/Lesson';
 import { BASE_URL } from '../../api/apiClinet';
@@ -22,7 +22,8 @@ interface LessonVideoPlayerProps {
   lessons: Lesson[],
   enrolledId: string,
   progress: number,
-  isBackPressed: (isPressed: Boolean) => void
+  isBackPressed: (isPressed: Boolean) => void,
+  onSeekComplete?: () => void   // called when iOS finishes seeking, so parent can unpause
 }
 
 
@@ -36,13 +37,15 @@ const LessonVideoPlayer = ({
   lessons,
   enrolledId,
   progress,
-  isBackPressed
+  isBackPressed,
+  onSeekComplete
 }: LessonVideoPlayerProps) => {
 
   console.log("is lesson is update ", lesson.lessonCode)
   const [isBuffering, setIsBuffering] =
     useState(false);
   const [currentSec, setCurrentSec] = useState<number>(0);
+  const [isSeeking, setIsSeeking] = useState(false);
 
   // const progress = useCallback((progress :OnProgressData) =>{
   //   onProgress(progress.currentTime);
@@ -93,16 +96,29 @@ const LessonVideoPlayer = ({
         ref={videoRef}
         style={styles.video}
         controls={true}
-        paused={paused}
+        paused={paused || isSeeking}
         resizeMode="contain"
         onLoadStart={() => {
           setIsBuffering(true);
         }}
         onLoad={() => {
           if (initialPosition > 0) {
+            if (Platform.OS === 'ios') {
+              // On iOS, seeking inside onLoad stalls playback.
+              // Set isSeeking=true so we temporarily pause, seek, then resume in onSeek.
+              setIsSeeking(true);
+            }
             videoRef.current?.seek(initialPosition);
           }
           setIsBuffering(false);
+        }}
+        onSeek={() => {
+          // Called when any seek completes on iOS.
+          // Clear isSeeking (initial-load seek) and notify parent (transcript/notes seeks).
+          if (isSeeking) {
+            setIsSeeking(false);
+          }
+          onSeekComplete?.();
         }}
         onBuffer={({ isBuffering }) => {
           setIsBuffering(isBuffering);
