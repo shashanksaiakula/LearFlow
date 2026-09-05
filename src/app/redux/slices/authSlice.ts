@@ -110,7 +110,7 @@ const authSlice = createSlice({
         },
         editProfileSuccess: (state, action) => {
             state.loading = false,
-                state.user = action.payload
+            state.user = action.payload
         },
         editProfileFailed: (state, action) => {
             state.loading = false,

@@ -30,7 +30,7 @@ const EditProfile = () => {
     const [name, setName] = useState(user?.name)
     const [number, setNumber] = useState(user?.phoneNumber)
     const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth)
-    const [imageUri, setImageUri] = useState<string | undefined>(undefined);
+    const [imageUri, setImageUri] = useState<string>(user?.profileImage);
 
     const cancelHandel = () => {
         setName("")
@@ -40,7 +40,7 @@ const EditProfile = () => {
     }
 
     const submitHandle = () => {
-        dispatch(editProfileRequest({ name: name, profileImage : imageUri ?? "", dateOfBirth: dateOfBirth, phoneNumber : number }))
+        dispatch(editProfileRequest({ name: name, profileImage : imageUri, dateOfBirth: dateOfBirth, phoneNumber : number }))
     }
 
     console.log("phone umber ",number)

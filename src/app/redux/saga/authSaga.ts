@@ -128,6 +128,11 @@ function* editProfileWorker(action: ReturnType<typeof editProfileRequest>): Gene
             message: response.data.message,
             user: response.data.user
         }))
+         const profileReponse = yield call(profile)
+        console.log("profile response ", profileReponse.data.data)
+        yield put(profileSuccess({
+            user: profileReponse.data.data
+        }))
     } catch (err) {
         const error = err as AxiosError<{
             success: boolean;
