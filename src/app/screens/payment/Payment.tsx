@@ -12,6 +12,7 @@ import { Colors } from '../../theme/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import { enrollIntoCourse, getEnrolledCourse } from '../../redux/thunk/enrollThunk'
+import { homeRequest } from '../../redux/slices/homeSlicer'
 import { RouteProp } from '@react-navigation/native'
 import { deleteBookmark } from '../../redux/thunk/thunkBookmark'
 import { Input } from '../../components/Input'
@@ -58,6 +59,7 @@ const Payment = ({ route, navigation }: Props) => {
 
     const amount = route.params.amount
     const { courseCode, lessonId } = route.params
+    console.log(amount, courseCode, "checkout screen params")
 
     const {
         control,
@@ -77,8 +79,7 @@ const Payment = ({ route, navigation }: Props) => {
     const onPay = async (_data: PaymentFormValues) => {
         setProcessing(true)
 
-        // Simulated payment attempt — swap this for a real gateway call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        await new Promise<void>((resolve) => setTimeout(resolve, 500))
 
         try {
             await dispatch(
@@ -88,20 +89,18 @@ const Payment = ({ route, navigation }: Props) => {
                 })
             ).unwrap()
 
-            // Remove this course from bookmarks if it was bookmarked
             const bookmarkedCourse = bookmarks?.find(
-                (course) => course.courseCode === courseCode
+                (course) => course?.courseCode === courseCode
             )
             if (bookmarkedCourse?._id) {
                 await dispatch(deleteBookmark({ id: bookmarkedCourse._id }))
             }
 
-            // Refresh the enrolled list so My Learning updates immediately
             await dispatch(getEnrolledCourse())
+            dispatch(homeRequest())
 
             navigation.replace('PaymentSuccess')
         } catch (e) {
-            // Enrollment failed — error is surfaced via enrollError below
             setProcessing(false)
         }
     }

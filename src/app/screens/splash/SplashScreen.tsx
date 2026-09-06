@@ -13,21 +13,23 @@ export default function SplashScreen() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // dispatch(checkAuthenticationRequested());
-
     const interval = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
-          clearInterval(interval)
-          dispatch(checkAuthenticationRequested())
+          clearInterval(interval);
           return 100;
         }
-        return prevProgress + 1
-      })
-
-    }, 10)
+        return prevProgress + 1;
+      });
+    }, 10);
     return () => clearInterval(interval);
-  }, [dispatch])
+  }, []);
+
+  useEffect(() => {
+    if (progress >= 100) {
+      dispatch(checkAuthenticationRequested());
+    }
+  }, [progress, dispatch]);
 
 
   return (

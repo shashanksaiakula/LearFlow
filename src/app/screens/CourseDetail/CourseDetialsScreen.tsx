@@ -15,8 +15,8 @@ import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import Overview from './overview';
 import Instructor from './instructor';
 import Curiculam from './curiculam';
-import Reviews from './reviews';
 import CommonCard from '../../components/common/CommonCard';
+import { getImageUrl } from '../../utils/imageUtils';
 
 
 type CoueseDetailScreenProps = RouteProp<RootStackParamList, "CourseDetails">

@@ -68,6 +68,7 @@ function* checkAuthenticationWorker(): Generator<any, void, any> {
         }
         const profileReponse = yield call(profile)
         console.log("profile response ", profileReponse.data.data)
+        yield put(initializationComplete());
         yield put(profileSuccess({
             user: profileReponse.data.data
         }))
@@ -75,7 +76,6 @@ function* checkAuthenticationWorker(): Generator<any, void, any> {
         // yield call(logoutApi)
         console.log("logout is calling ?")
         yield put(logout());
-    } finally {
         yield put(initializationComplete());
     }
 }
