@@ -12,7 +12,6 @@ import { Colors } from '../../theme/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import { enrollIntoCourse, getEnrolledCourse } from '../../redux/thunk/enrollThunk'
-import { homeRequest } from '../../redux/slices/homeSlicer'
 import { RouteProp } from '@react-navigation/native'
 import { deleteBookmark } from '../../redux/thunk/thunkBookmark'
 import { Input } from '../../components/Input'
@@ -79,7 +78,7 @@ const Payment = ({ route, navigation }: Props) => {
     const onPay = async (_data: PaymentFormValues) => {
         setProcessing(true)
 
-        await new Promise<void>((resolve) => setTimeout(resolve, 500))
+        await new Promise((resolve) => setTimeout(resolve, 500))
 
         try {
             await dispatch(
@@ -90,14 +89,13 @@ const Payment = ({ route, navigation }: Props) => {
             ).unwrap()
 
             const bookmarkedCourse = bookmarks?.find(
-                (course) => course?.courseCode === courseCode
+                (course) => course.courseCode === courseCode
             )
             if (bookmarkedCourse?._id) {
                 await dispatch(deleteBookmark({ id: bookmarkedCourse._id }))
             }
 
             await dispatch(getEnrolledCourse())
-            dispatch(homeRequest())
 
             navigation.replace('PaymentSuccess')
         } catch (e) {

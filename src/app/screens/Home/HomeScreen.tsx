@@ -58,9 +58,7 @@ const HomeScreen = ({ route, navigation }: props) => {
   const { loading, homeResponse, error } = useSelector((state: RootState) => state.home)
   const inProgressCousres = useSelector(selectInProgressCourses)
   const myBookermark = useSelector(selectBookmarkedCourses)
-  const currentLearning =
-    inProgressCousres.find(course => course?.courseCode === homeResponse?.continueLearning?.courseCode) ??
-    inProgressCousres[0]
+  const currentLearning = inProgressCousres.find(course => course.courseCode === homeResponse?.continueLearning?.courseCode)
 
   console.log("inProgressCousres ", inProgressCousres)
   useEffect(() => {
@@ -71,9 +69,7 @@ const HomeScreen = ({ route, navigation }: props) => {
   }, [dispatch,])
 
   useEffect(() => {
-    if (currentLearning?.courseCode && currentLearning?.currentLessonCode) {
-      dispatch(fetchLesson({ cousreId: currentLearning.courseCode, lessonId: currentLearning.currentLessonCode }))
-    }
+    dispatch(fetchLesson({ cousreId: currentLearning?.courseCode, lessonId: currentLearning?.currentLessonCode }))
   }, [dispatch, currentLearning?.courseCode, currentLearning?.currentLessonCode])
 
   if (loading) {
@@ -147,9 +143,9 @@ const HomeScreen = ({ route, navigation }: props) => {
         }
 
         <SectionHeader title={Strings.recommended_for_you} isShowViewAll={false} />
-        {homeResponse?.recommendedCourses?.[0] && <CourseCard course={homeResponse.recommendedCourses[0]} onClick={() => {
+        {homeResponse?.recommendedCourses[0] && <CourseCard course={homeResponse?.recommendedCourses[0]} onClick={() => {
           navigation.navigate("CourseDetails", {
-            courseId: homeResponse.recommendedCourses[0].courseCode,
+            courseId: homeResponse?.recommendedCourses[0].courseCode,
             isEnrolled: false,
             currentLessonCode: "",
             currentLessonPosition: 0,
@@ -157,7 +153,7 @@ const HomeScreen = ({ route, navigation }: props) => {
           })
         }} />}
         <SectionHeader title={Strings.my_bookmarked} onPress={() => { navigation.navigate('BottomTab', { screen: "bookmarks" }) }} />
-        {myBookermark?.[0] ? <CourseCard course={myBookermark[0]} onClick={() => {
+        {myBookermark.length > 0 ? <CourseCard course={myBookermark[0]} onClick={() => {
           navigation.navigate("CourseDetails", {
             courseId: myBookermark[0].courseCode,
             isEnrolled: false,

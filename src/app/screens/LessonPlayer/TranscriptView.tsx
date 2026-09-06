@@ -46,22 +46,23 @@ export const TranscriptView = ({
   );
 
   async function handleSaveNote() {
-    setWord("")
-    setDefinition("")
-    playResumeAction(false)
-    setIsShowModal(false)
-    setSelectedWord(null)
-    await dispatch(postNotes({ courseCode: courseId, lessonCode: lessonId, selectedText: word, timestamp: timeStamp, note: definition })).unwrap()
-    // }
-    dispatch(getNotes({ courseCode: courseId, lessonCode: lessonId }))
+    // Save the note, then close modal and resume playback
+    await dispatch(postNotes({ courseCode: courseId, lessonCode: lessonId, selectedText: word, timestamp: timeStamp, note: definition })).unwrap();
+    dispatch(getNotes({ courseCode: courseId, lessonCode: lessonId }));
+    setWord("");
+    setDefinition("");
+    setSelectedWord(null);
+    setIsShowModal(false);
+    playResumeAction(true);
   }
 
   function handelCancel() {
-    setWord("")
-    setDefinition("")
-    setIsShowModal(false)
-    playResumeAction(false)
-    setSelectedWord(null)
+    // Close modal and resume playback
+    setWord("");
+    setDefinition("");
+    setIsShowModal(false);
+    setSelectedWord(null);
+    playResumeAction(true);
     // setActiveCardId(null)
   }
 
@@ -76,6 +77,8 @@ export const TranscriptView = ({
     setWord(cleanedText);
     setTimeStamp(selectedTimeStamp);
     setDefinition('Loading definition...');
+    // Pause playback when opening the note modal
+    playResumeAction(false);
     setIsShowModal(true);
   };
 
@@ -85,10 +88,23 @@ export const TranscriptView = ({
       return;
     }
 
-    openNoteModal(selectedText);
+    const cleaned = selectedText.toLowerCase();
+    openNoteModal(cleaned);
 
     try {
-      const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`);
+      const encoded = encodeURIComponent(cleaned);
+      const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${encoded}`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        // dictionaryapi.dev returns JSON with a title/message on 404
+        const errData = await response.json().catch(() => null);
+        const msg = errData?.message || errData?.title || 'No definition found.';
+        setDefinition(msg);
+        return;
+      }
+
       const data = await response.json();
       const meaning = data?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
 
@@ -98,6 +114,7 @@ export const TranscriptView = ({
         setDefinition('No definition found.');
       }
     } catch (error) {
+      console.warn('fetchMeaning error:', error);
       setDefinition('Error fetching data.');
     }
   };
@@ -161,7 +178,8 @@ export const TranscriptView = ({
                 onLongPress={(selectedText, seek) => {
                   seekonPress(seek)
                   setTimeStamp(seek)
-                  playResumeAction(true)
+                  // Pause playback when opening modal to add a note
+                  playResumeAction(false)
                   openNoteModal(selectedText, seek);
                   fetchMeaning(selectedText);
                 }}
