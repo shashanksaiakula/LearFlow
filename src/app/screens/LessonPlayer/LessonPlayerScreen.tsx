@@ -71,12 +71,14 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
   //   }, [route.params.currentLessonPosition]);
 
   const seekPress = useCallback((seek: number) => {
-    if (Platform.OS === 'ios') {
-      // On iOS: pause → seek → onSeekComplete will unpause
-      setIsPaused(true);
-    } else {
-      setIsPaused(false);
-    }
+    console.log("seek for trnc ", seek)
+    // if (Platform.OS === 'ios') {
+    //   // On iOS: pause → seek → onSeekComplete will unpause
+    //   setIsPaused(true);
+    // } else {
+    //   setIsPaused(false);
+    // }
+    //  setIsPaused(false)
     videoRef.current?.seek(seek + 1)
   }, [])
 
@@ -148,6 +150,7 @@ const LessonPlayerScreen = ({ route, navigation }: Props) => {
             lessons={lessons}
             completedList={enrolledId?.completedLessonCode}
             lastLessonPlayedcode={enrolledId?.lastPlayedLessonCode}
+            lastLessonPlayedPosition={enrolledId?.lastPlayedLessonPosition}
             currentVideoSec={currentSec}
 
           />

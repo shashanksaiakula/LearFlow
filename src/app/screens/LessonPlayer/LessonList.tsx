@@ -17,11 +17,12 @@ type LessonProps = {
     lessons: Lesson[],
     completedList?: string[],
     lastLessonPlayedcode: string
+    lastLessonPlayedPosition?: number
     currentVideoSec: number,
     enrolledId: string
 }
 
-const LessonList = ({ onClick, lessonId, lessons, completedList, lastLessonPlayedcode, currentVideoSec, enrolledId }: LessonProps) => {
+const LessonList = ({ onClick, lessonId, lessons, completedList, lastLessonPlayedcode, lastLessonPlayedPosition, currentVideoSec, enrolledId }: LessonProps) => {
     const dispatch = useDispatch<AppDispatch>()
 
     const sortedLessons = lessons?.data
@@ -55,11 +56,13 @@ const LessonList = ({ onClick, lessonId, lessons, completedList, lastLessonPlaye
                     <LessonCard lesson={item} onClick={() => {
                         handleLastPlayedVider(item.lessonCode)
                     }}
-                        isActive={item._id === lessonId}
+                        isActive={item.lessonCode === lessonId}
                         index={item.order}
                         currentLesson={lessonId}
                         completedList={completedList}
                         lastLessonPlayed={lastLessonPlayedcode}
+                        currentVideoSec={item.lessonCode === lessonId ? currentVideoSec : 0}
+                        lastLessonPlayedPosition={lastLessonPlayedPosition}
                     />
                 }
             />
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 6,
+        paddingHorizontal: Spacing.xs,
     },
     indicatorStyle: {
         flex: 1,
@@ -99,6 +102,9 @@ const styles = StyleSheet.create({
     }, titleStyle: {
         ...Typography.h2,
         fontWeight: 'bold',
-        paddingHorizontal: Spacing.xxs
+        paddingHorizontal: Spacing.xxs,
+        paddingTop: Spacing.xs,
+        paddingBottom: Spacing.xxs,
+        color: '#0F172A',
     }
 })

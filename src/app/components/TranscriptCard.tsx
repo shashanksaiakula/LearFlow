@@ -23,9 +23,10 @@ const TranscriptCard = memo(
     isActive = false,
     selectedWord = null,
   }: TranscriptCardProps) => {
-
-    const timeStamp = formatTime(parseInt(time));
+    const timeStamp = formatTime(parseInt(time, 10));
     const words = text.split(/\s+/).filter(Boolean);
+
+    const seek = parseInt(time, 10);
 
     return (
       <Pressable
@@ -37,9 +38,8 @@ const TranscriptCard = memo(
             backgroundColor: Colors.primaryLight3,
           },
         ]}
-        onPress={() => onClick(parseInt(time))}
+        onPress={() => onClick(seek)}
       >
-
         <View style={styles.timeStampStyle}>
           <Text style={styles.timeStyle}>
             {timeStamp}
@@ -48,24 +48,30 @@ const TranscriptCard = memo(
 
         <View style={styles.textContainer}>
           {words.map((word, index) => {
-            const isSelected = selectedWord === word;
+            const isSelected = selectedWord?.toLowerCase() ===
+              word.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').toLowerCase();
 
             return (
               <Pressable
                 key={`${word}-${index}-${time}`}
                 hitSlop={4}
-                onPress={() => onClick(parseInt(time))}
+                onPress={() => onClick(seek)}
                 onLongPress={() => {
-                  if (onLongPress) {
-                    onLongPress(word, parseInt(time));
-                  }
+                  onLongPress?.(word, seek);
                 }}
                 style={[
                   styles.wordButton,
                   isSelected && styles.selectedWordButton,
                 ]}
               >
-                <Text style={[styles.textStyle, isSelected && styles.selectedTextStyle]}>{word}</Text>
+                <Text
+                  style={[
+                    styles.textStyle,
+                    isSelected && styles.selectedTextStyle,
+                  ]}
+                >
+                  {word}
+                </Text>
               </Pressable>
             );
           })}

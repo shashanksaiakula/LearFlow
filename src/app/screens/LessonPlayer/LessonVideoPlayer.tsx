@@ -23,7 +23,6 @@ interface LessonVideoPlayerProps {
   enrolledId: string,
   progress: number,
   isBackPressed: (isPressed: Boolean) => void,
-  onSeekComplete?: () => void   // called when iOS finishes seeking, so parent can unpause
 }
 
 
@@ -38,7 +37,6 @@ const LessonVideoPlayer = ({
   enrolledId,
   progress,
   isBackPressed,
-  onSeekComplete
 }: LessonVideoPlayerProps) => {
 
   console.log("is lesson is update ", lesson.lessonCode)
@@ -59,21 +57,22 @@ const LessonVideoPlayer = ({
     useCallback(() => {
       const onHardwareBackPress = async () => {
         isBackPressed(true)
+        videoRef.current?.pause()
         await dispatch(
           updateEnrollmentThunk({
             id: enrolledId,
             currentLessonCode: lesson.lessonCode,
             currentLessonPosition: currentSec,
             progress: progress,
+          }),
+        ).unwrap();
 
-          })
-        ).unwrap()
+        await dispatch(
+          getEnrolledCourse(),
+        ).unwrap();
 
-        await dispatch(getEnrolledCourse()).unwrap()
-        // 2. Pop the screen to navigate back
         navigation.pop();
 
-        // 3. Return true to tell React Native we handled the back action manually
         return true;
       };
 
@@ -104,21 +103,20 @@ const LessonVideoPlayer = ({
         onLoad={() => {
           if (initialPosition > 0) {
             if (Platform.OS === 'ios') {
-              // On iOS, seeking inside onLoad stalls playback.
-              // Set isSeeking=true so we temporarily pause, seek, then resume in onSeek.
               setIsSeeking(true);
             }
-            videoRef.current?.seek(initialPosition);
+
+            videoRef.current?.seek(
+              initialPosition,
+            );
           }
+
           setIsBuffering(false);
         }}
         onSeek={() => {
-          // Called when any seek completes on iOS.
-          // Clear isSeeking (initial-load seek) and notify parent (transcript/notes seeks).
           if (isSeeking) {
             setIsSeeking(false);
           }
-          onSeekComplete?.();
         }}
         onBuffer={({ isBuffering }) => {
           setIsBuffering(isBuffering);
@@ -126,46 +124,97 @@ const LessonVideoPlayer = ({
         onError={error => {
           console.log('VIDEO ERROR', error);
         }}
-        onProgress={(progress) => {
-          setCurrentSec(progress.currentTime)
-          onProgress(progress.currentTime);
+
+        onProgress={progressData => {
+          setCurrentSec(
+            progressData.currentTime,
+          );
+
+          onProgress(
+            progressData.currentTime,
+          );
         }}
-        //  paused={paused} 
+
         onEnd={async () => {
-          setCurrentSec(0)
+          setCurrentSec(0);
 
+          const lessonProgress = Math.round(
+            (lesson.order / lessons.length) *
+            100,
+          );
 
-          const progress = Math.round((lesson.order / lessons.length) * 100)
           if (nextLesson === undefined) {
-            return
+            return;
           }
-          await dispatch(updateEnrollmentThunk({
-            id: enrolledId, currentLessonCode: nextLesson.lessonCode, currentLessonPosition: 0, progress: progress,
-            completedLessonCode: lesson.lessonCode,
-            lastPlayedLessonCode: nextLesson?.lessonCode,
-            lastPlayedLessonPosition: 0
-          })).unwrap()
-          await dispatch(getEnrolledCourse()).unwrap()
-          setCurrentSec(0)
-          onLessonComplete(nextLesson.lessonCode)
 
+          await dispatch(
+            updateEnrollmentThunk({
+              id: enrolledId,
+              currentLessonCode:
+                nextLesson.lessonCode,
+              currentLessonPosition: 0,
+              progress: lessonProgress,
+              completedLessonCode:
+                lesson.lessonCode,
+              lastPlayedLessonCode:
+                nextLesson.lessonCode,
+              lastPlayedLessonPosition: 0,
+            }),
+          ).unwrap();
+
+          await dispatch(
+            getEnrolledCourse(),
+          ).unwrap();
+
+          setCurrentSec(0);
+
+          onLessonComplete(
+            nextLesson.lessonCode,
+          );
         }}
       />
+
       <View style={styles.backArrow}>
-        <CommonIconWithLoder icon="arrow-left" loding={false} isBackground={false} color={Colors.white} size={26} onPress={async () => {
-          isBackPressed(true)
-          console.log("cousre porgress ", progress)
-          await dispatch(updateEnrollmentThunk({ id: enrolledId, currentLessonCode: lesson.lessonCode, currentLessonPosition: currentSec, progress: progress })).unwrap()
-          await dispatch(getEnrolledCourse()).unwrap()
-          setCurrentSec(0)
-          navigation.pop()
-        }} />
+        <CommonIconWithLoder
+          icon="arrow-left"
+          loding={false}
+          isBackground={false}
+          color={Colors.white}
+          size={26}
+          onPress={async () => {
+            isBackPressed(true);
+            videoRef.current?.pause()
+
+            console.log(
+              'cousre porgress ',
+              progress,
+            );
+
+            await dispatch(
+              updateEnrollmentThunk({
+                id: enrolledId,
+                currentLessonCode:
+                  lesson.lessonCode,
+                currentLessonPosition:
+                  currentSec,
+                progress: progress,
+              }),
+            ).unwrap();
+
+            await dispatch(
+              getEnrolledCourse(),
+            ).unwrap();
+
+            setCurrentSec(0);
+
+            navigation.pop();
+          }}
+        />
       </View>
+
       {isBuffering && (
         <View style={styles.loader}>
-          <ActivityIndicator
-            size="large"
-          />
+          <ActivityIndicator size="large" />
         </View>
       )}
     </View>
@@ -191,19 +240,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   videoContainer: {
     width: '100%',
     height: 220,
     backgroundColor: 'red',
   },
+
   loader: {
     ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
-  }, backArrow: {
+  },
+
+  backArrow: {
     justifyContent: 'flex-start',
     overflow: 'hidden',
     position: 'absolute',
-    margin: Spacing.xxs
-  }
+    margin: Spacing.xxs,
+  },
 });

@@ -123,7 +123,7 @@ const HomeScreen = ({ route, navigation }: props) => {
             ? <FlatList
               horizontal={true}
               data={inProgressCousres.slice(0, 2)}
-              keyExtractor={item => item.id}
+              keyExtractor={item => `${item.id}`}
               renderItem={({ item }) =>
                 <MyCousrseCard course={item} onClick={() => {
                   navigation.navigate("CourseDetails", {
